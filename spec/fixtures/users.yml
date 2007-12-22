@@ -1,0 +1,19 @@
+cbscharf:
+  id:             1    
+  type:           LdapUser
+  username:       cbscharf
+  email_address:  cbscharf@example.com
+  first_name:     Chris
+  initial:        B
+  last_name:      Scharf
+  reason_for_account: Cool people use slate.
+  
+dmolsen:
+  id:             2
+  type:           User
+  username:       dmolsen
+  email_address:  dmolsen@example.com
+  first_name:     David
+  initial:        M
+  last_name:      Olsen  
+  reason_for_account: Cool people use slate.

@@ -1,0 +1,55 @@
+<% head javascript_include_tag('jquery', 'animator', 'areas') %>
+<div id="panels">
+  <%= render :partial => 'version', :collection => resource.versions %>
+  <div class="panel version" id="draft">
+    <div class="header">
+      <h2>Draft <span id="autosaveStatus"></span></h2>
+    </div>  
+    <div class="body">
+      <% form_for :area, :url => resource_path, :html => { :method => :put, :id => 'area_form' } do |f| %>
+				<fieldset>
+				<div class="content" id="textarea_container" style="margin: 0 15px 10px 10px;">
+          <%= text_area :area, :body, :onkeypress => 'AreaEditor.markUnsaved()', :style => 'margin: 0; padding: 0px; width: 100%; height: 100%;' %>
+				</div>
+        <div class="actions" id="actions_for_draft">
+          <%= submit_tag 'Preview', :onclick => 'AreaEditor.preview(); return false;' %> or 
+          <%= submit_tag 'Save now', :onclick => 'AreaEditor.save(true); return false;' %>
+          <%= submit_tag('Publish') %>
+          <p style="margin: 5px 0 0 0">
+            <label>
+    	        <%= check_box 'area', 'hard_breaks', :onchange => 'AreaEditor.markUnsaved()' -%> Hard breaks? 
+    	        <span class="tip">automatically inserts &lt;br /&gt; tags</span>
+    	      </label>
+  	      </p>
+        </div>
+        </fieldset>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="panel version" id="preview" style="display:none;">
+    <div class="header">
+      <h2>Preview</h2>
+    </div>  
+    <div class="body">
+      <div class="content" id="previewBody"></div>
+      <div class="actions">
+        <%= submit_tag 'Return to editor', :onclick => 'AreaEditor.closePreview(); return false;'  %>
+      </div>
+    </div>  
+  </div>
+</div>
+
+<div id="area" style="display: none">
+  <%#= render :partial => 'builder/area' %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+  $(function() {
+    AreaEditor.initialize({ 
+      baseURL: "<%= resource_path %>",
+      pageID: <%= enclosing_resource.id %>,
+      areaKey: "<%= resource.key %>"
+    });
+  });
+</script>

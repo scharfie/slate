@@ -1,0 +1,8 @@
+<%= hidden_field_tag :key, resource.key %>
+<%= form.text_area :body, :label => nil %>
+
+<% form.actions do %>
+  <%= submit_tag 'Save' %>
+  <%= submit_tag 'Publish' %>
+  <%= submit_tag 'Preview', :id => 'previewButton' %>
+<% end %>

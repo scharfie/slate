@@ -1,0 +1,6 @@
+<h2 id="navigation">Navigation</h2>
+<ul id="nav">
+  <% for name, options in navigation %>
+    <li class="<%= name.downcase %>"><%= navigation_item(name, options) %></li>
+  <% end %>
+</ul>      

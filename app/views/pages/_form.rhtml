@@ -1,0 +1,18 @@
+<%= form.text_field :name %>
+<%= form.text_field :permalink %>
+<%= form.text_field :template %>
+
+<% content_for_variable(:current_default) do %>
+  <% if (default_page = enclosing_resource.default_page) && default_page != resource %>
+    <span style="font-size: 0.9em">(currently set to
+      <strong><%= enclosing_resource.default_page.name %></strong>)
+    </span>
+  <% end %>
+<% end %>
+
+<%= form.check_box :is_default, :label => 'Set as default page? ' + @content_for_current_default %>
+<%= form.check_box :is_hidden, :label => 'Hide this page?' %>
+
+<% form.actions do %>
+  <%= submit_tag 'Save' %> or <%= link_to_cancel %>
+<% end %>

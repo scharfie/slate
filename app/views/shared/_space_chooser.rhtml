@@ -1,0 +1,4 @@
+<% form_tag(choose_spaces_url, :id => 'chooser') do %>
+  <%= select_tag 'space_id', options_from_collection_for_select(spaces, 'id', 'name', Space.active ? Space.active.id : nil) %>
+  <%= submit_tag 'Choose' %>
+<% end %>  

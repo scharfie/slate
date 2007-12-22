@@ -1,0 +1,58 @@
+= EZTime 
+
+== Installation
+
+  script/plugin install http://svn.webtest.wvu.edu/repos/rails/plugins/eztime/
+
+EZTime is a simple extension to the Date class in Ruby to provide easy
+formatting of dates and times.
+
+== Can't I just use strftime? 
+
+=== Feature Support
+
+EZTime has a number of formatting features not available to strftime. 
+For example, what if you want to display the ordinal (st, nd, rd, th)
+for a date?  (i.e. 1st, 2nd, etc.)  With EZTime, ordinals are easy.
+
+How about displaying the meridian (AM/PM) in lowercase?  What about 
+only displaying the first letter (a/p)?  While strftime is powerful,
+there are simply some formatting options not available, which is a 
+shame.
+
+=== Simplicity
+
+EZTime is much easier to use than strftime because it doesn't require
+much memorization.  For example, isn't ":month/:day/:year" easier than
+"%m/%d/%Y"?  Not convinced?  How about ":day:ordinal of :month_name, :year" 
+(i.e. 20th of December, 2003).
+
+=== Extensibility
+
+Perhaps the strongest feature of EZTime is that it can be "extended" by simply
+adding new methods to the EZTime module.  The reason this works is because EZTime
+eval's the formatting string after a simple substitution, replacing the :name 
+with a method call to that name.  The upside to this is that everything you put
+in the formatting string can be accessed by itself as a method call.
+
+=== Formatting variants
+
+Certain methods have one or more variants, all following a standard convention:
+* 'z': (prefix) element will include a leading 0 digit
+* 'l': (prefix) (lowercase L): element will be converted to all lowercase
+* 's': (prefix) small variants.  For example, smeridian will return 'A' or 'P'
+* '12': (suffix): element will be in 12-hour format
+
+See the documentation for the various methods for examples of these modifiers.
+
+=== Known Issues
+
+Currently, using quotes or apostrophes in an EZTime format string is not supported - 
+it results in compile errors.  If there is a need for either of these characters, 
+however, I will look into correcting the situation.
+
+= Credits
+
+EZTime was created by Chris Scharf (http://tiny.scharfie.com)
+
+

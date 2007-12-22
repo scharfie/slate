@@ -1,0 +1,33 @@
+<p>
+  <b>Name:</b>
+  <%=h @space.name %>
+</p>
+
+<p>
+  <b>Key:</b>
+  <%=h @space.key %>
+</p>
+
+<p>
+  <b>Theme:</b>
+  <%=h @space.theme %>
+</p>
+
+<p>
+  <b>Domain:</b>
+  <%=h @space.domain %>
+</p>
+
+<p>
+  <b>Google analytics code:</b>
+  <%=h @space.google_analytics_code %>
+</p>
+
+<p>
+  <b>Css:</b>
+  <%=h @space.css %>
+</p>
+
+
+<%= link_to 'Edit', edit_space_path(@space) %> |
+<%= link_to 'Back', spaces_path %>

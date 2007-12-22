@@ -1,0 +1,14 @@
+test_space:
+  id: 1
+  type: SiteSpace
+  name: Test Space
+  key:  test_space
+  theme: test_theme
+  
+admin_space:
+  id: 2
+  type: SiteSpace
+  name: Admin Space
+  key:  admin_space
+  theme: admin_theme
+  

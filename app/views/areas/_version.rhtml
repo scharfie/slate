@@ -1,0 +1,15 @@
+<div class="panel version" id="version-<%= version.version %>">
+  <div class="header">
+    <h2><%= panel_title(version) %>
+      <span><%= version_timestamp(version) %></span>
+    </h2>
+  </div>  
+  <div class="body collapsed">
+    <div class="content" id="panel<%= version.version %>-content">
+      Loading...
+    </div>
+    <div class="actions">
+      <%= submit_tag 'Copy to draft', :onclick => "AreaEditor.copyToDraft(#{version.version}); return false;" %> 
+    </div>
+  </div>
+</div>

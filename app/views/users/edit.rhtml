@@ -1,0 +1,107 @@
+<h1>Editing user</h1>
+
+<%= error_messages_for :user %>
+
+<% form_for(:user, :url => user_path(@user), :html => { :method => :put }) do |f| %>
+  <p>
+    <b>Type</b><br />
+    <%= f.text_field :type %>
+  </p>
+
+  <p>
+    <b>Username</b><br />
+    <%= f.text_field :username %>
+  </p>
+
+  <p>
+    <b>Password</b><br />
+    <%= f.text_field :password %>
+  </p>
+
+  <p>
+    <b>First name</b><br />
+    <%= f.text_field :first_name %>
+  </p>
+
+  <p>
+    <b>Last name</b><br />
+    <%= f.text_field :last_name %>
+  </p>
+
+  <p>
+    <b>Initial</b><br />
+    <%= f.text_field :initial %>
+  </p>
+
+  <p>
+    <b>Display name</b><br />
+    <%= f.text_field :display_name %>
+  </p>
+
+  <p>
+    <b>Telephone number</b><br />
+    <%= f.text_field :telephone_number %>
+  </p>
+
+  <p>
+    <b>Email address</b><br />
+    <%= f.text_field :email_address %>
+  </p>
+
+  <p>
+    <b>Login attempts</b><br />
+    <%= f.text_field :login_attempts %>
+  </p>
+
+  <p>
+    <b>Locked</b><br />
+    <%= f.check_box :locked %>
+  </p>
+
+  <p>
+    <b>Requested on</b><br />
+    <%= f.datetime_select :requested_on %>
+  </p>
+
+  <p>
+    <b>Verified on</b><br />
+    <%= f.datetime_select :verified_on %>
+  </p>
+
+  <p>
+    <b>Approved on</b><br />
+    <%= f.datetime_select :approved_on %>
+  </p>
+
+  <p>
+    <b>Approved by</b><br />
+    <%= f.text_field :approved_by %>
+  </p>
+
+  <p>
+    <b>Expires on</b><br />
+    <%= f.datetime_select :expires_on %>
+  </p>
+
+  <p>
+    <b>Created on</b><br />
+    <%= f.datetime_select :created_on %>
+  </p>
+
+  <p>
+    <b>Last login</b><br />
+    <%= f.datetime_select :last_login %>
+  </p>
+
+  <p>
+    <b>Reason for account</b><br />
+    <%= f.text_area :reason_for_account %>
+  </p>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', user_path(@user) %> |
+<%= link_to 'Back', users_path %>

@@ -1,0 +1,15 @@
+<h1>
+<span class="slate"><%= link_to 'slate', dashboard_url %></span><% if Space.active -%>
+<span class="space"><%= link_to Space.active.name, space_dashboard_url(Space.active) -%>
+<% end -%>
+</h1>
+
+<% if User.active %>
+  <ul id="meta-nav">
+    <li><%= space_chooser %></li>
+    <li class="separator">|</li>
+    <li><%= link_to 'Sign out', logout_url %></li>
+  </ul>  
+<% end %>
+<%= navigation %>
+<div class="hr"><hr /></div>

@@ -1,0 +1,13 @@
+<% heading 'Creating new page' %>
+
+<% if resource.parent.root? %>
+  Top-level page
+<% else %>  
+  This page be created in <span><%= resource.parent.path_names.join(' &raquo; ') %></span>
+<% end %>
+
+<% form_for_resource do |form| %>
+  <%= form.hidden_field :parent_id %>
+  <%= render :partial => 'form', :object => form %>
+<% end %>  
+  

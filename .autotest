@@ -1,0 +1,12 @@
+require 'autotest/timestamp'
+require 'autotest/menu'
+
+BAR = "=" * 80
+
+Autotest.add_hook :red do |at|
+  puts "\e[31m#{BAR}\e[0m\n\n"
+end
+
+Autotest.add_hook :green do |at|
+  puts "\e[32m#{BAR}\e[0m\n\n"
+end

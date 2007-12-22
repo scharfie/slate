@@ -1,0 +1,22 @@
+TagClass
+========
+
+Introduction:
+
+TagClass is a Rails plugin that automatically inserts the type of an INPUT field to the class attribute of the field.  For example, a text INPUT field will have the class 'text' automatically added when using the ActionView helpers.
+
+How it works:
+
+TagClass modifies the tag method of the ActionView::Helpers::TagHelper module.
+
+Usage:
+
+Simply install the TagClass plugin and use any of the built-in form field helpers (i.e. text_field, etc.)
+
+Why?
+
+The main goal of TagClass is to make styling INPUT fields a little easier.  CSS has attribute selectors, but not all browsers support them.  With TagClass, you can easily target all submit buttons (input.submit), all password fields (input.password), and all the other standard INPUT types.  The appended class is exactly the same as the "type" attribute.
+
+What if I already assign a class?
+
+Don't worry - TagClass looks to see if a class was already passed in, and if so it will merely append the new class to the end of the existing one.

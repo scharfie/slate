@@ -1,0 +1,6 @@
+<h3>Files</h3>
+<ul>
+  <% zip.entries.each do |file| %>
+    <li><%= file.name %> (<%= number_to_human_size(file.size) %>)</li>
+  <% end %>
+</ul>

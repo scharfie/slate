@@ -1,0 +1,7 @@
+<% heading 'Editing page' %>
+
+<% form_for_resource do |form| %>
+  <%#= form.hidden_field :parent_id %>
+  <%= render :partial => 'form', :object => form %>
+<% end %>  
+  

@@ -1,0 +1,60 @@
+= Change Log
+
+Below is a complete list of changes for each revision of CssDryer.
+
+== 0.1.5
+
+* Achieved compatibility with Markaby by adding filepath paramater to template rendering (NcssHandler#render) method signature (incompatibility reported by Ray Carrasco).
+
+== 0.1.4
+
+* Commas in comments are sometimes replaced with a space to prevent them from being interpreted as selectors (thanks to Adrian Prodan for the bug report).  Yes, this is a shameful hack.
+* Added tests for multiline comments and comments containing blank lines (suggested by Phil Crosby).
+* Added a section on how comments are handled to the README.
+* Removed page_cache_extension line from the StylesheetsController code.  It was unnecessary and forced all cached pages, including HTML ones, to have a .css extension.
+
+== 0.1.3
+
+* Instance and local variables from the controller now available within stylesheets (thanks to Rifraf for prodding me into action).
+
+== 0.1.2
+
+* Incompatible with Rails 1.1.6 and below thanks to the use of <code>:format</code> in a route.  Update to Rails 1.2RC1 :)
+* Caches correctly with <code>.css</code> extension.  Updated the README with the necessary changes to the controller and routes.
+* Works with the <code>stylesheet_link_tag</code> helper.  Updated the README with the changes to make this work.
+
+== 0.1.1
+
+* Fixed bug where comma separated style values, e.g. font families, were misinterpreted as comma separated selectors.
+
+== 0.1.0
+
+* Handles comma separated selectors (suggested by John Nunemaker).
+* No longer outputs nested blank lines (noticed by Adi).
+
+== 0.0.5
+
+* Changed extension from <code>.dcss</code> to <code>.ncss</code> to avoid clashing with Miles Byrne's DCSS stylesheets (suggested by Miles).
+* Clarified the lack of support for nested, multiple, comma separated selectors by adding a paragraph to the README's Which Selectors Are Supported section.
+
+== 0.0.4
+
+* Handles class, pseudo-class, attribute, id, child and adjacent selectors (suggested by Adi and Maxim Kulkin).
+* No longer outputs empty selectors (noticed by Adi).
+* Fixed typo in nesting example in README.
+
+== 0.0.3
+
+* Fixed bug where parameter was passed to the wrong method.
+
+== 0.0.2
+
+* Added support for <code>@media</code> blocks.
+* Fixed bug in handling of non-nested descendant selectors.
+* Handles whitespace consistently, preserving the original as much as possible.
+
+== 0.0.1
+
+* Initial public release.
+* Handles descendant selectors.
+* Handles ERB.

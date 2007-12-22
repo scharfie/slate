@@ -1,0 +1,25 @@
+<% if editor? %>
+  <div id="<%= area.dom_id %>" class="<%= area_class(area) %>">
+    <div class="b-area">
+      <div class="b-toolbar">
+        <table cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td><%= area.key %></td>
+            <td align="right">
+              <%= toggle_area_link(area) %>
+              <%= clear_area_link(area) %>
+              <%= edit_area_link(area) %>
+            </td>
+          </tr>  
+        </table>
+      </div>
+      <div class="b-content">
+        <%= render :partial => 'builder/using_default',
+          :locals => { :area => area } if area.using_default?(@page) %>
+        <%= render :inline => area.body_html %>      
+      </div>
+    </div>    
+  </div>
+<% else %>
+  <%= render :inline => area.body_html %>
+<% end %>

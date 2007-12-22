@@ -1,0 +1,12 @@
+<tr class="field">
+  <td class="info">
+    <%= label unless label.blank? %>
+    <%= content_tag(:p, tip, :class => 'tip') unless tip.blank? %>
+  </td>
+  <td class="input">
+    <%= element %>
+  </td>
+  <td class="error">  
+    <%= errors %>
+  </td>
+</tr>  

@@ -1,0 +1,28 @@
+#header {
+	display: none;
+}
+
+#body, #footer {
+	width: 500px;
+	margin: 30px auto;
+}
+
+#body {
+	background: #fff;
+	padding: 0px;
+	margin-top: 100px;
+  border: solid 10px #ccc;
+
+	div.bottom {
+	  display: none;
+	}
+}
+
+h2 {
+	background: none;
+	color: #222;
+}
+
+div.actions {
+	margin-bottom: -10px;
+}

@@ -1,0 +1,4 @@
+<%= image_tag image.public_filename %>
+<% for thumbnail in image.thumbnails %>
+  <%= image_tag thumbnail.public_filename %>
+<% end %>

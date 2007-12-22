@@ -1,0 +1,8 @@
+<% heading 'Pages' %>
+
+<% toolbar_item link_to('New page', new_resource_path()) %>
+
+<h3>My Pages</h3>
+<ul id="pages">
+  <%= render :partial => 'page', :collection => self.resource.children %>
+</ul>

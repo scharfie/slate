@@ -1,0 +1,8 @@
+<%= form.text_field :name %>
+<%= form.text_field :key %>
+<%= form.text_field :domain %>
+<%= form.text_field :theme %>
+
+<% form.actions do %>
+  <%= submit_tag 'Save' %> or <%= link_to_cancel Space.active ? space_dashboard_url(Space.active) : dashboard_url %>
+<% end %>

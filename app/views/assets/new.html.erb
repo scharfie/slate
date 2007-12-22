@@ -1,0 +1,10 @@
+<% heading 'Upload file' %>
+<% form_for_resource(:html => { :multipart => true }) do |form| %>
+  <%= form.file_field :uploaded_data, :label => 'Upload this file:' %>
+  
+  <%= form.text_field :name, :label => 'Name this file (optional):' %>
+  
+  <% form.actions do %>
+    <%= submit_tag 'Upload' %>
+  <% end %>
+<% end %>

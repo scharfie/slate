@@ -1,0 +1,2 @@
+class SiteSpace < Space
+end

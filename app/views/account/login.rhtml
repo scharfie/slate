@@ -1,0 +1,18 @@
+<% heading do %>
+  Sign in <span>or <%= link_to 'Request an account', new_account_path() -%></span>
+<% end %>
+
+<% head stylesheet_link_tag('login') %>
+
+<%= content_tag(:p, @account.errors.on_base.to_a.join("<br />"), :class => 'error') if @account.errors.any? -%>
+
+<% form_for :account do |form| %>
+  <table>
+  <% form.options.merge! :default_template => 'row', :label_append => ':' %>
+  <%= form.text_field 'username', :size => 35 %>
+  <%= form.password_field 'password', :size => 20 %>
+  </table>  
+  <% form.actions do %>
+    <%= submit_tag 'Sign in' %>
+  <% end %>
+<% end %>

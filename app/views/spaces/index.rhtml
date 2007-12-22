@@ -1,0 +1,30 @@
+<h1>Listing spaces</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Key</th>
+    <th>Theme</th>
+    <th>Domain</th>
+    <th>Google analytics code</th>
+    <th>Css</th>
+  </tr>
+  
+<% for space in @spaces %>
+  <tr>
+    <td><%=h space.name %></td>
+    <td><%=h space.key %></td>
+    <td><%=h space.theme %></td>
+    <td><%=h space.domain %></td>
+    <td><%=h space.google_analytics_code %></td>
+    <td><%=h space.css %></td>
+    <td><%= link_to 'Show', space_path(space) %></td>
+    <td><%= link_to 'Edit', edit_space_path(space) %></td>
+    <td><%= link_to 'Destroy', space_path(space), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New space', new_space_path %>

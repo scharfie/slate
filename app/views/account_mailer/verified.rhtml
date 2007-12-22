@@ -1,0 +1,12 @@
+<p>Attention super user(s):<br /></p>
+
+<p>The following account has been verified:<br /></p>
+
+<p><strong>User:</strong> <%= @user.display_name %> (<%= @user.username %>)</p>
+<p><strong>Reason for request: </strong><%= @user.why %><br /></p>
+
+<p>To approve this account, please click the following link (or copy and paste into your browser):<br /></p>
+
+<p><%= @approve_url %><br /></p>
+
+<%= render :partial => 'account_mailer/signature' %>

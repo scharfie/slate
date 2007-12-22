@@ -1,0 +1,8 @@
+<div class="field">
+  <%= errors %>
+  <div class="input">
+    <%= element %> <%= label unless label.blank? %>
+    <%= content_tag(:p, tip, :class => 'tip') unless tip.blank? %>
+
+  </div>  
+</div>

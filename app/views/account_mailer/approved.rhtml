@@ -1,0 +1,17 @@
+<p>Dear <%= @user.first_name %>,<br /><p>
+
+<p>This e-mail is to inform you that your account request has been approved.
+You may now login to slate at the following location:<br /></p>
+
+<p><%= @login_url %><br /></p>
+
+<p>Your username is: <strong><%= @user.username %></strong><br />
+  <% if @user.ldap_user? %>
+    Your password is the same as your LDAP account password.
+  <% else %>
+    Your password is: <strong><%= @user.temporary_password %></strong>
+  <% end %>
+  <br />
+</p>
+
+<%= render :partial => 'account_mailer/signature' %>

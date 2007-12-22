@@ -1,0 +1,17 @@
+<% head stylesheet_link_tag('assets') %>
+<% heading 'Files' %>
+<% toolbar_item link_to(glyph('application_get') + ' Upload', new_resource_path) %>
+
+<table class="assets">
+  <% for asset in resources %>
+  <tr class="<%= cycle('odd', '') %>">
+    <td class="preview"><%= link_to asset_image_tag(asset, 'sq'), resource_path(asset) %></td>
+    <td class="info">
+      <h3><%= link_to(asset.name, resource_path(asset)) %></h3>
+      <%= link_to 'Edit', edit_resource_path(asset) %><br />
+      <strong>Uploaded:</strong> <%= asset.updated_on.eztime(':nmonth :day:ordinal, :year at :hour12::minute :lmeridian') %><br />
+      <strong>Size:</strong> <%= number_to_human_size(asset.size) %>
+    </td>
+  </tr>
+  <% end %>
+</table>

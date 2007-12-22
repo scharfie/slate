@@ -1,0 +1,105 @@
+div.b-area {
+  border: solid 2px orange;
+  padding: 0px;
+  position: relative;
+
+  div.b-toolbar {
+	  padding: 2px;
+	  margin:  1px;
+	  background: darkorange;
+	
+	  table {
+		  width: 100%;
+		
+		  td {
+		    padding: 2px;
+			}
+		}
+		
+		img {
+			border: none;
+		}
+	}
+	
+	div.b-toolbar, div.b-toolbar td {
+    font: normal 12px Lucida Grande, Verdana;
+	  color: white;		
+	}
+	
+	div.b-content {
+	  padding: 4px 6px;
+	
+	  em.b-empty {
+		  color: #777;
+		  font-size: 11px;
+		}
+	}
+}
+
+div.b-default {
+	div.b-area {
+	  border-color: purple;
+  }
+
+	div.b-toolbar {
+	  background: purple;	
+	}
+}
+
+div.b-u-default {
+	div.b-area {
+	  border-color: #777;
+  }
+
+  div.b-toolbar {
+	  background: #777;	
+  }
+}
+
+div.b-notice {
+	background: #FFFFC1 url(/images/glyphs/information.png) no-repeat 5px 8px;
+	color: #000;
+	font: normal 11px Verdana;
+	padding: 10px;
+	padding-left: 25px;
+	-moz-border-radius: 8px;
+
+	a {
+		color: darkorange;
+		font-weight: bold;
+		padding: 3px 1px;
+		text-decoration: none;
+
+		:hover {
+			background: darkorange;
+			color: #fff;
+		}
+	}
+}
+
+div#b-toolbar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 3px 0 0 0;
+	text-indent: 3px;
+	width: 100%;
+	height: 21px;
+	color: yellow;
+	background: darkorange;
+
+	a {
+		font: normal 12px Verdana;
+	  text-decoration: none;
+	  color: #fff;
+	  padding: 3px;
+	
+		:hover {
+  	  background: purple;
+		}
+	}
+}
+
+html body {
+	margin-top: 24px !important;
+}

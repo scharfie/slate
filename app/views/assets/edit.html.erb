@@ -1,0 +1,8 @@
+<% heading 'Editing ' + span(resource.name) %>
+
+<% form_for_resource do |form| %>
+  <%= form.text_field :name, :value => resource.name, :size => 45 %>
+  <% form.actions do %>
+    <%= submit_tag 'Save' %>
+  <% end %>
+<% end %>  

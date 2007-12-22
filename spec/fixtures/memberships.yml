@@ -1,0 +1,11 @@
+cbscharf_test_space:
+  id: 1
+  user_id: 1
+  space_id: 1
+  role: 1
+  
+cbscharf_admin_space:
+  id: 2
+  user_id: 1
+  space_id: 2
+  role: 2

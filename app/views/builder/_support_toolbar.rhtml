@@ -1,0 +1,9 @@
+<div id="b-toolbar">
+  <% %w(editor preview production).each do |mode| %>
+    <%= link_to(mode.capitalize, :mode => 
+      mode == 'editor' ? nil : mode) unless send(mode + '?') %>
+  <% end %>  
+  |
+  <%= link_to 'Dashboard', space_dashboard_url(@space) %>
+  <%= link_to 'Pages', space_pages_url(@space) %>
+</div>

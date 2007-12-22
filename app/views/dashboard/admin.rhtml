@@ -1,0 +1,7 @@
+<% heading 'Dashboard (Admin)' %>
+
+<% toolbar_item link_to('Create space', new_space_url) %>
+
+<h3>Spaces</h3>
+
+<%= render :partial => 'space', :collection => Space.find(:all) %>

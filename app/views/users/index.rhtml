@@ -1,0 +1,54 @@
+<h1>Listing users</h1>
+
+<table>
+  <tr>
+    <th>Username</th>
+    <th>Password</th>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Initial</th>
+    <th>Display name</th>
+    <th>Telephone number</th>
+    <th>Email address</th>
+    <th>Login attempts</th>
+    <th>Locked</th>
+    <th>Requested on</th>
+    <th>Verified on</th>
+    <th>Approved on</th>
+    <th>Approved by</th>
+    <th>Expires on</th>
+    <th>Created on</th>
+    <th>Last login</th>
+    <th>Reason for account</th>
+  </tr>
+  
+<% for user in @users %>
+  <tr>
+    <td><%=h user.username %></td>
+    <td><%=h user.password %></td>
+    <td><%=h user.first_name %></td>
+    <td><%=h user.last_name %></td>
+    <td><%=h user.initial %></td>
+    <td><%=h user.display_name %></td>
+    <td><%=h user.telephone_number %></td>
+    <td><%=h user.email_address %></td>
+    <td><%=h user.login_attempts %></td>
+    <td><%=h user.locked %></td>
+    <td><%=h user.requested_on %></td>
+    <td><%=h user.verified_on %></td>
+    <td><%=h user.approved_on %></td>
+    <td><%=h user.approved_by %></td>
+    <td><%=h user.expires_on %></td>
+    <td><%=h user.created_on %></td>
+    <td><%=h user.last_login %></td>
+    <td><%=h user.reason_for_account %></td>
+    <td><%= link_to 'Show', user_path(user) %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user_path(user), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New user', new_user_path %>

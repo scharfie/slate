@@ -1,0 +1,199 @@
+body {
+	color: #333;
+	background: #e5e5e5;
+	margin: 0;
+	padding: 0;
+	font-family: "Lucida Grande", "Arial";
+	font-size: 0.9em;
+}
+
+a {
+	:link, :visited {
+  	color: #339;
+  }
+}
+
+#header {
+	position: relative;
+	background: #242424;
+	padding: 10px 10px 0;
+
+  h1 {
+	  font-size: 1.8em;
+	  line-height: 1.5;
+	  display: inline;
+	  color: #555;
+	
+	  span.space {
+		  border-left: solid 1px #555;
+			padding-left: 0.4em;
+			margin-left: 0.4em;
+		}
+		
+	  a {
+		  color: #fff;
+		  text-decoration: none;
+		
+		  :hover {
+			  text-decoration: underline;
+		  }
+		}
+
+		
+	}
+	
+	div.hr {
+		clear: both;
+		
+		hr {
+			display: none;
+		}
+	}
+	
+	ul {
+  	padding: 0;
+		margin: 0;
+	  list-style: none;
+	}
+	
+	ul#meta-nav {
+	  position: absolute;
+	  right: 10px;
+	  top: 10px;
+	  line-height: 1.5;
+	
+	  li {
+		  float: left;
+		
+		  .separator {
+    	  color: #555;
+  		  margin: auto 4px;
+			}
+		
+		  a {
+  			font-size: 0.95em;
+        color: #fff;
+				text-decoration: none;
+				
+				:hover {
+					text-decoration: underline;
+				}
+			}
+		}	
+		
+		input {
+			font-size: 0.95em;
+			padding: 0 3px;
+		}
+	}
+	
+	h2#navigation {
+		display: none;
+	}
+	
+	ul#nav {
+		padding-top: 5px;
+		float: left;
+		
+		li {
+			float: left;
+			
+			a {
+				font-size: 0.9em;
+				text-decoration: none;
+				background: #333;
+				color: #fff;
+			  display: block;
+			  padding: 5px 8px 6px;
+			  margin-right: 2px;
+			
+			  :hover {
+				  background: #555;
+		 	  }
+			
+			  .current {
+   				font-weight: bold;
+				  background: #e5e5e5;
+				  color: #333;
+				}
+			}
+		}	
+	}
+}
+
+/** forms **/
+div.field {
+	margin-bottom: 5px;
+}
+
+div.actions {
+	background: #f5f5f5;
+	padding: 10px;
+	margin: 10px -10px -30px;
+	z-index: 100;
+	position: relative;
+}
+
+input {
+	.text, .password, .submit, .button, button {
+  	font: normal 14px "Lucida Grande", verdana;	
+  	padding: 3px;	
+	}
+	
+	.primary {
+		font-size: 22px;
+	}
+}
+
+label {
+	font: normal 14px "Lucida Grande", Helvetica, "Trebuchet MS";
+	color: #444;
+ 
+  span {
+  	color: #999;
+	  font-weight: normal;
+  }
+}
+
+/** footer **/
+#footer {
+	margin: 10px;
+}
+
+/** content **/
+h1,h2,h3,h4,h5,h6 {
+	font-weight: normal;
+}
+
+h2 {
+	font-size: 1.2em;
+	margin: 0;
+	background: #333;
+	color: #fff;
+	padding: 10px;
+	
+	span {
+	  color: #999;	
+	}
+}
+
+img {
+	border: none;
+}
+
+#body {
+	margin: 10px;
+	padding-right: 10px;
+	background: #fff url(/images/columns.png) repeat-y top right;
+
+	div.bottom {
+		margin-right: -10px;
+		height: 25px;
+	  background: url(/images/columns-bottom.png) no-repeat top right;	
+	}
+}
+
+
+#content {
+	padding: 10px;
+}

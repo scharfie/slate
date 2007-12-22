@@ -1,0 +1,15 @@
+sqlite:
+  adapter: sqlite3
+  database: dbstring_sqlite.sqlite3
+  
+mysql:
+  adapter: mysql
+  database: dbstring_mysql
+  host: localhost
+  username: root
+  password:  
+  
+postgresql:
+  adapter: postgresql
+  database: dbstring_postgresql
+  host: localhost

@@ -1,0 +1,24 @@
+table.assets {
+	width: 100%;
+	
+	h3 {
+		margin: 0;
+		font-size: 1.4em;
+	}
+
+	td.preview {
+		vertical-align: center;
+		text-align: center;
+		padding: 4px;
+		width: 75px;
+	}
+
+	td.info {
+		color: #777;
+		padding: 4px 8px;
+	}
+	
+	tr.odd td {
+		background: #f5f5f5;
+	}
+}

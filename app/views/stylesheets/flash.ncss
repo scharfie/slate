@@ -1,0 +1,39 @@
+div#flash {
+	div {
+	  .flash {
+		  margin-bottom: 10px;
+	    padding: 0.75em 30px;
+		  font: bold 1em Lucida Grande;
+		  border: 1px dotted transparent;
+		  border-width: 1px 0;
+	  }
+	
+	  .notice {
+		  background: #eeffee url(/images/glyphs/check.png) no-repeat 7px center;
+		  border-color: #9c9;
+		  color: #696;
+		}
+		
+		.error {
+			background: #ffb3b3 url(/images/glyphs/error.png) no-repeat 7px center;
+			background-color: #FFE5E5;
+			border-color: #c99;
+			color: #966;
+		}
+  }
+
+  a.close {
+	  font-weight: bold;
+	  text-align: right;
+	  float: right;
+	  margin-right: -15px;
+	  margin-top: -1.25em;
+	  text-decoration: none;
+		color: #966;
+	
+	  :hover {
+		  background: none;
+	  }
+	
+  } 	
+}

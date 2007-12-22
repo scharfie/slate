@@ -1,0 +1,7 @@
+<div id="flash">
+<% flash.each do |key, msg| %>
+  <% next if msg.nil? %>
+  <% msg += ' ' + link_to_function('&times;', 'this.parentNode.style.display="none";', :class => 'close') %>
+  <%= content_tag(:div, msg, :class => "flash #{key}") %>
+<% end %>  
+</div>

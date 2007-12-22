@@ -1,0 +1,11 @@
+<li>
+  <%= link_to page.name, resource_path(page), :class => 'page' %>
+  <span class="actions">
+    <%= link_to 'Edit', edit_resource_path(page) %>
+    <%= link_to 'Add child', new_resource_path(page) %>
+    <%= link_to 'Destroy', resource_path(page), :method => :delete, :confirm => 'Destroy this page?' %>
+  </span>  
+  <ul>
+    <%= render :partial => 'page', :collection => page.children %>
+  </ul>  
+</li>
