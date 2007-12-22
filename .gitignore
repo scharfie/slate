@@ -2,3 +2,5 @@ log/*.log
 tmp/**/*
 .DS_Store
 db/*.sqlite3
+lib/tasks/wvu.rake
+config/slate/wvu.rb
