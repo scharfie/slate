@@ -1,0 +1,1 @@
+# This file must exist to be a valid slate plugin

@@ -19,6 +19,10 @@ Rails::Initializer.run do |config|
   # Only load the plugins named here, by default all plugins in vendor/plugins are loaded
   # config.plugins = %W( exception_notification ssl_requirement )
 
+  # locate slate plugins
+  require File.join(File.dirname(__FILE__), '../lib/slate/plugin/locator.rb')  
+  config.plugin_locators += [Slate::Plugin::Locator]
+
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
