@@ -1,3 +1,5 @@
+require 'slate/routing'
+
 ActionController::Routing::Routes.draw do |map|
   # Load plugin route definitions
   Slate.plugins.each do |plugin|
