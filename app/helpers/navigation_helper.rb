@@ -21,7 +21,17 @@ protected
     items << ['Dashboard', { :match => :exact, :url => space_dashboard_path(Space.active) }]
     items << 'Pages'
     items << ['Files', { :matches => 'assets', :url => space_assets_path(Space.active) }]
+    items += plugin_navigation_items
     items << ['Settings', { :match => :exact, :url => edit_space_path(Space.active) }]
+  end
+
+  # returns navigation items defined in plugins
+  def plugin_navigation_items
+    builder = Slate::Plugin::Navigation.new
+    Slate.plugins.each do |plugin|
+      plugin.navigation_definitions.each { |block| self.instance_exec(builder, &block) } #block.call(builder, controller) }
+    end
+    builder.items
   end
 
 public

@@ -6,19 +6,39 @@ module Slate
   self.plugins = []
   
   class Plugin < Rails::Plugin
+    class Navigation
+      attr_accessor :items
+    
+      def add(name=nil, options={})
+        (@items ||= []) << [name, options]
+      end
+    end
+    
     class << self
+      def navigation(&block)
+        self.navigation_definitions << block
+      end
+      
       def routes(&block)
         self.route_definitions << block
       end
-    
+      
+      def navigation_definitions
+        @navigation_definitions ||= []
+      end
+      
       def route_definitions
         @route_definitions ||= []
-      end  
+      end
     end
     
     # convenience accessor to class route definitions
     def route_definitions
       self.class.route_definitions
+    end
+    
+    def navigation_definitions
+      self.class.navigation_definitions
     end
 
     def valid?
