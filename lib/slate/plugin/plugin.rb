@@ -41,10 +41,15 @@ module Slate
       self.class.navigation_definitions
     end
 
-    def migrator
-      Slate::Plugin::Migrator.new(self)
+    def migrate(target_version = nil) 
+      Slate::Plugin::Migrator.migrate_plugin(self, target_version)
     end
-
+    
+    # Path to migrations directory
+    def migrations_path
+      File.join(directory, 'db/migrate')
+    end    
+    
     def schema_info
       Slate::Plugin::SchemaInfo.find_or_create_by_name(plugin_name)
     end
@@ -52,6 +57,8 @@ module Slate
     def plugin_name
       self.class.to_s
     end
+    
+    alias_method :name, :plugin_name
     
     def valid?
       File.directory?(directory) && 
