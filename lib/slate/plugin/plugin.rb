@@ -41,6 +41,18 @@ module Slate
       self.class.navigation_definitions
     end
 
+    def migrator
+      Slate::Plugin::Migrator.new(self)
+    end
+
+    def schema_info
+      Slate::Plugin::SchemaInfo.find_or_create_by_name(plugin_name)
+    end
+    
+    def plugin_name
+      self.class.to_s
+    end
+    
     def valid?
       File.directory?(directory) && 
         has_app_directory? && 
