@@ -64,21 +64,22 @@ module Spec
         @_defined_description || @_matcher_description || "NO NAME"
       end
       
-      def set_instance_variables_from_hash(instance_variables)
-        instance_variables.each do |variable_name, value|
-          unless ['@_implementation', '@_defined_description', '@_matcher_description', '@method_name'].index(variable_name)
+      def set_instance_variables_from_hash(ivars)
+        ivars.each do |variable_name, value|
+          # Ruby 1.9 requires variable.to_s on the next line
+          unless ['@_implementation', '@_defined_description', '@_matcher_description', '@method_name'].include?(variable_name.to_s)
             instance_variable_set variable_name, value
           end
         end
       end
 
       def run_with_description_capturing
-        return_value = nil
-        
-        @_matcher_description = Matchers.capture_generated_description do
-          return_value = instance_eval(&(@_implementation || PENDING_EXAMPLE_BLOCK))
+        begin
+          return instance_eval(&(@_implementation || PENDING_EXAMPLE_BLOCK))
+        ensure
+          @_matcher_description = Spec::Matchers.generated_description
+          Spec::Matchers.clear_generated_description
         end
-        return_value
       end
       
       protected
