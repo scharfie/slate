@@ -1,6 +1,5 @@
-require "#{File.dirname(__FILE__)}/../abstract_unit"
-require "#{File.dirname(__FILE__)}/fake_controllers"
-require "action_controller/test_case"
+require 'abstract_unit'
+require 'controller/fake_controllers'
 
 class TestTest < Test::Unit::TestCase
   class TestController < ActionController::Base
@@ -616,8 +615,8 @@ end
 
 class CrazyNameTest < ActionController::TestCase
   tests ContentController
+
   def test_controller_class_can_be_set_manually_not_just_inferred
     assert_equal ContentController, self.class.controller_class
   end
 end
-

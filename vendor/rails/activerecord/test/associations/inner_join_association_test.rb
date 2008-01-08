@@ -5,35 +5,35 @@ require 'fixtures/author'
 require 'fixtures/category'
 require 'fixtures/categorization'
 
-class InnerJoinAssociationTest < Test::Unit::TestCase
+class InnerJoinAssociationTest < ActiveSupport::TestCase
   fixtures :authors, :posts, :comments, :categories, :categories_posts, :categorizations
 
   def test_construct_finder_sql_creates_inner_joins
     sql = Author.send(:construct_finder_sql, :joins => :posts)
-    assert_match /INNER JOIN `?posts`? ON `?posts`?.author_id = authors.id/, sql
+    assert_match /INNER JOIN .?posts.? ON .?posts.?.author_id = authors.id/, sql
   end
   
   def test_construct_finder_sql_cascades_inner_joins
     sql = Author.send(:construct_finder_sql, :joins => {:posts => :comments})
-    assert_match /INNER JOIN `?posts`? ON `?posts`?.author_id = authors.id/, sql
-    assert_match /INNER JOIN `?comments`? ON `?comments`?.post_id = posts.id/, sql
+    assert_match /INNER JOIN .?posts.? ON .?posts.?.author_id = authors.id/, sql
+    assert_match /INNER JOIN .?comments.? ON .?comments.?.post_id = posts.id/, sql
   end
   
   def test_construct_finder_sql_inner_joins_through_associations
     sql = Author.send(:construct_finder_sql, :joins => :categorized_posts)
-    assert_match /INNER JOIN `?categorizations`?.*INNER JOIN `?posts`?/, sql
+    assert_match /INNER JOIN .?categorizations.?.*INNER JOIN .?posts.?/, sql
   end
   
   def test_construct_finder_sql_applies_association_conditions
     sql = Author.send(:construct_finder_sql, :joins => :categories_like_general, :conditions => "TERMINATING_MARKER")
-    assert_match /INNER JOIN `?categories`? ON.*AND.*`?General`?.*TERMINATING_MARKER/, sql
+    assert_match /INNER JOIN .?categories.? ON.*AND.*.?General.?.*TERMINATING_MARKER/, sql
   end
 
   def test_construct_finder_sql_unpacks_nested_joins
     sql = Author.send(:construct_finder_sql, :joins => {:posts => [[:comments]]})
     assert_no_match /inner join.*inner join.*inner join/i, sql, "only two join clauses should be present"
-    assert_match /INNER JOIN `?posts`? ON `?posts`?.author_id = authors.id/, sql
-    assert_match /INNER JOIN `?comments`? ON `?comments`?.post_id = `?posts`?.id/, sql
+    assert_match /INNER JOIN .?posts.? ON .?posts.?.author_id = authors.id/, sql
+    assert_match /INNER JOIN .?comments.? ON .?comments.?.post_id = .?posts.?.id/, sql
   end
 
   def test_construct_finder_sql_ignores_empty_joins_hash
@@ -67,7 +67,7 @@ class InnerJoinAssociationTest < Test::Unit::TestCase
   def test_find_with_implicit_inner_joins_does_not_set_associations
     authors = Author.find(:all, :select => 'authors.*', :joins => :posts)
     assert !authors.empty?, "expected authors to be non-empty"
-    assert authors.all? {|a| !a.send(:instance_variables).include?("@posts")}, "expected no authors to have the @posts association loaded"
+    assert authors.all? {|a| !a.send(:instance_variable_names).include?("@posts")}, "expected no authors to have the @posts association loaded"
   end
   
   def test_count_honors_implicit_inner_joins

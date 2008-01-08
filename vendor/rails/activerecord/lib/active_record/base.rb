@@ -548,8 +548,14 @@ module ActiveRecord #:nodoc:
       #   Person.exists?(:name => "David")
       #   Person.exists?(['name LIKE ?', "%#{query}%"])
       def exists?(id_or_conditions)
-        !find(:first, :select => "#{quoted_table_name}.#{primary_key}",
-              :conditions => expand_id_conditions(id_or_conditions)).nil?
+        connection.select_all(
+          construct_finder_sql(
+            :select     => "#{quoted_table_name}.#{primary_key}", 
+            :conditions => expand_id_conditions(id_or_conditions), 
+            :limit      => 1
+          ), 
+          "#{name} Exists"
+        ).size > 0
       end
 
       # Creates an object (or multiple objects) and saves it to the database, if validations pass.
@@ -671,11 +677,11 @@ module ActiveRecord #:nodoc:
       #   Billing.update_all( "author = 'David'", "title LIKE '%Rails%'",
       #                         :order => 'created_at', :limit => 5 )
       def update_all(updates, conditions = nil, options = {})
-        sql  = "UPDATE #{table_name} SET #{sanitize_sql_for_assignment(updates)} "
+        sql  = "UPDATE #{quoted_table_name} SET #{sanitize_sql_for_assignment(updates)} "
         scope = scope(:find)
         add_conditions!(sql, conditions, scope)
-        add_order!(sql, options[:order], scope)
-        add_limit!(sql, options, scope)
+        add_order!(sql, options[:order], nil)
+        add_limit!(sql, options, nil)
         connection.update(sql, "#{name} Update")
       end
 
@@ -1487,7 +1493,7 @@ module ActiveRecord #:nodoc:
 
             self.class_eval %{
               def self.#{method_id}(*args)
-                options = args.last.is_a?(Hash) ? args.pop : {}
+                options = args.extract_options!
                 attributes = construct_attributes_from_arguments([:#{attribute_names.join(',:')}], args)
                 finder_options = { :conditions => attributes }
                 validate_find_options(options)
@@ -1866,10 +1872,13 @@ module ActiveRecord #:nodoc:
         end
 
         def expand_range_bind_variables(bind_vars) #:nodoc:
-          bind_vars.each_with_index do |var, index|
-            bind_vars[index, 1] = [var.first, var.last] if var.is_a?(Range)
+          bind_vars.sum do |var|
+            if var.is_a?(Range)
+              [var.first, var.last]
+            else
+              [var]
+            end
           end
-          bind_vars
         end
 
         def quote_bound_value(value) #:nodoc:
@@ -1949,6 +1958,22 @@ module ActiveRecord #:nodoc:
       def to_param
         # We can't use alias_method here, because method 'id' optimizes itself on the fly.
         (id = self.id) ? id.to_s : nil # Be sure to stringify the id for routes
+      end
+      
+      # Returns a cache key that can be used to identify this record. Examples:
+      #
+      #   Product.new.cache_key     # => "products/new"
+      #   Product.find(5).cache_key # => "products/5" (updated_at not available)
+      #   Person.find(5).cache_key  # => "people/5-20071224150000" (updated_at available)
+      def cache_key
+        case 
+        when new_record?
+          "#{self.class.name.tableize}/new"
+        when self[:updated_at]
+          "#{self.class.name.tableize}/#{id}-#{updated_at.to_s(:number)}"
+        else
+          "#{self.class.name.tableize}/#{id}"
+        end
       end
 
       def id_before_type_cast #:nodoc:
@@ -2043,28 +2068,28 @@ module ActiveRecord #:nodoc:
         save!
       end
 
-      # Initializes the +attribute+ to zero if nil and adds one. Only makes sense for number-based attributes. Returns self.
-      def increment(attribute)
+      # Initializes the +attribute+ to zero if nil and adds the value passed as +by+ (default is one). Only makes sense for number-based attributes. Returns self.
+      def increment(attribute, by = 1)
         self[attribute] ||= 0
-        self[attribute] += 1
+        self[attribute] += by
         self
       end
 
       # Increments the +attribute+ and saves the record.
-      def increment!(attribute)
-        increment(attribute).update_attribute(attribute, self[attribute])
+      def increment!(attribute, by = 1)
+        increment(attribute, by).update_attribute(attribute, self[attribute])
       end
 
-      # Initializes the +attribute+ to zero if nil and subtracts one. Only makes sense for number-based attributes. Returns self.
-      def decrement(attribute)
+      # Initializes the +attribute+ to zero if nil and subtracts the value passed as +by+ (default is one). Only makes sense for number-based attributes. Returns self.
+      def decrement(attribute, by = 1)
         self[attribute] ||= 0
-        self[attribute] -= 1
+        self[attribute] -= by
         self
       end
 
       # Decrements the +attribute+ and saves the record.
-      def decrement!(attribute)
-        decrement(attribute).update_attribute(attribute, self[attribute])
+      def decrement!(attribute, by = 1)
+        decrement(attribute, by).update_attribute(attribute, self[attribute])
       end
 
       # Turns an +attribute+ that's currently true into false and vice versa. Returns self.

@@ -1,10 +1,26 @@
 *SVN*
 
+* Fixtures: removed support for the ancient pre-YAML file format.  #10736 [John Barnette]
+
+* More thoroughly quote table names.  #10698 [dimdenis, lotswholetime, Jeremy Kemper]
+
+* update_all ignores scoped :order and :limit, so post.comments.update_all doesn't try to include the comment order in the update statement.  #10686 [Brendan Ribera]
+
+* Added ActiveRecord::Base.cache_key to make it easier to cache Active Records in combination with the new ActiveSupport::Cache::* libraries [DHH]
+
+* Make sure CSV fixtures are compatible with ruby 1.9's new csv implementation. [JEG2]
+
+* Added by parameter to increment, decrement, and their bang varieties so you can do player1.increment!(:points, 5) #10542 [Sam]
+
+* Optimize ActiveRecord::Base#exists? to use #select_all instead of #find.  Closes #10605 [jamesh, fcheung, protocool]
+
+* Don't unnecessarily load has_many associations in after_update callbacks.  Closes #6822 [stopdropandrew, canadaduane]
+
 * Eager belongs_to :include infers the foreign key from the association name rather than the class name.  #10517 [Jonathan Viney]
 
 * SQLite: fix rename_ and remove_column for columns with unique indexes.  #10576 [Brandon Keepers]
 
-* Ruby 1.9 compatibility.  [Jeremy Kemper]
+* Ruby 1.9 compatibility.  #10655 [Jeremy Kemper, Dirkjan Bussink]
 
 
 *2.0.2* (December 16th, 2007)
@@ -66,7 +82,7 @@ so newlines etc are escaped #10385 [Norbert Crombach]
 
 * Dynamic finders on association collections respect association :order and :limit.  #10211, #10227 [Patrick Joyce, Rick Olson, Jack Danger Canty]
 
-* Add 'foxy' support for fixtures of polymorphic associations. #10183 [jbarnette, David Lowenfels]
+* Add 'foxy' support for fixtures of polymorphic associations. #10183 [John Barnette, David Lowenfels]
 
 * validates_inclusion_of and validates_exclusion_of allow formatted :message strings.  #8132 [devrieda, Mike Naberezny]
 
@@ -114,7 +130,7 @@ so newlines etc are escaped #10385 [Norbert Crombach]
     - autofill timestamp columns
     - support YAML defaults
     - fixture label interpolation
-  Enabled for fixtures that correspond to a model class and don't specify a primary key value.  #9981 [jbarnette]
+  Enabled for fixtures that correspond to a model class and don't specify a primary key value.  #9981 [John Barnette]
 
 * Add docs explaining how to protect all attributes using attr_accessible with no arguments. Closes #9631 [boone, rmm5t]
 

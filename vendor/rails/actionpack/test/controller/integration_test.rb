@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + '/../abstract_unit'
-
-$:.unshift File.dirname(__FILE__) + '/../../../railties/lib'
+require 'abstract_unit'
 require 'action_controller/integration'
 
 uses_mocha 'integration' do

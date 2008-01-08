@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/../abstract_unit'
-require File.dirname(__FILE__) + '/fake_models'
+require 'abstract_unit'
+require 'controller/fake_models'
 
 module Fun
   class GamesController < ActionController::Base
@@ -55,6 +55,14 @@ class TestController < ActionController::Base
 
   def render_custom_code
     render :text => "hello world", :status => 404
+  end
+
+  def render_text_with_nil
+    render :text => nil
+  end
+
+  def render_text_with_false
+    render :text => false
   end
 
   def render_nothing_with_appendix
@@ -261,6 +269,17 @@ class RenderTest < Test::Unit::TestCase
     get :render_custom_code
     assert_response 404
     assert_equal 'hello world', @response.body
+  end
+
+  def test_render_text_with_nil
+    get :render_text_with_nil
+    assert_response 200
+    assert_equal '', @response.body
+  end
+
+  def test_render_text_with_false
+    get :render_text_with_false
+    assert_equal 'false', @response.body
   end
 
   def test_render_nothing_with_appendix

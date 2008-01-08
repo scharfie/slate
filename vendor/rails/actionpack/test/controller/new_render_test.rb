@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/../abstract_unit'
-require File.dirname(__FILE__) + '/fake_models'
+require 'abstract_unit'
+require 'controller/fake_models'
 
 class CustomersController < ActionController::Base
 end
@@ -361,10 +361,18 @@ class NewRenderTestController < ActionController::Base
     render :action => "calling_partial_with_layout"
   end
 
+  def render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout
+    render :action => "calling_partial_with_layout"
+  end
+
   def render_using_layout_around_block
     render :action => "using_layout_around_block"
   end
 
+  def render_using_layout_around_block_in_main_layout_and_within_content_for_layout
+    render :action => "using_layout_around_block"
+  end
+  
   def rescue_action(e) raise end
     
   private
@@ -387,6 +395,10 @@ class NewRenderTestController < ActionController::Base
           "layouts/builder"
         when "action_talk_to_layout", "layout_overriding_layout"
           "layouts/talk_from_action"
+        when "render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout"
+          "layouts/partial_with_layout"
+        when "render_using_layout_around_block_in_main_layout_and_within_content_for_layout"
+          "layouts/block_with_layout"
       end
     end
 end
@@ -495,6 +507,7 @@ class NewRenderTest < Test::Unit::TestCase
     ActionController::Base.protected_variables_cache = nil
 
     get :hello_world
+    assert !assigns.include?('_request'), '_request should not be in assigns'
     assert !assigns.include?('request'), 'request should not be in assigns'
 
     ActionController::Base.view_controller_internals = true
@@ -824,9 +837,20 @@ EOS
     get :render_call_to_partial_with_layout
     assert_equal "Before (David)\nInside from partial (David)\nAfter", @response.body
   end
-  
+
+  def test_render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout
+    get :render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout
+    assert_equal "Before (Anthony)\nInside from partial (Anthony)\nAfter\nBefore (David)\nInside from partial (David)\nAfter\nBefore (Ramm)\nInside from partial (Ramm)\nAfter", @response.body
+  end
+
   def test_using_layout_around_block
-    get :using_layout_around_block
+    get :render_using_layout_around_block
     assert_equal "Before (David)\nInside from block\nAfter", @response.body
   end
+
+  def test_using_layout_around_block_in_main_layout_and_within_content_for_layout
+    get :render_using_layout_around_block_in_main_layout_and_within_content_for_layout
+    assert_equal "Before (Anthony)\nInside from first block in layout\nAfter\nBefore (David)\nInside from block\nAfter\nBefore (Ramm)\nInside from second block in layout\nAfter\n", @response.body
+  end
+
 end

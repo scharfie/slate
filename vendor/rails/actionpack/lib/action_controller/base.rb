@@ -850,8 +850,8 @@ module ActionController #:nodoc:
           response.headers["Location"] = url_for(location)
         end
 
-        if text = options[:text]
-          render_for_text(text, options[:status])
+        if options.has_key?(:text)
+          render_for_text(options[:text], options[:status])
 
         else
           if file = options[:file]
@@ -1210,7 +1210,7 @@ module ActionController #:nodoc:
 
       def add_instance_variables_to_assigns
         @@protected_variables_cache ||= Set.new(protected_instance_variables)
-        instance_variables.each do |var|
+        instance_variable_names.each do |var|
           next if @@protected_variables_cache.include?(var)
           @assigns[var[1..-1]] = instance_variable_get(var)
         end

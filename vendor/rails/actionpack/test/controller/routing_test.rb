@@ -1,5 +1,5 @@
-require "#{File.dirname(__FILE__)}/../abstract_unit"
-require "#{File.dirname(__FILE__)}/fake_controllers"
+require 'abstract_unit'
+require 'controller/fake_controllers'
 require 'action_controller/routing'
 
 class MilestonesController < ActionController::Base
@@ -31,8 +31,8 @@ class UriReservedCharactersRoutingTest < Test::Unit::TestCase
     safe, unsafe = %w(: @ & = + $ , ;), %w(^ / ? # [ ])
     hex = unsafe.map { |char| '%' + char.unpack('H2').first.upcase }
 
-    @segment = "#{safe}#{unsafe}".freeze
-    @escaped = "#{safe}#{hex}".freeze
+    @segment = "#{safe.join}#{unsafe.join}".freeze
+    @escaped = "#{safe.join}#{hex.join}".freeze
   end
 
   def test_route_generation_escapes_unsafe_path_characters

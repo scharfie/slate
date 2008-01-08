@@ -1065,7 +1065,8 @@ module ActionView
     end
 
     # Converts chained method calls on DOM proxy elements into JavaScript chains 
-    class JavaScriptProxy < BasicObject #:nodoc:
+    class JavaScriptProxy < ActiveSupport::BasicObject #:nodoc:
+
       def initialize(generator, root = nil)
         @generator = generator
         @generator << root if root
@@ -1203,7 +1204,7 @@ module ActionView
         append_enumerable_function!("zip(#{arguments_for_call arguments}")
         if block
           function_chain[-1] += ", function(array) {"
-          yield ActiveSupport::JSON::Variable.new('array')
+          yield ::ActiveSupport::JSON::Variable.new('array')
           add_return_statement!
           @generator << '});'
         else
