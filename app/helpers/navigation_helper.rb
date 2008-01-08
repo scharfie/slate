@@ -29,9 +29,9 @@ protected
   def plugin_navigation_items
     builder = Slate::Plugin::Navigation.new
     Slate.plugins.each do |plugin|
-      plugin.navigation_definitions.each { |block| self.instance_exec(builder, &block) } #block.call(builder, controller) }
+      plugin.navigation_definitions.each { |block| self.instance_exec(builder, &block) }
     end
-    builder.items
+    builder.items || []
   end
 
 public

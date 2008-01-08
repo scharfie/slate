@@ -1,2 +1,3 @@
---exclude "spec/*,gems/*" 
+--exclude "spec/*,gems/*,slate/plugin/*,slate/routing.rb" 
 --rails
+--text-report

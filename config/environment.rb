@@ -28,10 +28,11 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
-  # locate slate plugins
   require File.join(File.dirname(__FILE__), '../lib/slate/plugin/locator.rb')  
-  config.plugin_locators += [Slate::Plugin::Locator]
 
+  # locate slate plugins unless we're in test environment
+  config.plugin_locators += [Slate::Plugin::Locator] unless RAILS_ENV =~ /test/
+  
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
