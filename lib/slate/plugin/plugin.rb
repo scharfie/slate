@@ -12,6 +12,16 @@ module Slate
       def add(name=nil, options={})
         (@items ||= []) << [name, options]
       end
+      
+      def self.items(controller)
+        builder = self.new
+        Slate.plugins.each do |plugin|
+          plugin.navigation_definitions.each do |block| 
+            controller.instance_exec(builder, &block)
+          end  
+        end
+        builder.items || []
+      end
     end
     
     class << self

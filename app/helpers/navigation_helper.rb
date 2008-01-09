@@ -27,11 +27,7 @@ protected
 
   # returns navigation items defined in plugins
   def plugin_navigation_items
-    builder = Slate::Plugin::Navigation.new
-    Slate.plugins.each do |plugin|
-      plugin.navigation_definitions.each { |block| self.instance_exec(builder, &block) }
-    end
-    builder.items || []
+    Slate::Plugin::Navigation.items(self)
   end
 
 public
