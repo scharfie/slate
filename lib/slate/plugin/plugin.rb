@@ -9,10 +9,13 @@ module Slate
     class Navigation
       attr_accessor :items
     
+      # Adds item to the navigation items collection
       def add(name=nil, options={})
         (@items ||= []) << [name, options]
       end
       
+      # Returns all navigation items by evaluating
+      # them in the context of the given controller
       def self.items(controller)
         builder = self.new
         Slate.plugins.each do |plugin|
@@ -42,15 +45,17 @@ module Slate
       end
     end
     
-    # convenience accessor to class route definitions
+    # Convenience accessor to class route definitions
     def route_definitions
       self.class.route_definitions
     end
     
+    # Convenience accessor to class navigation definitions
     def navigation_definitions
       self.class.navigation_definitions
     end
 
+    # Migrates this plugin to the target version
     def migrate(target_version = nil) 
       Slate::Plugin::Migrator.migrate_plugin(self, target_version)
     end
@@ -60,22 +65,30 @@ module Slate
       File.join(directory, 'db/migrate')
     end    
     
+    # Returns ActiveRecord object from the plugin schema
+    # table for this plugin
     def schema_info
       Slate::Plugin::SchemaInfo.find_or_create_by_name(plugin_name)
     end
     
+    # Returns name of the plugin
     def plugin_name
       self.class.to_s
     end
     
     alias_method :name, :plugin_name
     
+    # Returns true if the current plugin is a valid
+    # Slate plugin (having an app directory and 
+    # plugin file)
     def valid?
       File.directory?(directory) && 
         has_app_directory? && 
         has_plugin_file?
     end
     
+    # Loads plugin (initializes dependencies and adds
+    # plugin to Slate.plugins)
     def load(initializer)
       return if loaded?
 

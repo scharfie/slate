@@ -2,30 +2,41 @@ require 'fileutils'
 
 module Slate
   class Plugin
+    # Returns path to assets directory in plugin
     def source_assets_path
       File.join(directory, 'assets')
     end
     
+    # Returns target path for assets (RAILS_ROOT/public)
     def target_assets_path
       File.join(RAILS_ROOT, 'public')
     end
     
+    # Returns target path for given asset by replacing
+    # the source path directory with target path directory
     def target_asset_path(path)
       path.sub(source_assets_path, target_assets_path)
     end
 
+    # Returns directory glob of all entries in 
+    # source assets path directory
     def assets
       @assets ||= Dir["#{source_assets_path}/**/*"].sort
     end
     
+    # Returns all file assets in source assets directory
     def asset_files
       assets.select { |d| File.file?(d) }
     end
     
+    # Returns all directories in source assets directory
     def asset_directories
       assets.select { |d| File.directory?(d) }
     end
     
+    # Creates directories in target assets directory
+    # based on directory structure found in source assets
+    # directory
     def create_asset_directories
       asset_directories.each do |path|
         target = target_asset_path(path)
@@ -41,6 +52,7 @@ module Slate
       end
     end
 
+    # Copies all source assets to target asset directory.
     def copy_assets(force=true)
       create_asset_directories
   
@@ -80,7 +92,9 @@ module Slate
           self.plugin.nil? || self.plugin == plugin.name
         end
         
-        def list(plugin)
+        # Returns list of all assets for each plugin
+        # or specified plugin
+        def list(plugin=nil)
           self.plugin = plugin
           
           Slate.plugins.map do |p|
@@ -89,6 +103,8 @@ module Slate
           end.compact
         end
         
+        # Copies all assets for each plugin or specified
+        # plugin
         def copy(plugin, force=true)
           self.plugin = plugin
           
@@ -102,6 +118,8 @@ module Slate
           end
         end
 
+        # Updates all assets for each plugin or specified
+        # plugin
         def update(plugin)
           copy plugin, false
         end
