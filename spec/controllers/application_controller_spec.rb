@@ -24,7 +24,7 @@ end
 
 describe ApplicationTestController do
   before(:each) do
-    request.host = 'www.example.com'
+    request.host = 'slate.local.host'
     @user = mock(User)
   end
   
@@ -35,7 +35,7 @@ describe ApplicationTestController do
     get 'some_action'
     response.should be_redirect
     response.should redirect_to(login_url)
-    session[:redirect_to].should == 'http://www.example.com/application_test/some_action'
+    session[:redirect_to].should == 'http://slate.local.host/application_test/some_action'
   end
   
   it "should render test when logged in on GET to /some_action" do
@@ -56,7 +56,7 @@ end
 
 describe ApplicationRCTestController do
   before(:each) do
-    request.host = 'www.example.com'
+    request.host = 'slate.local.host'
     @user = mock(User)
   end
    

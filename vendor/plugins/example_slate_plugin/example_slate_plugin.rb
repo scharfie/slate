@@ -11,5 +11,14 @@ class ExampleSlatePlugin < Slate::Plugin
     end
     
     map.hello 'hello', :controller => 'hello'
+    
+    map.public_routes do |m| 
+      m.connect '*page_path/:year/:month/:day/:permalink',
+        :month => nil, :day => nil, :permalink => nil,
+        :controller => 'hello', :action => 'view_blog_article',
+        :requirements => { 
+          :year => /\d{4}/
+        }
+    end  
   end
 end

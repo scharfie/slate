@@ -1,6 +1,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SpacesController do
+  before(:each) do
+    request.host = 'slate.local.host'
+  end
+
   it "should redirect to space dashboard on GET to /show" do
     controller.should_receive(:capture_user).and_return(true)
     get 'show', :id => 77

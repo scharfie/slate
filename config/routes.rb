@@ -9,8 +9,9 @@ ActionController::Routing::Routes.draw do |map|
   # public side
   # map all requests that do not have slate as the subdomain to
   # the public controller and group all parameters in page_path
-  map.connect '*page_path', :controller => 'public', :conditions => { 
-    :not_subdomain => 'slate' }
+  map.public_routes do |m|
+    m.connect '*page_path', :controller => 'public'
+  end
 
   map.default '', :controller => 'account', :action => 'login', 
     :erp => '/account/login'

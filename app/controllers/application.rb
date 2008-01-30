@@ -23,7 +23,12 @@ protected
   # before filter which assigns active user based on 
   # session.  If no user is found, a redirect to the 
   # login screen occurs
+  # 
+  # Note that this filter returns true if the first
+  # subdomain is not 'slate'
   def capture_user!
+    return true if request.subdomains.first != 'slate'
+    
     unless capture_user
       flash[:notice] = "Please sign in first and then we'll take you back."
       session[:redirect_to] = url_for(:only_path => false)

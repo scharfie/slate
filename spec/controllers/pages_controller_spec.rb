@@ -5,6 +5,8 @@ describe PagesController do
     @space = mock(Space)
     @space.stub!(:theme).and_return('theme_support')
     Space.active = @space
+    
+    request.host = 'slate.local.host'
   end
   
   it "should use PagesController" do
@@ -62,6 +64,8 @@ describe PagesController do
     @space.should_receive(:pages).and_return(Page)
     @space.stub!(:to_param).and_return(77)
     @page.stub!(:to_param).and_return(91)
+    
+    request.host = 'slate.local.host'
   end
   
   it "should redirect to edit page on GET to /show when template is nil" do

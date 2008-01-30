@@ -17,6 +17,14 @@ module Slate
         with_options :path_prefix => 'spaces/:space_id', 
           :name_prefix => 'space_', &block
       end
+      
+      # This routing helper provides an easy interface for
+      # creating a route that will be used for the public-side
+      # of slate (i.e. outside of slate admin)
+      def public_routes(&block)
+        with_options :conditions => { 
+          :not_subdomain => 'slate' }, &block
+      end
     end
   end
 end

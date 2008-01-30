@@ -4,6 +4,7 @@ describe AccountController do
   before(:each) do
     @user = mock(User)
     @user.stub!(:id).and_return(77)
+    request.host = 'slate.local.host'
   end
   
   it "should render 'login' on GET to /login" do
@@ -75,6 +76,7 @@ describe AccountController, "when logged in" do
   before(:each) do
     @user = mock(User)
     session[:user_id] = 77
+    request.host = 'slate.local.host'
   end
   
   it "should render show on GET to /" do
@@ -95,6 +97,7 @@ describe AccountController, "when not logged in" do
   before(:each) do
     @user = mock(User)
     session[:user_id] = 77
+    request.host = 'slate.local.host'
   end
   
   it "should redirect to login on GET to /" do
@@ -117,7 +120,7 @@ describe AccountController, 'new account request' do
     
     @logged_in_user = mock(User)
     
-    request.host = 'www.example.com'
+    request.host = 'slate.local.host'
   end
   
   it "should render 'new' on GET to /new" do
@@ -182,7 +185,7 @@ describe AccountController, 'new account request' do
     
     response.should be_redirect
     response.should redirect_to(login_url)
-    session[:redirect_to].should == 'http://www.example.com/account/approve/77/de1b937c7946744dad1d7f4fb2938054c15a2d56'
+    session[:redirect_to].should == 'http://slate.local.host/account/approve/77/de1b937c7946744dad1d7f4fb2938054c15a2d56'
     flash[:error].should == 'Super user is required to perform this task.'
     flash[:notice].should == nil
   end  

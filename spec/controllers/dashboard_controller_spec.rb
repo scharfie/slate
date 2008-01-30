@@ -4,6 +4,8 @@ describe DashboardController do
   before(:each) do
     @user = mock(User)
     @space = mock(Space)
+    
+    request.host = 'slate.local.host'
   end
   
   it "should render space dashboard when on GET to /spaces/1/dashboard" do
@@ -52,6 +54,8 @@ describe DashboardController, "with user logged in" do
     User.should_receive(:find_by_id).with(77).
       exactly(@verbs.length).and_return(@user)
     session[:user_id] = 77
+    
+    request.host = 'slate.local.host'
   end
   
   def any_verb_on_action_should_redirect_to_show(action)
