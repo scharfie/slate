@@ -21,8 +21,30 @@
 h2 {
 	background: none;
 	color: #222;
+	
+	.heading {
+	  background: #f5f5f5; 
+  }
 }
 
 div.actions {
 	margin-bottom: -10px;
+}
+
+textarea#account_reason_for_account {
+  width: 99%;
+}
+
+label {
+  font-weight: bold;
+}
+
+p.tip {
+  color: #777;
+  margin: 0;
+  font-size: 0.85em;
+}
+
+td.info {
+  padding-right: 5px;
 }

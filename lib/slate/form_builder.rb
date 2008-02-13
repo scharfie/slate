@@ -8,11 +8,8 @@ module Slate
   #   - added actions helper which creates <div class="actions"></div>
   #     (used for submit tags)
   class FormBuilder < ActionView::Helpers::FormBuilder
-    # creates a new form builder with default options
-    def initialize(*args)
-      super
-      self.options.merge! :default_template => 'element', :label_append => ''
-    end
+    attr_accessor_with_default :default_template, 'element'
+    attr_accessor_with_default :label_append, ''
         
     # redefine the field helpers 
     (field_helpers + %w(date_select datetime_select collection_select select)).each do |helper|
@@ -22,11 +19,9 @@ module Slate
         label = args[-1].delete(:label) { args.first.to_s.humanize }
         tip   = args[-1].delete(:tip)
 
-        template = nil
-        if args[-1].has_key?(:template)
-          template = args[-1].delete(:template)
-          return super(*args) unless template
-        end
+        template = args.last.has_key?(:template) ? args.last.delete(:template) : self.default_template
+
+        return super(*args) unless template
 
         render_form_element helper, label, tip, template, args, super(*args)
       end
@@ -45,7 +40,7 @@ module Slate
       begin
         @template.render :partial => "forms/#{template || helper}", :locals => locals
       rescue ActionView::ActionViewError
-        @template.render :partial => "forms/#{self.options[:default_template] || 'element'}", :locals => locals
+        @template.render :partial => "forms/#{self.default_template || 'element'}", :locals => locals
       end
     end
 
@@ -54,7 +49,7 @@ module Slate
     # current object, using the given label for text
     def label_for(method, label)
       return '' if label.nil?
-      label += (self.options[:label_append] || '') unless label =~ /\?$/
+      label += (self.label_append || '') unless label =~ /\?$/
       @template.content_tag('label', label, {:for => "#{@object_name}_#{method}"})
     end
     

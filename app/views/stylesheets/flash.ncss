@@ -15,11 +15,10 @@ div#flash {
 		}
 		
 		.error {
-			background: #ffb3b3 url(/images/glyphs/error.png) no-repeat 7px center;
-			background-color: #FFE5E5;
+			background: #933 url(/images/glyphs/error.png) no-repeat 7px center;
 			border-color: #c99;
-			color: #966;
-		}
+			color: #fff;
+  	}
   }
 
   a.close {

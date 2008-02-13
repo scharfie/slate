@@ -59,7 +59,7 @@ describe Slate::FormBuilder do
   # executes the block in the context of a new Slate::FormBuilder
   def form_builder(&block)
     builder = Slate::FormBuilder.new('address_book', @address_book, self, {}, block)
-    builder.options.merge! self.builder_options
+    self.builder_options.each { |k,v| builder.send(k.to_s + '=', v) }
     yield builder
   end
   

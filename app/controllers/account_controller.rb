@@ -40,6 +40,7 @@ public
   rescue Slate::UserError => e
     self.resource = resource_service.new(:username => params[resource_name][:username])
     self.resource.errors.add_to_base e.message
+    flash[:error] = e.message
   end
   
   # logout the current user
