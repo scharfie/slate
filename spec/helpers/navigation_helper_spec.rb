@@ -62,47 +62,10 @@ describe NavigationHelper, "navigation items" do
     @controller
   end
   
-  it "should prepare options for navigation item 'Custom'" do
-    should_receive(:hash_for_space_custom_url).and_return(:controller => 'custom_controller')
-    @options = options_for_navigation_item('Custom')
-    @options[:url].should == { :controller =>'custom_controller' }
-    @options[:name].should == 'Custom'
-    @options[:class].should be_nil
-  end
-  
-  it "should prepare current navigation item 'Pages'" do
-    should_receive(:hash_for_space_pages_url).and_return(:controller => 'pages')
-    @options = options_for_navigation_item('Pages')
-    @options[:url].should == { :controller => 'pages' }
-    @options[:name].should == 'Pages'
-    @options[:html][:class].should == 'current'
-    
-    navigation_item_current?(@options).should == true
-  end
-  
-  it "should prepare current navigation for item 'Dashboard' with exact matching" do
-    stub!(:url_for).and_return('spaces/1/dashboard')
-    should_receive(:hash_for_space_dashboard_url).and_return(:controller => 'dashboard')
-    
-    @options = options_for_navigation_item('Dashboard', :match => :exact)
-    @options[:url].should == { :controller => 'dashboard' }
-    @options[:name].should == 'Dashboard'
-    @options[:html][:class].should == 'current'
-    
-    navigation_item_current?(@options).should == true
-  end
-  
-  it "should prepare navigation item 'Assets' with custom options" do
-    @options = options_for_navigation_item('Assets', :url => { :controller => 'my_assets' },
-      :matches => 'files', :name => 'My Assets', :html => { :id => 'myAssets' })
-    @options[:url].should == { :controller => 'my_assets' }
-    @options[:name].should == 'My Assets'
-    @options[:html].should == { :id => 'myAssets' }
-  end
-  
   it "should create link to navigation item 'Pages'" do
-    should_receive(:hash_for_space_pages_url).and_return(:controller => 'pages')
-    @link = navigation_item('Pages')
-    @link.should == '<a href="/pages" class="current">Pages</a>'    
+    should_receive(:current_tab).and_return('Pages')
+    
+    navigation_item('Pages', space_pages_path(1)).
+      should == '<a href="/spaces/1/pages" class="current">Pages</a>'    
   end
 end

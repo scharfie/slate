@@ -6,6 +6,20 @@ module Slate
   self.plugins = []
   
   class Plugin < Rails::Plugin
+    class << self
+      attr_accessor :name, :description
+      
+      def name(value=nil)
+        @name = value if value
+        @name
+      end
+      
+      def description(value=nil)
+        @description = value if value
+        @description
+      end
+    end
+    
     class Navigation
       attr_accessor :items
     
@@ -76,7 +90,20 @@ module Slate
       self.class.to_s
     end
     
-    alias_method :name, :plugin_name
+    # Returns plugin key name
+    def key
+      @name
+    end
+    
+    # Returns the "friendly" name of the plugin
+    def name
+      self.class.name || plugin_name.gsub(/_plugin/, '').humanize
+    end
+    
+    # Returns the description of the plugin
+    def description
+      self.class.description
+    end
     
     # Returns true if the current plugin is a valid
     # Slate plugin (having an app directory and 

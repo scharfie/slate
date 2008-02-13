@@ -3,6 +3,13 @@
 <%= form.text_field :domain %>
 <%= form.text_field :theme %>
 
+<% if Space.active %>
+  <h3>Plugins</h3>
+  <% Space.active.plugins.each do |plugin| %>
+    <%= check_box_tag 'plugins[]', plugin.key, plugin.enabled? %> <%= plugin.name %>
+  <% end %>
+<% end %>
+
 <% form.actions do %>
   <%= submit_tag 'Save' %> or <%= link_to_cancel Space.active ? space_dashboard_url(Space.active) : dashboard_url %>
 <% end %>

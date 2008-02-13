@@ -26,7 +26,7 @@ public
   def show
     space_dashboard and return if enclosing_resource
     admin_dashboard and return if User.active.super_user?
-    user_dashboard and return
+    user_dashboard  and return
   end
   
   # make sure that any pre-defined routes get kicked

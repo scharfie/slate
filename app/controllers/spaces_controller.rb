@@ -1,5 +1,7 @@
 class SpacesController < ApplicationController
   resources_controller_for :spaces
+  current_tab 'Settings'
+  
   before_filter :ensure_super_user!, :only => [:new]
 
 protected
