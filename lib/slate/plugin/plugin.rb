@@ -33,7 +33,7 @@ module Slate
       def self.items(controller)
         builder = self.new
         Slate.plugins.each do |plugin|
-          plugin.navigation_definitions.each do |block| 
+          (plugin.navigation_definitions || []).each do |block| 
             controller.instance_exec(builder, &block)
           end  
         end

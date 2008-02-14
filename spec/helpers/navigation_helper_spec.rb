@@ -54,18 +54,9 @@ describe NavigationHelper do
 end
 
 describe NavigationHelper, "navigation items" do
-  before(:each) do
-    controller.stub!(:controller_name).and_return('pages')
-  end
-  
-  def controller
-    @controller
-  end
-  
   it "should create link to navigation item 'Pages'" do
     should_receive(:current_tab).and_return('Pages')
-    
     navigation_item('Pages', space_pages_path(1)).
-      should == '<a href="/spaces/1/pages" class="current">Pages</a>'    
+      should == '<a href="/spaces/1/pages" class="current">Pages</a>'
   end
 end

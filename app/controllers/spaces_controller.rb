@@ -41,4 +41,8 @@ public
   def show
     redirect_to space_dashboard_url(params[:id])
   end
+  
+  # def update
+  #   raise params.to_yaml
+  # end
 end
