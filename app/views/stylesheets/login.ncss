@@ -3,7 +3,7 @@
 }
 
 #body, #footer {
-	width: 500px;
+	width: 470px;
 	margin: 30px auto;
 }
 
@@ -43,6 +43,10 @@ p.tip {
   color: #777;
   margin: 0;
   font-size: 0.85em;
+}
+
+table {
+  margin: 15px;
 }
 
 td.info {

@@ -10,10 +10,12 @@
   <table>
   <% form.default_template = 'row' %>
   <% form.label_append = ':' %>
-  <%= form.text_field 'username', :size => 35 %>
+  <%= form.text_field 'username', :size => 30 %>
   <%= form.password_field 'password', :size => 20 %>
+  
+  <tr class="field">
+    <td class="info"></td>
+    <td class="input"><%= submit_tag 'Sign in' %></td>
+  </tr>  
   </table>  
-  <% form.actions do %>
-    <%= submit_tag 'Sign in' %>
-  <% end %>
 <% end %>
