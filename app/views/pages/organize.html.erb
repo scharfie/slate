@@ -1,0 +1,154 @@
+<% heading 'Organize' %>
+<% head javascript_include_tag('jquery.highlightFade.js') %>
+
+<ul id="pages">
+  <%= render :partial => 'branch', :collection => resource.children %>
+</ul>
+
+<style type="text/css" media="screen">
+  div.to-actions {
+    display: inline;
+  }
+
+  div.to-actions a {
+    font-size: 0.9em;
+    color: #777;
+    padding: 4px;
+    text-decoration: none;
+  }
+</style>
+
+<script type="text/javascript" charset="utf-8">
+  function TreeOrganizer(dom_id) {
+    this.leaf = null;
+    this.branch = null;
+    this.dom_id = dom_id;
+    // use this template once we have the images
+    //this.template = '<a href="#" onclick="NAME.ACTION(this); return false;" class="to-ACTION"><img src="/images/glyphs/ACTION.png" alt="TEXT" /></a>';
+    this.template = '<a href="#" onclick="NAME.ACTION(this); return false;" class="to-ACTION">TEXT</a>';
+    return this;
+  } // end PageOrganizer
+  
+  TreeOrganizer.prototype = {
+    extractNode: function(node) {
+      this.leaf = $(node).parents('li:first');
+      this.branch = this.leaf.parents('ul:first');
+    }
+    ,
+    isRoot: function(branch) {
+      return $(branch).attr('id') == this.dom_id; 
+    }
+    ,
+    animate: function() {
+      this.leaf.highlightFade({interval: 10, speed: 600, start: '#eee'});
+    }
+    ,
+    moveTop: function(node) {
+      this.extractNode(node);
+      this.branch.prepend(this.leaf);
+      this.animate();
+    }
+    ,
+    moveBottom: function(node) {
+      this.extractNode(node);
+      this.branch.append(this.leaf);
+      this.animate();
+    }
+    ,
+    moveUp: function(node) {
+      this.extractNode(node);
+      this.leaf.prev().before(this.leaf);
+      this.animate();
+    }
+    ,
+    moveDown: function(node) {
+      this.extractNode(node);
+      this.leaf.next().after(this.leaf);
+      this.animate();
+    }
+    ,
+    moveLeft: function(node) {
+      this.extractNode(node);
+      
+      if (this.isRoot(this.branch)) return;
+      
+      this.branch.parents('li:first').after(this.leaf);
+      this.animate();
+    }
+    ,
+    moveRight: function(node) {
+      this.extractNode(node);
+      
+      this.branch = this.leaf.prev().children('ul:first');
+      
+      if (this.branch.length == 0) return;
+      
+      this.branch.append(this.leaf);
+      this.animate();
+    }
+    ,
+    promote: function(node) {
+      this.moveLeft(node);
+    }
+    ,
+    demote: function(node) {
+      this.moveRight(node);
+    }
+    ,
+    linkTo: function(varname, action) {
+      return this.template.replace(new RegExp('NAME', 'g'), varname).
+        replace(new RegExp('ACTION', 'g'), action).
+        replace(new RegExp('TEXT', 'g'), this.actionText(action));
+    }
+    ,
+    actionText: function(action) {
+      switch(action) {
+        case 'moveTop':     return '&uArr;'; // Move to top';
+        case 'moveBottom':  return '&dArr;'; // Move to bottom ';
+        case 'moveUp':      return '&uarr;'; // Move up';
+        case 'moveDown':    return '&darr;'; // Move down';
+        case 'moveLeft':    return '&larr;'; // Move left';
+        case 'moveRight':   return '&rarr;'; // Move right ';
+        default:            return action;
+      }
+    }
+    ,
+    actionLinks: function(varname) {
+      return this.linkTo(varname, 'moveTop')    
+           + this.linkTo(varname, 'moveUp')       
+           + this.linkTo(varname, 'moveDown')     
+           + this.linkTo(varname, 'moveBottom')   
+           + this.linkTo(varname, 'moveLeft')     
+           + this.linkTo(varname, 'moveRight')   
+    }
+    ,
+    extractID: function(node) {
+      var id = node.id.match(/\d+$/);
+      return (id ? id[0] : node.id);
+    }
+    ,
+    mappings: function() {
+      return this._mappings($('#' + this.dom_id), '0'); 
+    }
+    ,
+    _mappings: function(parent, parentID) {
+      var mappings = [];
+      var childID  = null;
+      var mapper = this;
+      
+      $.each($(parent).children('li'), function(index, child) {
+        childID = mapper.extractID(child);  
+        mappings.push(childID + '-' + parentID);
+        mappings = mappings.concat(mapper._mappings($(child).children('ul'), childID));
+      });
+      return mappings;
+    }
+  } // end 
+
+  $(function() {
+    organizer = new TreeOrganizer('pages');
+    $('#pages li div.to-actions').html(
+      organizer.actionLinks('organizer')
+    );
+  });
+</script>

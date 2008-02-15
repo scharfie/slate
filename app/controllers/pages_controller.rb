@@ -30,4 +30,8 @@ public
     flash[:error] = e.message
     redirect_to edit_enclosing_resource_url
   end
+  
+  def organize
+    self.resource = resource_service.root
+  end
 end

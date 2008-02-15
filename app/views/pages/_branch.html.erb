@@ -1,0 +1,5 @@
+<li id="<%= dom_id(branch) %>">
+  <%= branch.name %>
+  <div class="to-actions"></div>
+  <ul><%= render :partial => 'branch', :collection => branch.children -%></ul>
+</li>

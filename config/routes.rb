@@ -42,7 +42,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :spaces, :collection => { :choose => :post } do |space|
     space.resource :dashboard, :controller => 'dashboard',
       :name_prefix => 'space_'
-    space.resources :pages do |page|
+    space.resources :pages, :collection => {
+      :organize => :any
+    } do |page|
       page.resources :areas, :member => { 
         :toggle => :any, 
         :preview => :post,
