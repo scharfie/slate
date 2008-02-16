@@ -1,5 +1,6 @@
 <% heading 'Organize' %>
 <% head javascript_include_tag('jquery.highlightFade.js') %>
+<% head javascript_include_tag('jquery.hotkeys.js') %>
 
 <ul id="pages">
   <%= render :partial => 'branch', :collection => resource.children %>
@@ -16,6 +17,19 @@
     padding: 4px;
     text-decoration: none;
   }
+  
+  #pages li {
+    padding: 3px;
+  }
+  
+  li span.name {
+    padding: 3px;
+  }
+  
+  li span.active {
+    background: #cedeef;
+    xborder: dotted 1px #369;
+  }
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -23,6 +37,7 @@
     this.leaf = null;
     this.branch = null;
     this.dom_id = dom_id;
+    this.root = $('#' + this.dom_id);
     // use this template once we have the images
     //this.template = '<a href="#" onclick="NAME.ACTION(this); return false;" class="to-ACTION"><img src="/images/glyphs/ACTION.png" alt="TEXT" /></a>';
     this.template = '<a href="#" onclick="NAME.ACTION(this); return false;" class="to-ACTION">TEXT</a>';
@@ -31,7 +46,12 @@
   
   TreeOrganizer.prototype = {
     extractNode: function(node) {
-      this.leaf = $(node).parents('li:first');
+      if ($(node)[0].tagName == 'LI') {
+        this.leaf = $(node);
+      } else {  
+        this.leaf = $(node).parents('li:first');
+      }
+      
       this.branch = this.leaf.parents('ul:first');
     }
     ,
@@ -143,6 +163,94 @@
       });
       return mappings;
     }
+    ,
+    installHotkeys: function() {
+      var mapper = this;
+      this.activeLeaf = null;
+      
+      this.activateLeaf(this.root.children('li:first'));
+
+      $.hotkeys.add('Right', function() {
+        mapper.activateRelativeLeaf(1);
+      });
+
+      $.hotkeys.add('Left', function() {
+        mapper.activateRelativeLeaf(-1);
+      });
+      
+      $.hotkeys.add('Down', function() {
+        mapper.activateRelativeLeaf(1);
+      });
+
+      $.hotkeys.add('Up', function() {
+        mapper.activateRelativeLeaf(-1);
+      });
+      
+      $.hotkeys.add('Shift+Down', function() {
+        mapper.moveDown(mapper.activeLeaf);
+      });
+
+      $.hotkeys.add('Shift+Up', function() {
+        mapper.moveUp(mapper.activeLeaf);
+      });
+
+      $.hotkeys.add('Shift+Left', function() {
+        mapper.moveLeft(mapper.activeLeaf);
+      });
+      
+      $.hotkeys.add('Shift+Right', function() {
+        mapper.moveRight(mapper.activeLeaf);
+      });
+
+      // Not sure about these yet
+      // $.hotkeys.add('Alt+Up', function() {
+      //   mapper.moveTop(mapper.activeLeaf);
+      // });
+      // 
+      // $.hotkeys.add('Alt+Down', function() {
+      //   mapper.moveBottom(mapper.activeLeaf);
+      // });
+    }
+    ,
+    activateLeaf: function(leaf) {
+      leaf = $(leaf);
+      if (leaf.length == 0) return;
+      if (leaf[0].tagName != 'LI') return;
+      
+      if (this.activeLeaf) $(this.activeLeaf).children('span.name:first').removeClass('active');
+      
+      this.activeLeaf = leaf;
+      this.activeLeaf.children('span.name:first').addClass('active');
+      return this.activeLeaf;
+    }
+    ,
+    activateRelativeLeaf: function(offset) {
+      var child = null;
+      var leaf = $(this.activeLeaf);
+      
+      if (offset == 1) {
+        child = leaf.find('ul li:first');
+        
+        if (child.length == 0) child = leaf.next();
+        
+        if (child.length == 0) {
+          //var c = 10;
+          child = leaf.parent().parent();
+          while(child.next().length == 0) {
+            child = child.parent().parent();
+          } // end if
+          
+          child = child.next();
+        }
+      } else if (offset == -1) {
+        child = leaf.prev().find('ul li:last');
+        
+        if (child.length == 0) child = leaf.prev();
+        if (child.length == 0) child = leaf.parent().parent();
+      }
+
+      this.activateLeaf(child);
+    }
   } // end 
 
   $(function() {
@@ -150,5 +258,7 @@
     $('#pages li div.to-actions').html(
       organizer.actionLinks('organizer')
     );
+    
+    organizer.installHotkeys();
   });
 </script>
