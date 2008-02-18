@@ -43,7 +43,8 @@ ActionController::Routing::Routes.draw do |map|
     space.resource :dashboard, :controller => 'dashboard',
       :name_prefix => 'space_'
     space.resources :pages, :collection => {
-      :organize => :any
+      :organize => :get,
+      :remap => :put
     } do |page|
       page.resources :areas, :member => { 
         :toggle => :any, 

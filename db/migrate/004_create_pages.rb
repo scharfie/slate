@@ -10,6 +10,7 @@ class CreatePages < ActiveRecord::Migration
       t.column :depth, :integer
       t.column :permalink, :string
       t.column :template, :string
+      t.column :position, :integer, :default => 9999
       t.column :is_hidden, :boolean, :default => false
       t.column :is_default, :boolean, :default => false
       t.column :children_count, :integer, :default => 0

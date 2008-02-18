@@ -47,6 +47,30 @@ describe PagesController do
     get 'show', :space_id => 77, :id => 91
     response.should be_success
   end
+  
+  it "should grab root page on GET to /organize" do
+    @root = mock(Page)
+    controller.should_receive(:capture_user).and_return(true)
+    Space.should_receive(:find).with('77').and_return(@space)
+    @space.should_receive(:pages).and_return(Page)
+    Page.should_receive(:root).and_return(@root)
+    
+    get 'organize', :space_id => 77
+    controller.resource.should == @root
+    response.should be_success
+  end
+  
+  it "should remap tree on PUT to /remap" do
+    controller.should_receive(:capture_user).and_return(true)
+    Space.should_receive(:find).with('77').and_return(@space)
+    @space.should_receive(:pages).and_return(Page)
+    
+    Page.should_receive(:remap_tree!).with('2-1,3-1,4-1,5-2')
+    
+    put 'remap', :space_id => 77, :mappings => '2-1,3-1,4-1,5-2'
+    flash[:notice].should == 'Successfully re-organized pages!'
+    response.should redirect_to(controller.resources_path)
+  end
 end
 
 describe PagesController do

@@ -31,7 +31,16 @@ public
     redirect_to edit_enclosing_resource_url
   end
   
+  # GET organize
   def organize
     self.resource = resource_service.root
+  end
+  
+  # PUT remap
+  def remap
+    mappings = params[:mappings]
+    resource_service.remap_tree!(mappings)
+    flash[:notice] = 'Successfully re-organized pages!'
+    redirect_to resources_url
   end
 end

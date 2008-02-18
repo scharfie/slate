@@ -6,6 +6,13 @@
   <%= render :partial => 'branch', :collection => resource.children %>
 </ul>
 
+<% form_tag remap_resources_path, :method => :put, :id => 'remap' do %>
+  <div class="actions">
+    <%= hidden_field_tag 'mappings' %>
+    <%= submit_tag 'Save' %>
+  </div>
+<% end %>
+
 <style type="text/css" media="screen">
   div.to-actions {
     display: inline;
@@ -33,10 +40,11 @@
 </style>
 
 <script type="text/javascript" charset="utf-8">
-  function TreeOrganizer(dom_id) {
+  function TreeOrganizer(dom_id, root_id) {
     this.leaf = null;
     this.branch = null;
     this.dom_id = dom_id;
+    this.root_id = root_id ? root_id : 0;
     this.root = $('#' + this.dom_id);
     // use this template once we have the images
     //this.template = '<a href="#" onclick="NAME.ACTION(this); return false;" class="to-ACTION"><img src="/images/glyphs/ACTION.png" alt="TEXT" /></a>';
@@ -148,7 +156,7 @@
     }
     ,
     mappings: function() {
-      return this._mappings($('#' + this.dom_id), '0'); 
+      return this._mappings($('#' + this.dom_id), this.root_id); 
     }
     ,
     _mappings: function(parent, parentID) {
@@ -251,14 +259,31 @@
 
       this.activateLeaf(child);
     }
+    ,
+    storeMappings: function(dom_id) {
+      var element = $('#' + dom_id);
+      if (element.length > 0) {
+        return element[0].value = this.mappings().join(',');
+      } // end if 
+    }
   } // end 
 
   $(function() {
-    organizer = new TreeOrganizer('pages');
-    $('#pages li div.to-actions').html(
+    organizer = new TreeOrganizer('pages', <%= resource.id %>);
+
+    $('#pages li').click(function(event) {
+      organizer.activateLeaf(this);
+      return false;
+    }).children('div.to-actions').html(
       organizer.actionLinks('organizer')
     );
     
+    // install keyboard shortcuts
     organizer.installHotkeys();
+    
+    // hook into form
+    $('#remap').submit(function() {
+      organizer.storeMappings('mappings');
+    });
   });
 </script>
