@@ -1,12 +1,12 @@
-module ActiveRecord
-  module Associations
-    class HasManyThroughAssociation
+module ActiveRecord # :nodoc:
+  module Associations # :nodoc:
+    class HasManyThroughAssociation # :nodoc:
       alias_method :new, :build
     end
-    class HasManyAssociation
+    class HasManyAssociation # :nodoc:
       alias_method :new, :build
     end
-    class HasAndBelongsToManyAssociation
+    class HasAndBelongsToManyAssociation # :nodoc:
       alias_method :new, :build
     end
   end

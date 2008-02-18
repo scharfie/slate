@@ -77,7 +77,7 @@
 # * Use ::auto which creates Dictionay sub-entries as needed.
 # * And ::alpha which creates a new Dictionary sorted by key.
 
-class Dictionary
+class Dictionary # :nodoc:
 
   include Enumerable
 
