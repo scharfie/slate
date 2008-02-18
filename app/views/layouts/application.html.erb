@@ -16,7 +16,7 @@
   
   <div id="body">
     <h2 class="heading"><%= yield :heading %></h2>
-    <%= toolbar %>
+    <%= toolbar :id => 'toolbar' %>
     <%= render :partial => 'shared/flash', :object => flash %>
     <div id="content">
       <%= yield %>
