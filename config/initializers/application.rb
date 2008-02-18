@@ -10,11 +10,13 @@ require 'slate/permalink_column'
 # ZIP file support (assets)
 require 'zip/zip'
 
+# default slate configuration
 Slate::Configuration.config do |config|
   config.users.require_verification = true
   config.users.require_approval     = true
   config.users.login_attempts       = 5
   config.users.password_salt        = nil
+  config.assets.processor           = 'ImageScience'
 end
 
 # load extra configuration files from config/slate

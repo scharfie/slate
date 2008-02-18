@@ -3,7 +3,7 @@ class Asset < ActiveRecord::Base
   
   # attachment_fu configuration
   # note: the slashes are to make rcov happy
-  has_attachment :processor => :image_science, \
+  has_attachment :processor => Slate.config.assets.processor, \
     :thumbnails => { \
       :sq => 75, \
       :tn => '100x100>', \
