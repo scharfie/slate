@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
   permalink_column :name, :glue => '_'
-  acts_as_dotted_path :scope => :space_id, :ensure_root => true
+  acts_as_dotted_path :scope => :space_id, :ensure_root => true, :order => 'path, position ASC'
   belongs_to :space
   
   has_many :areas
