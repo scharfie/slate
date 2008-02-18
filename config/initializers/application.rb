@@ -16,6 +16,10 @@ Slate::Configuration.config do |config|
   config.users.require_approval     = true
   config.users.login_attempts       = 5
   config.users.password_salt        = nil
+  
+  # Sets the image processor used by attachment_fu
+  # Valid values: ImageScience, MiniMagick, Rmagick[1]
+  # [1] Currently, Rmagick doesn't seem to be working
   config.assets.processor           = 'ImageScience'
 end
 
