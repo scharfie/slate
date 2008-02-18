@@ -21,8 +21,8 @@ a {
   h1 {
 	  font-size: 1.8em;
 	  line-height: 1.5;
-	  display: inline;
 	  color: #555;
+	  margin: 0;
 	
 	  span.space {
 		  border-left: solid 1px #555;
