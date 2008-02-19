@@ -32,18 +32,18 @@ module UserSpecHelper
 
   def unlock_account
     @user.locked = false
-    @user.save
+    @user.save!
   end
 
   def verify_account
     @user.verified_on = Time.now
-    @user.password = 'P@ssword'
-    @user.save
+    @user.password = @user.password_confirmation = 'P@ssword'
+    @user.save!
   end  
   
   def approve_account
     @user.approved_on = Time.now
-    @user.save
+    @user.save!
   end  
 end
 
@@ -68,11 +68,6 @@ describe User do
      '####1234', # special, number
      'abcdEFGH', # lower, upper  
     ].each { |p| User.valid_password?(p).should == false }
-  end
-  
-  it "should fail to set password attribute when invalid" do
-    lambda { User.new(:password => 'invalid-password') }.
-      should raise_error(Slate::PasswordInvalid)
   end
 end
 
@@ -244,9 +239,15 @@ describe "New user" do
   end
   
   it "should have a temporary password" do
-    @user.temporary_password = User.generate_password
-    @user.temporary_password.should_not == nil
+    @user.password = User.generate_password
+    @user.password.should_not == nil
     @user.save
+  end
+  
+  it "should not be valid when password doesn't match schema" do
+    @user.password = "some-invalid-password"
+    @user.valid?.should == false
+    @user.errors.on(:password).should == "does not match required schema"
   end
   
   it "should have display_name 'Chris Scharf'" do

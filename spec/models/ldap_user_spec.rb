@@ -15,18 +15,18 @@ module LdapUserSpecHelper
   
   def unlock_account
     @user.locked = false
-    @user.save
+    @user.save!
   end
   
   def verify_account
     @user.verified_on = Time.now
-    @user.password = 'P@ssword'
-    @user.save
+    @user.password = @user.password_confirmation = 'P@ssword'
+    @user.save!
   end  
   
   def approve_account
     @user.approved_on = Time.now
-    @user.save
+    @user.save!
   end
   
   def request_ldap_account(options={})

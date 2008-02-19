@@ -30,20 +30,37 @@ end
 
 
 class User < ActiveRecord::Base
-  validates_uniqueness_of :username, :email_address
+  # Attributes
   attr_protected :super_user
   cattr_accessor :active
-  attr_accessor :temporary_password
+  attr_accessor :password
   
+  # Associations
   has_many :memberships
   has_many :spaces, :through => :memberships, :select => 'spaces.*, memberships.role AS role'
 
+  # Callbacks
+  before_validation :ensure_username
+  before_save :encrypt_password
+
+  # Validations
+  validate :password_validation
+  validates_presence_of :password_confirmation, :if => Proc.new { |user| !user.password.blank? }
+  validates_confirmation_of :password, :if => Proc.new { |user| !user.password.blank? }
+  validates_uniqueness_of :username, :email_address
   validates_presence_of :first_name, :last_name, :email_address, :reason_for_account, 
     :on => :create, :if => Proc.new { |user| !user.ldap_user? }
 
-  before_validation :ensure_username
-
 protected
+  # callback to ensure the password is valid
+  def password_validation
+    return if password.blank? 
+    if !self.class.valid_password?(password)
+      errors.add 'password', "does not match required schema"
+      return false
+    end
+  end
+
   # ensures that the username attribute is set
   # (optionally setting it to a generated value)
   def ensure_username
@@ -152,14 +169,14 @@ public
   # based on the following rules:
   #   Your password must:
   #   1. Be at least eight characters in length 
-  # - 2. Not contain all or part of the user's account name 
-  #   3. Contain characters from three of the following four categories:
+  #   2. Contain characters from three of the following four categories:
   #     a. English uppercase characters (A through Z)
   #     b. English lowercase characters (a through z)
   #     c. Base 10 digits (0 through 9) 
   #     d. Nonalphanumeric characters (e.g., !, $, #, %)
   def self.valid_password?(pw)
-    return false if pw.length < 8
+    return true if Slate.config.users.password_validation == false
+    return false if pw.nil? || pw.length < 8
     pass, rules = 0, [/[A-Z]/, /[a-z]/, /[0-9]/, /[!@#\$%]/]
     rules.each { |re| pass += 1 if pw =~ re }
     pass >= 3
@@ -288,20 +305,14 @@ public
     self.update_attributes(:locked => false, :login_attempts => 0)
   end  
   
-  # sets the temporary password (clear-text)
-  # and sets the password to the encrypted form
-  def temporary_password=(pw)
-    self.password = @temporary_password = pw
+  # before save which encrypts the password
+  def encrypt_password
+    return if password.blank?
+    self.crypted_password = self.class.encrypt_password(password)
   end
   
-  # sets the encrypted password if it's valid
-  def password=(pw)
-    raise Slate::PasswordInvalid unless self.class.valid_password?(pw)
-    self[:password] = self.class.encrypt_password(pw)
-  end
-  
-  # authenticate user with given password
+  # Authenticate user with given password
   def authenticate(password)
-    self.password == self.class.encrypt_password(password)
+    self.crypted_password == self.class.encrypt_password(password)
   end
 end
