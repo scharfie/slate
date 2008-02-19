@@ -1,2 +1,8 @@
 slate is a content management system/framework originally developed at
 West Virginia University Web Services (http://www.wvu.edu).
+
+= Setup =
+
+* Configure your database connection (database.yml)
+* Create your database and migrate (rake db:migrate)
+* Run slate setup (rake slate:setup)
