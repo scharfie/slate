@@ -5,6 +5,7 @@ db/*.sqlite3
 db/schema.rb
 lib/tasks/wvu.rake
 config/slate/wvu.rb
+config/database.yml
 coverage
 spec/public/*
 public/assets
