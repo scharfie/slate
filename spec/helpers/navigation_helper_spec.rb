@@ -29,6 +29,7 @@ describe NavigationHelper do
     should_receive(:space_dashboard_path).with(Space.active)
     should_receive(:edit_space_path).with(Space.active)
     should_receive(:space_assets_path).with(Space.active)
+    should_receive(:plugin_navigation_items).and_return([])
     
     @items = items_for_navigation
     @items.should have(4).items
@@ -47,6 +48,7 @@ describe NavigationHelper do
 
     should_receive(:space_dashboard_path).with(Space.active)
     should_receive(:edit_space_path).with(Space.active)
+    should_receive(:plugin_navigation_items).and_return([])
 
     navigation.should_not be_nil
     render_options[:partial].should == 'shared/navigation'    

@@ -27,9 +27,17 @@ protected
     tabs
   end
 
-  # returns navigation items defined in plugins
+  # Returns navigation items for enabled plugins
   def plugin_navigation_items
-    Slate::Plugin::Navigation.items(self)
+    builder = Slate::Plugin::Navigation.new(self)
+    
+    Space.active.available_plugins.each do |plugin|
+      plugin.navigation_definitions.each do |block| 
+        builder.instance_eval &block
+      end if plugin.enabled?
+    end
+    
+    builder.items
   end
 
 public
