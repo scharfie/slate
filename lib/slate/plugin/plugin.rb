@@ -76,6 +76,7 @@ module Slate
 
     # Migrates this plugin to the target version
     def migrate(target_version = nil) 
+      require 'slate/plugin/migrator'
       Slate::Plugin::Migrator.migrate_plugin(self, target_version)
     end
     
@@ -87,6 +88,7 @@ module Slate
     # Returns ActiveRecord object from the plugin schema
     # table for this plugin
     def schema_info
+      require 'slate/plugin/schema_info'
       Slate::Plugin::SchemaInfo.find_or_create_by_name(plugin_name)
     end
     
