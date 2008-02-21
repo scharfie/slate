@@ -30,7 +30,8 @@ protected
 public    
   def login
     if request.get?
-      self.resource = find_resource
+      self.resource = capture_user || find_resource
+      redirect_back_to self.resource.super_user? ? dashboard_url() : spaces_url() and return unless self.resource.new_record?
       render and return
     end
       
