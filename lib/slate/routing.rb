@@ -22,8 +22,9 @@ module Slate
       # creating a route that will be used for the public-side
       # of slate (i.e. outside of slate admin)
       def public_routes(&block)
-        with_options :conditions => { 
-          :not_subdomain => 'slate' }, &block
+        with_options :controller => 'public',
+          :conditions => { :not_subdomain => 'slate' }, 
+          &block
       end
     end
   end

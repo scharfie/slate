@@ -62,3 +62,22 @@ describe NavigationHelper, "navigation items" do
       should == '<a href="/spaces/1/pages" class="current">Pages</a>'
   end
 end
+
+describe NavigationHelper, "plugin navigation items" do
+  it "should return navigation items from plugins" do
+    @navigation_definitions = Proc.new { |tabs| 
+      tabs.add "Login", login_url 
+    }
+    
+    @plugin = mock(Plugin)
+    @plugin.stub!(:enabled?).and_return(true)
+    @plugin.stub!(:navigation_definitions).
+      and_return([@navigation_definitions])
+
+    Space.should_receive(:active).and_return(@space = mock(Space))
+    @space.should_receive(:available_plugins).and_return([@plugin])
+    
+    items = plugin_navigation_items
+    items.should == [['Login', login_url]]
+  end
+end

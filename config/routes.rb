@@ -10,7 +10,17 @@ ActionController::Routing::Routes.draw do |map|
   # map all requests that do not have slate as the subdomain to
   # the public controller and group all parameters in page_path
   map.public_routes do |m|
-    m.connect '*page_path', :controller => 'public'
+    # support "peridocal" routes
+    m.connect '*page_path/:year/:month/:day/:slug',
+      :month => nil, :day => nil, :slug => nil,
+      :requirements => { 
+        :year => /\d{4}/, 
+        :month => /\d{1,2}|/, 
+        :day => /\d{1,2}|/ 
+      }
+    
+    # catch normal page routes
+    m.connect '*page_path'
   end
 
   map.default '', :controller => 'account', :action => 'login', 

@@ -9,6 +9,7 @@ describe AccountController do
   
   it "should render 'login' on GET to /login" do
     User.should_receive(:new).with(nil).and_return(@user)
+    @user.should_receive(:new_record?).and_return(true)
     
     get 'login'
     response.should be_success

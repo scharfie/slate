@@ -15,7 +15,10 @@ public
         <strong>Domain:</strong>#{request.host}<br />
         <strong>Path:</strong> /#{path.join('/')}
       <br /><br />
-      <pre>#{@space.to_yaml}</pre>  
+      <pre>#{@space.to_yaml}
+        <br />
+        #{params.to_yaml}  
+      </pre>  
     HTML
   end
 end

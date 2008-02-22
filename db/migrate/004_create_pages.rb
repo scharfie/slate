@@ -1,19 +1,19 @@
 class CreatePages < ActiveRecord::Migration
   def self.up
     create_table :pages do |t|
-      t.column :name, :string
-      t.column :parent_id, :integer, :default => 0
-      t.column :space_id, :integer
-      t.column :created_on, :datetime
-      t.column :updated_on, :datetime
-      t.column :path, :string
-      t.column :depth, :integer
-      t.column :permalink, :string
-      t.column :template, :string
-      t.column :position, :integer, :default => 9999
-      t.column :is_hidden, :boolean, :default => false
-      t.column :is_default, :boolean, :default => false
-      t.column :children_count, :integer, :default => 0
+      t.string :name
+      t.string :permalink
+      t.integer :parent_id, :default => 0
+      t.integer :space_id
+      t.datetime :created_on
+      t.datetime :updated_on
+      t.string :template
+      t.string :path
+      t.integer :depth
+      t.integer :position, :default => 9999
+      t.boolean :is_hidden, :default => false
+      t.boolean :is_default, :default => false
+      t.integer :children_count, :default => 0
     end
   end
 

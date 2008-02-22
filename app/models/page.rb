@@ -1,16 +1,20 @@
 class Page < ActiveRecord::Base
   permalink_column :name, :glue => '_'
-  acts_as_dotted_path :scope => :space_id, :ensure_root => true, :order => 'path, position ASC'
+  acts_as_dotted_path :scope => :space_id, 
+    :ensure_root => true, :order => 'path, position ASC'
+
+  # Associations
   belongs_to :space
-  
   has_many :areas
-  
+
+  # Callbacks
+  before_validation :ensure_name
+  before_save :ensure_one_default_page
+
+  # Validations
   validates_presence_of :space_id
   validates_presence_of :name
 
-  before_validation :ensure_name
-  before_save :ensure_one_default_page
-  
 protected
   # ensures that the root node has the name
   # "Pages"
