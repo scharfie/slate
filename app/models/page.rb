@@ -38,6 +38,34 @@ protected
   end
   
 public
+  def self.find_by_page_path(path)
+    return nil if path.blank?
+    path = path.split('/') unless Array === path
+    return nil if path.empty?    
+        
+    # find out how many pieces there are (separated by '/')
+    depth           = path.length
+    permalink       = path.pop
+    parent_permalink = path.pop
+    
+    conditions = [[]]
+    conditions[0] << "pages.depth = #{depth}" # " AND pages.space_id = #{Space.active.id}"
+    conditions[0] << "pages.permalink = ?"
+    conditions << permalink
+    includes = []
+    
+    if parent_permalink
+      conditions[0] << "parents_pages.permalink = ?"
+      conditions << parent_permalink
+      includes << :parent
+    end
+    
+    conditions[0] = conditions[0].join(' AND ')
+ 
+    self.find :first, :select => 'pages.*', 
+      :conditions => conditions, :include => includes
+  end
+
   # returns the names of all items in the bloodline
   # (except the root page)
   def path_names

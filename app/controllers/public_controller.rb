@@ -10,15 +10,17 @@ protected
 public
   def index
     path = params[:page_path]
+    page = @space.pages.find_by_page_path(path)
+    
     render :text => <<-HTML
       <h1>TODO: render public side for path:</h1>
         <strong>Domain:</strong>#{request.host}<br />
         <strong>Path:</strong> /#{path.join('/')}
       <br /><br />
-      <pre>#{@space.to_yaml}
-        <br />
-        #{params.to_yaml}  
-      </pre>  
+      <pre>
+        <br />#{params.to_yaml}
+        <br />#{page.to_yaml}
+      </pre>
     HTML
   end
 end

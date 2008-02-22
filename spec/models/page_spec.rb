@@ -27,6 +27,15 @@ describe Page do
     @address = @space.pages.create(:name => '1 Fine Arts Drive', :is_hidden => true)
     @morgantown.children << @address
   end
+
+  it "should return 'WV' via find_by_page_path" do
+    Page.find_by_page_path('wv').should == @wv
+  end
+  
+  it "should return 'Morgantown' via find_by_page_path" do
+    Page.find_by_page_path('wv/morgantown').should == @morgantown
+    Page.find_by_page_path(%w(wv morgantown)).should == @morgantown
+  end
   
   it "should return path names" do
     @address.path_names.should == ['WV', 'Morgantown', '1 Fine Arts Drive']

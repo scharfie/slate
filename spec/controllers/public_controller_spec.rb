@@ -9,8 +9,9 @@ describe PublicController do
   it "should find space for domain 'slate.example.com' on GET to /index" do
     Space.should_receive(:find_by_domain).with('slate.example.com').
       and_return(@space)
+    Page.should_receive(:find_by_page_path).and_return(nil)  
       
-    @space.should_receive(:to_yaml).and_return('')
+    @space.should_receive(:pages).and_return(Page)
       
     get 'index', :page_path => ['/']
     response.should be_success
