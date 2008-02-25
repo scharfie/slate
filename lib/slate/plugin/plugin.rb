@@ -153,7 +153,7 @@ module Slate
       config.controller_paths << controller_path
       
       # add views to the view paths
-      ActionController::Base.view_paths << File.join(app_path, 'views')
+      ActionController::Base.append_view_path File.join(app_path, 'views')
     end
     
   private
