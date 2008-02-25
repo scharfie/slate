@@ -4,6 +4,11 @@ vendor/plugins/tag_class:
   type: svn
   branch: master
   remote: http://svn.webtest.wvu.edu/repos/rails/plugins/tag_class
+vendor/plugins/resources_controller: 
+  local_branch: braid/svn/vendor/plugins/resources-controller
+  type: svn
+  branch: master
+  remote: http://svn.ardes.com/rails_plugins/resources_controller
 vendor/plugins/rspec: 
   local_branch: braid/svn/vendor/plugins/rspec
   type: svn
@@ -14,26 +19,26 @@ vendor/plugins/eztime:
   type: svn
   branch: master
   remote: http://svn.webtest.wvu.edu/repos/rails/plugins/eztime
-vendor/plugins/attachment_fu: 
-  local_branch: braid/svn/vendor/plugins/attachment-fu
-  type: svn
-  branch: master
-  remote: http://svn.techno-weenie.net/projects/plugins/attachment_fu
 vendor/plugins/mimetype_fu: 
   local_branch: braid/svn/vendor/plugins/mimetype-fu
   type: svn
   branch: master
   remote: http://mimetype-fu.googlecode.com/svn/trunk
-vendor/rails: 
-  local_branch: braid/svn/vendor/rails
+vendor/plugins/attachment_fu: 
+  local_branch: braid/svn/vendor/plugins/attachment-fu
   type: svn
   branch: master
-  remote: http://svn.rubyonrails.org/rails/trunk
+  remote: http://svn.techno-weenie.net/projects/plugins/attachment_fu
 vendor/plugins/routing_tricks: 
   local_branch: braid/svn/vendor/plugins/routing-tricks
   type: svn
   branch: master
   remote: http://svn.jamisbuck.org/rails-plugins/routing_tricks
+vendor/rails: 
+  local_branch: braid/svn/vendor/rails
+  type: svn
+  branch: master
+  remote: http://svn.rubyonrails.org/rails/trunk
 vendor/plugins/dbstring: 
   local_branch: braid/svn/vendor/plugins/dbstring
   type: svn
