@@ -1,0 +1,8 @@
+global_autotest_file = File.expand_path('~/.autotest')
+load(global_autotest_file) if File.exists?(global_autotest_file)
+
+class Autotest
+  def tests_for_file(filename)
+    Dir['test/**/*_test.rb']
+  end
+end

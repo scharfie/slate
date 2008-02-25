@@ -14,6 +14,11 @@ vendor/plugins/rspec:
   type: svn
   branch: master
   remote: http://rspec.rubyforge.org/svn/trunk/rspec
+vendor/plugins/resources_controller: 
+  local_branch: braid/svn/vendor/plugins/resources-controller
+  type: svn
+  branch: master
+  remote: http://svn.ardes.com/rails_plugins/resources_controller
 vendor/plugins/eztime: 
   local_branch: braid/svn/vendor/plugins/eztime
   type: svn
@@ -49,6 +54,11 @@ vendor/plugins/rspec_on_rails:
   type: svn
   branch: master
   remote: http://rspec.rubyforge.org/svn/trunk/rspec_on_rails
+vendor/plugins/css_dryer: 
+  local_branch: braid/svn/vendor/plugins/css-dryer
+  type: svn
+  branch: master
+  remote: http://opensource.airbladesoftware.com/trunk/plugins/css_dryer
 vendor/plugins/acts_as_dotted_path: 
   local_branch: braid/svn/vendor/plugins/acts-as-dotted-path
   type: svn
