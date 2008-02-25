@@ -1,5 +1,17 @@
 *SVN*
 
+* add a -e/--export to script/plugin install, uses svn export. #10847 [jon@blankpad.net)]
+
+* Add config.time_zone for configuring the default Time.zone value.  #10982 [Geoff Buesing]
+
+* Reshuffle load order so that routes and observers are initialized after plugins and app initializers.  Closes #10980 [rick]
+
+* Git support for script/generate.  #10690 [ssoroka]
+
+* Update scaffold to use labels instead of bold tags.  Closes #10757 [zach-inglis-lt3]
+
+* Resurrect WordNet synonym lookups.  #10710 [tom./, matt]
+
 * Added config.cache_store to environment options to control the default cache store (default is FileStore if tmp/cache is present, otherwise MemoryStore is used) [DHH]
 
 * Added that rails:update is run when you do rails:freeze:edge to ensure you also get the latest JS and config files #10565 [jeff]

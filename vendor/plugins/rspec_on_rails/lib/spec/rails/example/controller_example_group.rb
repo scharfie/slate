@@ -106,7 +106,7 @@ module Spec
             end
             EOE
           end
-          @controller.metaclass.class_eval do
+          (class << @controller; self; end).class_eval do
             def controller_path #:nodoc:
               self.class.name.underscore.gsub('_controller', '')
             end
@@ -150,8 +150,8 @@ module Spec
         end
 
         protected
-        def _controller_ivar_proxy
-          @controller_ivar_proxy ||= AssignsHashProxy.new @controller
+        def _assigns_hash_proxy
+          @_assigns_hash_proxy ||= AssignsHashProxy.new @controller
         end
 
         private
@@ -162,18 +162,32 @@ module Spec
         module ControllerInstanceMethods #:nodoc:
           include Spec::Rails::Example::RenderObserver
 
-          # === render(options = nil, deprecated_status = nil, &block)
+          # === render(options = nil, deprecated_status_or_extra_options = nil, &block)
           #
           # This gets added to the controller's singleton meta class,
           # allowing Controller Examples to run in two modes, freely switching
           # from context to context.
-          def render(options=nil, deprecated_status=nil, &block)
+          def render(options=nil, deprecated_status_or_extra_options=nil, &block)
+            if ::Rails::VERSION::STRING >= '2.0.0' && deprecated_status_or_extra_options.nil?
+              deprecated_status_or_extra_options = {}
+            end
+              
             unless block_given?
               unless integrate_views?
-                @template.metaclass.class_eval do
-                  define_method :file_exists? do
-                    true
+                if @template.respond_to?(:finder)
+                  (class << @template.finder; self; end).class_eval do
+                    define_method :file_exists? do
+                      true
+                    end
                   end
+                else
+                  (class << @template; self; end).class_eval do
+                    define_method :file_exists? do
+                      true
+                    end
+                  end
+                end
+                (class << @template; self; end).class_eval do
                   define_method :render_file do |*args|
                     @first_render ||= args[0]
                   end
@@ -181,16 +195,26 @@ module Spec
               end
             end
 
-            if expect_render_mock_proxy.send(:__mock_proxy).send(:find_matching_expectation, :render, options)
-              expect_render_mock_proxy.render(options)
+            if matching_message_expectation_exists(options)
+              expect_render_mock_proxy.render(options, &block)
               @performed_render = true
             else
-              unless expect_render_mock_proxy.send(:__mock_proxy).send(:find_matching_method_stub, :render, options)
-                super(options, deprecated_status, &block)
+              unless matching_stub_exists(options)
+                super(options, deprecated_status_or_extra_options, &block)
               end
             end
           end
-
+          
+          private
+            def matching_message_expectation_exists(options)
+              expect_render_mock_proxy.send(:__mock_proxy).send(:find_matching_expectation, :render, options)
+            end
+          
+            def matching_stub_exists(options)
+              expect_render_mock_proxy.send(:__mock_proxy).send(:find_matching_method_stub, :render, options)
+            end
+          
+          public
           if self.respond_to?(:should_receive) && self.respond_to?(:stub!)
             self.send :alias_method, :orig_should_receive, :should_receive
             self.send :alias_method, :orig_stub!, :stub!

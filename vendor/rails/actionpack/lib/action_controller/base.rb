@@ -5,6 +5,8 @@ require 'action_controller/routing'
 require 'action_controller/resources'
 require 'action_controller/url_rewriter'
 require 'action_controller/status_codes'
+require 'action_view/template'
+require 'action_view/template_finder'
 require 'drb'
 require 'set'
 
@@ -428,6 +430,7 @@ module ActionController #:nodoc:
 
       def view_paths=(value)
         @view_paths = value
+        ActionView::TemplateFinder.process_view_paths(value)
       end
 
       # Adds a view_path to the front of the view_paths array.
@@ -440,6 +443,7 @@ module ActionController #:nodoc:
       def prepend_view_path(path)
         @view_paths = superclass.view_paths.dup if @view_paths.nil?
         view_paths.unshift(*path)
+        ActionView::TemplateFinder.process_view_paths(path)
       end
       
       # Adds a view_path to the end of the view_paths array.
@@ -452,6 +456,7 @@ module ActionController #:nodoc:
       def append_view_path(path)
         @view_paths = superclass.view_paths.dup if @view_paths.nil?
         view_paths.push(*path)
+        ActionView::TemplateFinder.process_view_paths(path)
       end
       
       # Replace sensitive parameter data from the request log.
@@ -642,11 +647,11 @@ module ActionController #:nodoc:
       
       # View load paths for controller.
       def view_paths
-        (@template || self.class).view_paths
+        @template.finder.view_paths
       end
     
       def view_paths=(value)
-        (@template || self.class).view_paths = value
+        @template.finder.view_paths = value  # Mutex needed
       end
 
       # Adds a view_path to the front of the view_paths array.
@@ -656,7 +661,7 @@ module ActionController #:nodoc:
       #   self.prepend_view_path(["views/default", "views/custom"])
       #
       def prepend_view_path(path)
-        (@template || self.class).prepend_view_path(path)
+        @template.finder.prepend_view_path(path)  # Mutex needed
       end
       
       # Adds a view_path to the end of the view_paths array.
@@ -666,7 +671,7 @@ module ActionController #:nodoc:
       #   self.append_view_path(["views/default", "views/custom"])
       #
       def append_view_path(path)
-        (@template || self.class).append_view_path(path)
+        @template.finder.append_view_path(path)  # Mutex needed
       end
 
     protected
@@ -829,14 +834,16 @@ module ActionController #:nodoc:
       # All renders take the :status and :location options and turn them into headers. They can even be used together:
       #
       #   render :xml => post.to_xml, :status => :created, :location => post_url(post)
-      def render(options = nil, &block) #:doc:
+      def render(options = nil, extra_options = {}, &block) #:doc:
         raise DoubleRenderError, "Can only render or redirect once per action" if performed?
 
         if options.nil?
           return render_for_file(default_template_name, nil, true)
+        elsif !extra_options.is_a?(Hash)
+          raise RenderError, "You called render with invalid options : #{options}, #{extra_options}"
         else
           if options == :update
-            options = { :update => true }
+            options = extra_options.merge({ :update => true })
           elsif !options.is_a?(Hash)
             raise RenderError, "You called render with invalid options : #{options}"
           end
@@ -862,7 +869,8 @@ module ActionController #:nodoc:
 
           elsif inline = options[:inline]
             add_variables_to_assigns
-            render_for_text(@template.render_template(options[:type], inline, nil, options[:locals] || {}), options[:status])
+            tmpl = ActionView::Template.new(@template, options[:inline], false, options[:locals], true, options[:type])
+            render_for_text(@template.render_template(tmpl), options[:status])
 
           elsif action_name = options[:action]
             template = default_template_name(action_name.to_s)
@@ -904,7 +912,7 @@ module ActionController #:nodoc:
 
             generator = ActionView::Helpers::PrototypeHelper::JavaScriptGenerator.new(@template, &block)
             response.content_type = Mime::JS
-            render_for_text(generator.to_s)
+            render_for_text(generator.to_s, options[:status])
 
           elsif options[:nothing]
             # Safari doesn't pass the headers of the return if the response is zero length
@@ -1029,7 +1037,8 @@ module ActionController #:nodoc:
       # RedirectBackError will be raised. You may specify some fallback
       # behavior for this case by rescuing RedirectBackError.
       def redirect_to(options = {}, response_status = {}) #:doc: 
-        
+        raise ActionControllerError.new("Cannot redirect to nil!") if options.nil?
+
         if options.is_a?(Hash) && options[:status] 
           status = options.delete(:status) 
         elsif response_status[:status] 
@@ -1118,7 +1127,7 @@ module ActionController #:nodoc:
           raise "You must assign a template class through ActionController.template_class= before processing a request"
         end
 
-        response.template = ActionView::Base.new(view_paths, {}, self)
+        response.template = ActionView::Base.new(self.class.view_paths, {}, self)
         response.template.extend self.class.master_helper_module
         response.redirected_to = nil
         @performed_render = @performed_redirect = false
@@ -1248,7 +1257,7 @@ module ActionController #:nodoc:
       end
 
       def template_exists?(template_name = default_template_name)
-        @template.file_exists?(template_name)
+        @template.finder.file_exists?(template_name)
       end
 
       def template_public?(template_name = default_template_name)
@@ -1256,7 +1265,7 @@ module ActionController #:nodoc:
       end
 
       def template_exempt_from_layout?(template_name = default_template_name)
-        extension = @template && @template.pick_template_extension(template_name)
+        extension = @template && @template.finder.pick_template_extension(template_name)
         name_with_extension = !template_name.include?('.') && extension ? "#{template_name}.#{extension}" : template_name
         @@exempt_from_layout.any? { |ext| name_with_extension =~ ext }
       end

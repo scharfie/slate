@@ -15,6 +15,10 @@ module Spec
       attr_reader :options
 
       OPTIONS = {
+        :pattern => ["-p", "--pattern [PATTERN]","Limit files loaded to those matching this pattern. Defaults to '**/*_spec.rb'",
+                                                 "Separate multiple patterns with commas.",
+                                                 "Applies only to directories named on the command line (files",
+                                                 "named explicitly on the command line will be loaded regardless)."],
         :diff =>    ["-D", "--diff [FORMAT]", "Show diff of objects that are expected to be equal when they are not",
                                              "Builtin formats: unified|u|context|c",
                                              "You can also specify a custom differ class",
@@ -84,11 +88,11 @@ module Spec
         @out_stream = out
         @options = Options.new(@error_stream, @out_stream)
 
-        @spec_parser = SpecParser.new
         @file_factory = File
 
         self.banner = "Usage: spec (FILE|DIRECTORY|GLOB)+ [options]"
         self.separator ""
+        on(*OPTIONS[:pattern]) {|pattern| @options.filename_pattern = pattern}
         on(*OPTIONS[:diff]) {|diff| @options.parse_diff(diff)}
         on(*OPTIONS[:colour]) {@options.colour = true}
         on(*OPTIONS[:example]) {|example| @options.parse_example(example)}
@@ -124,10 +128,6 @@ module Spec
           blk.call(file) if blk
         end
 
-        if @options.line_number
-          set_spec_from_line_number
-        end
-
         @options
       end
 
@@ -141,6 +141,10 @@ module Spec
       def parse_options_file(options_file)
         option_file_args = IO.readlines(options_file).map {|l| l.chomp.split " "}.flatten
         @argv.push(*option_file_args)
+        # TODO - this is a brute force solution to http://rspec.lighthouseapp.com/projects/5645/tickets/293.
+        # Let's look for a cleaner way. Might not be one. But let's look. If not, perhaps
+        # this can be moved to a different method to indicate the special handling for drb?
+        parse_drb(@argv)
       end
 
       def parse_generate_options
@@ -170,9 +174,9 @@ module Spec
         @options.examples_should_not_be_run
       end
 
-      def parse_drb
+      def parse_drb(argv = nil)
+        argv ||= @options.argv # TODO - see note about about http://rspec.lighthouseapp.com/projects/5645/tickets/293
         is_drb = false
-        argv = @options.argv
         is_drb ||= argv.delete(OPTIONS[:drb][0])
         is_drb ||= argv.delete(OPTIONS[:drb][1])
         return nil unless is_drb
@@ -193,36 +197,8 @@ module Spec
         exit if stdout?
       end      
 
-      def set_spec_from_line_number
-        if @options.examples.empty?
-          if @options.files.length == 1
-            if @file_factory.file?(@options.files[0])
-              source = @file_factory.open(@options.files[0])
-              example = @spec_parser.spec_name_for(source, @options.line_number)
-              @options.parse_example(example)
-            elsif @file_factory.directory?(@options.files[0])
-              @error_stream.puts "You must specify one file, not a directory when using the --line option"
-              exit(1) if stderr?
-            else
-              @error_stream.puts "#{@options.files[0]} does not exist"
-              exit(2) if stderr?
-            end
-          else
-            @error_stream.puts "Only one file can be specified when using the --line option: #{@options.files.inspect}"
-            exit(3) if stderr?
-          end
-        else
-          @error_stream.puts "You cannot use both --line and --example"
-          exit(4) if stderr?
-        end
-      end
-
       def stdout?
         @out_stream == $stdout
-      end
-
-      def stderr?
-        @error_stream == $stderr
       end
     end
   end

@@ -98,6 +98,9 @@ EOF
             scenario_ended
           end
 
+          def step_upcoming(type, description, *args)
+          end
+
           def step_succeeded(type, description, *args)
             print_step('passed', type, description, *args) # TODO: uses succeeded CSS class
           end
@@ -112,11 +115,12 @@ EOF
           
           def print_step(klass, type, description, *args)
             spans = args.map { |arg| "<span class=\"param\">#{arg}</span>" }
+            desc_string = description.step_name
+            arg_regexp = description.arg_regexp           
             i = -1
-            inner = type.to_s.capitalize + ' ' + description.gsub(::Spec::Story::Step::PARAM_PATTERN) { |param| spans[i+=1] }
+            inner = type.to_s.capitalize + ' ' + desc_string.gsub(arg_regexp) { |param| spans[i+=1] }
             @output.puts "                <li class=\"#{klass}\">#{inner}</li>"
           end
-
         end
       end
     end

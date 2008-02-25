@@ -1,0 +1,51 @@
+--- 
+vendor/plugins/tag_class: 
+  local_branch: braid/svn/vendor/plugins/tag-class
+  type: svn
+  branch: master
+  remote: http://svn.webtest.wvu.edu/repos/rails/plugins/tag_class
+vendor/plugins/rspec: 
+  local_branch: braid/svn/vendor/plugins/rspec
+  type: svn
+  branch: master
+  remote: http://rspec.rubyforge.org/svn/trunk/rspec
+vendor/plugins/eztime: 
+  local_branch: braid/svn/vendor/plugins/eztime
+  type: svn
+  branch: master
+  remote: http://svn.webtest.wvu.edu/repos/rails/plugins/eztime
+vendor/plugins/attachment_fu: 
+  local_branch: braid/svn/vendor/plugins/attachment-fu
+  type: svn
+  branch: master
+  remote: http://svn.techno-weenie.net/projects/plugins/attachment_fu
+vendor/plugins/mimetype_fu: 
+  local_branch: braid/svn/vendor/plugins/mimetype-fu
+  type: svn
+  branch: master
+  remote: http://mimetype-fu.googlecode.com/svn/trunk
+vendor/rails: 
+  local_branch: braid/svn/vendor/rails
+  type: svn
+  branch: master
+  remote: http://svn.rubyonrails.org/rails/trunk
+vendor/plugins/routing_tricks: 
+  local_branch: braid/svn/vendor/plugins/routing-tricks
+  type: svn
+  branch: master
+  remote: http://svn.jamisbuck.org/rails-plugins/routing_tricks
+vendor/plugins/dbstring: 
+  local_branch: braid/svn/vendor/plugins/dbstring
+  type: svn
+  branch: master
+  remote: http://svn.webtest.wvu.edu/repos/rails/plugins/dbstring
+vendor/plugins/rspec_on_rails: 
+  local_branch: braid/svn/vendor/plugins/rspec-on-rails
+  type: svn
+  branch: master
+  remote: http://rspec.rubyforge.org/svn/trunk/rspec_on_rails
+vendor/plugins/acts_as_dotted_path: 
+  local_branch: braid/svn/vendor/plugins/acts-as-dotted-path
+  type: svn
+  branch: master
+  remote: http://svn.webtest.wvu.edu/repos/rails/plugins/acts_as_dotted_path

@@ -55,7 +55,7 @@ module ActiveResource
   # This class is used by ActiveResource::Base to interface with REST
   # services.
   class Connection
-    attr_reader :site
+    attr_reader :site, :user, :password
     attr_accessor :format
 
     class << self
@@ -68,6 +68,7 @@ module ActiveResource
     # attribute to the URI for the remote resource service.
     def initialize(site, format = ActiveResource::Formats[:xml])
       raise ArgumentError, 'Missing site URI' unless site
+      @user = @password = nil
       self.site = site
       self.format = format
     end
@@ -75,6 +76,18 @@ module ActiveResource
     # Set URI for remote service.
     def site=(site)
       @site = site.is_a?(URI) ? site : URI.parse(site)
+      @user = URI.decode(@site.user) if @site.user
+      @password = URI.decode(@site.password) if @site.password
+    end
+
+    # Set user for remote service.
+    def user=(user)
+      @user = user
+    end
+
+    # Set password for remote service.
+    def password=(password)
+      @password = password
     end
 
     # Execute a GET request.
@@ -99,6 +112,12 @@ module ActiveResource
     # Used to create new resources.
     def post(path, body = '', headers = {})
       request(:post, path, body.to_s, build_request_headers(headers))
+    end
+
+    # Execute a HEAD request.
+    # Used to ...
+    def head(path, headers= {})
+      request(:head, path, build_request_headers(headers))
     end
 
 
@@ -160,9 +179,9 @@ module ActiveResource
         authorization_header.update(default_header).update(headers)
       end
       
-      # Sets authorization header; authentication information is pulled from credentials provided with site URI.
+      # Sets authorization header
       def authorization_header
-        (@site.user || @site.password ? { 'Authorization' => 'Basic ' + ["#{@site.user}:#{ @site.password}"].pack('m').delete("\r\n") } : {})
+        (@user || @password ? { 'Authorization' => 'Basic ' + ["#{@user}:#{ @password}"].pack('m').delete("\r\n") } : {})
       end
 
       def logger #:nodoc:

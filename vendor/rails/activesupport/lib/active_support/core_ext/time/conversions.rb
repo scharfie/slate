@@ -1,7 +1,7 @@
 module ActiveSupport #:nodoc:
   module CoreExtensions #:nodoc:
     module Time #:nodoc:
-      # Getting times in different convenient string representations and other objects
+      # Converting times to formatted strings, dates, and datetimes.
       module Conversions
         DATE_FORMATS = {
           :db           => "%Y-%m-%d %H:%M:%S",
@@ -13,17 +13,16 @@ module ActiveSupport #:nodoc:
           :rfc822       => "%a, %d %b %Y %H:%M:%S %z"
         }
 
-        def self.included(base)
+        def self.included(base) #:nodoc:
           base.class_eval do
             alias_method :to_default_s, :to_s
             alias_method :to_s, :to_formatted_s
           end
         end
 
-        # Convert to a formatted string - see DATE_FORMATS for predefined formats.
-        # You can also add your own formats to the DATE_FORMATS constant and use them with this method.
+        # Convert to a formatted string. See DATE_FORMATS for builtin formats.
         #
-        # This method is also aliased as <tt>to_s</tt>.
+        # This method is aliased to <tt>to_s</tt>.
         #
         # ==== Examples:
         #   time = Time.now                     # => Thu Jan 18 06:10:17 CST 2007
@@ -36,16 +35,26 @@ module ActiveSupport #:nodoc:
         #   time.to_formatted_s(:long)          # => "January 18, 2007 06:10"
         #   time.to_formatted_s(:long_ordinal)  # => "January 18th, 2007 06:10"
         #   time.to_formatted_s(:rfc822)        # => "Thu, 18 Jan 2007 06:10:17 -0600"
+        #
+        # == Adding your own time formats to to_formatted_s
+        # You can add your own formats to the Time::DATE_FORMATS hash.
+        # Use the format name as the hash key and either a strftime string
+        # or Proc instance that takes a time argument as the value.
+        #
+        #   # config/initializers/time_formats.rb
+        #   Time::DATE_FORMATS[:month_and_year] = "%B %Y"
+        #   Time::DATE_FORMATS[:short_ordinal] = lambda { |time| time.strftime("%B #{time.day.ordinalize}") }
         def to_formatted_s(format = :default)
-          if formatter = DATE_FORMATS[format]
-            if formatter.respond_to?(:call)
-              formatter.call(self).to_s
-            else
-              strftime(formatter)
-            end
-          else
-            to_default_s
-          end
+          return to_default_s unless formatter = DATE_FORMATS[format]
+          formatter.respond_to?(:call) ? formatter.call(self).to_s : strftime(formatter)
+        end
+        
+        # Returns the utc_offset as an +HH:MM formatted string. Examples:
+        #
+        #   Time.local(2000).formatted_offset         # => "-06:00"
+        #   Time.local(2000).formatted_offset(false)  # => "-0600"
+        def formatted_offset(colon = true, alternate_utc_string = nil)
+          utc? && alternate_utc_string || utc_offset.to_utc_offset_s(colon)
         end
 
         # Convert a Time object to a Date, dropping hour, minute, and second precision.

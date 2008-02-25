@@ -32,6 +32,15 @@ module ActionView
     #       <input name="commit" type="submit" value="Create" />
     #     </form>
     #
+    # If you are using a partial for your form fields, you can use this shortcut:
+    #
+    #     <% form_for :person, @person, :url => { :action => "create" } do |f| %>
+    #       <%= render :partial => f %>
+    #       <%= submit_tag 'Create' %>
+    #     <% end %>
+    #
+    # This example will render the <tt>people/_form</tt> partial, setting a local variable called <tt>form</tt> which references the yielded FormBuilder.
+    #
     # The <tt>params</tt> object created when this form is submitted would look like:
     #
     #     {"action"=>"create", "controller"=>"persons", "person"=>{"first_name"=>"William", "last_name"=>"Smith"}}
@@ -56,6 +65,9 @@ module ActionView
     # ...becomes...
     #
     #   <input type="text" id="person_1_name" name="person[1][name]" value="<%= @person.name %>" />
+    #
+    # An <tt>index</tt> option may also be passed to <tt>form_for</tt> and <tt>fields_for</tt>.  This automatically applies
+    # the <tt>index</tt> to all the nested fields.
     #
     # There are also methods for helping to build form tags in link:classes/ActionView/Helpers/FormOptionsHelper.html,
     # link:classes/ActionView/Helpers/DateHelper.html, and link:classes/ActionView/Helpers/ActiveRecordHelper.html
@@ -153,10 +165,17 @@ module ActionView
       #     <%= check_box_tag "person[admin]", @person.company.admin? %>
       #   <% end %>
       #
+      # In this case, if you use this:
+      #
+      #   <%= render :partial => f %>
+      #
+      # The rendered template is <tt>people/_labelling_form</tt> and the local variable referencing the form builder is called <tt>labelling_form</tt>.
+      #
       # In many cases you will want to wrap the above in another helper, so you could do something like the following:
       #
-      #   def labelled_form_for(name, object, options, &proc)
-      #     form_for(name, object, options.merge(:builder => LabellingFormBuiler), &proc)
+      #   def labelled_form_for(record_or_name_or_array, *args, &proc)
+      #     options = args.extract_options!
+      #     form_for(record_or_name_or_array, *(args << options.merge(:builder => LabellingFormBuilder)), &proc)
       #   end
       #
       # If you don't need to attach a form to a model instance, then check out FormTagHelper#form_tag.
@@ -628,12 +647,13 @@ module ActionView
 
       def initialize(object_name, object, template, options, proc)
         @object_name, @object, @template, @options, @proc = object_name, object, template, options, proc
+        @default_options = @options ? @options.slice(:index) : {}
       end
 
       (field_helpers - %w(label check_box radio_button fields_for)).each do |selector|
         src = <<-end_src
           def #{selector}(method, options = {})
-            @template.send(#{selector.inspect}, @object_name, method, options.merge(:object => @object))
+            @template.send(#{selector.inspect}, @object_name, method, objectify_options(options))
           end
         end_src
         class_eval src, __FILE__, __LINE__
@@ -652,20 +672,20 @@ module ActionView
           name = "#{object_name}[#{ActionController::RecordIdentifier.singular_class_name(object)}]"
           args.unshift(object)
         end
-        
+
         @template.fields_for(name, *args, &block)
       end
 
       def label(method, text = nil, options = {})
-        @template.label(@object_name, method, text, options.merge(:object => @object))
+        @template.label(@object_name, method, text, objectify_options(options))
       end
 
       def check_box(method, options = {}, checked_value = "1", unchecked_value = "0")
-        @template.check_box(@object_name, method, options.merge(:object => @object), checked_value, unchecked_value)
+        @template.check_box(@object_name, method, objectify_options(options), checked_value, unchecked_value)
       end
 
       def radio_button(method, tag_value, options = {})
-        @template.radio_button(@object_name, method, tag_value, options.merge(:object => @object))
+        @template.radio_button(@object_name, method, tag_value, objectify_options(options))
       end
 
       def error_message_on(method, prepend_text = "", append_text = "", css_class = "formError")
@@ -673,12 +693,17 @@ module ActionView
       end
 
       def error_messages(options = {})
-        @template.error_messages_for(@object_name, options.merge(:object => @object))
+        @template.error_messages_for(@object_name, objectify_options(options))
       end
 
       def submit(value = "Save changes", options = {})
         @template.submit_tag(value, options.reverse_merge(:id => "#{object_name}_submit"))
       end
+
+      private
+        def objectify_options(options)
+          @default_options.merge(options.merge(:object => @object))
+        end
     end
   end
 

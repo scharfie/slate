@@ -76,7 +76,10 @@ module Spec
               end
             end            
           end
-        
+
+          def step_upcoming(type, description, *args)
+          end
+                  
           def step_succeeded(type, description, *args)
             found_step(type, description, false, *args)
           end
@@ -104,13 +107,15 @@ module Spec
         private
 
           def found_step(type, description, failed, *args)
+            desc_string = description.step_name
+            arg_regexp = description.arg_regexp
             text = if(type == @previous_type)
               "\n    And "
             else
               "\n\n    #{type.to_s.capitalize} "
             end
             i = -1
-            text << description.gsub(::Spec::Story::Step::PARAM_PATTERN) { |param| args[i+=1] }
+            text << desc_string.gsub(arg_regexp) { |param| args[i+=1] }
             @output.print(failed ? red(text) : green(text))
 
             if type == :'given scenario'

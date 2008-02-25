@@ -61,8 +61,10 @@ module ActionController
       request_method == :head
     end
 
+    # Provides acccess to the request's HTTP headers, for example:
+    #  request.headers["Content-Type"] # => "text/plain"
     def headers
-      @env
+      @headers ||= ActionController::Http::Headers.new(@env)
     end
 
     def content_length
@@ -111,7 +113,7 @@ module ActionController
     #   end
     def format=(extension)
       parameters[:format] = extension.to_s
-      format
+      @format = Mime::Type.lookup_by_extension(parameters[:format])
     end
 
     # Returns true if the request's "X-Requested-With" header contains

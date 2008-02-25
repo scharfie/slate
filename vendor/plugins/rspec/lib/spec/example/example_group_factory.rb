@@ -23,7 +23,7 @@ module Spec
         def default(example_group_class)
           old = @example_group_types
           @example_group_types = Hash.new(example_group_class)
-          @example_group_types.merge(old) if old
+          @example_group_types.merge!(old) if old
         end
 
         def get(id=nil)
@@ -36,12 +36,8 @@ module Spec
         
         def create_example_group(*args, &block)
           opts = Hash === args.last ? args.last : {}
-          if opts[:shared]
-            SharedExampleGroup.new(*args, &block)
-          else
-            superclass = determine_superclass(opts)
-            superclass.describe(*args, &block)
-          end
+          superclass = determine_superclass(opts)
+          superclass.describe(*args, &block)
         end
 
         protected

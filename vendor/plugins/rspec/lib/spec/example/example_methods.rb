@@ -63,6 +63,10 @@ module Spec
       def description
         @_defined_description || @_matcher_description || "NO NAME"
       end
+
+      def __full_description
+        "#{self.class.description} #{self.description}"
+      end
       
       def set_instance_variables_from_hash(ivars)
         ivars.each do |variable_name, value|
@@ -80,6 +84,10 @@ module Spec
           @_matcher_description = Spec::Matchers.generated_description
           Spec::Matchers.clear_generated_description
         end
+      end
+
+      def implementation_backtrace
+        eval("caller", @_implementation)
       end
       
       protected

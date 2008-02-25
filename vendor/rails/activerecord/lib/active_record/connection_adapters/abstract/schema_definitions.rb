@@ -144,7 +144,10 @@ module ActiveRecord
 
         # convert something to a BigDecimal
         def value_to_decimal(value)
-          if value.is_a?(BigDecimal)
+          # Using .class is faster than .is_a? and
+          # subclasses of BigDecimal will be handled
+          # in the else clause
+          if value.class == BigDecimal
             value
           elsif value.respond_to?(:to_d)
             value.to_d
@@ -169,12 +172,8 @@ module ActiveRecord
           def new_time(year, mon, mday, hour, min, sec, microsec)
             # Treat 0000-00-00 00:00:00 as nil.
             return nil if year.nil? || year == 0
-
-            Time.send(Base.default_timezone, year, mon, mday, hour, min, sec, microsec)
-          # Over/underflow to DateTime
-          rescue ArgumentError, TypeError
-            zone_offset = Base.default_timezone == :local ? DateTime.local_offset : 0
-            DateTime.civil(year, mon, mday, hour, min, sec, zone_offset) rescue nil
+            
+            Time.time_with_datetime_fallback(Base.default_timezone, year, mon, mday, hour, min, sec, microsec) rescue nil
           end
 
           def fast_string_to_date(string)
@@ -453,9 +452,7 @@ module ActiveRecord
         polymorphic = options.delete(:polymorphic)
         args.each do |col|
           column("#{col}_id", :integer, options)
-          unless polymorphic.nil?
-            column("#{col}_type", :string, polymorphic.is_a?(Hash) ? polymorphic : {})
-          end
+          column("#{col}_type", :string, polymorphic.is_a?(Hash) ? polymorphic : options) unless polymorphic.nil?
         end
       end
       alias :belongs_to :references

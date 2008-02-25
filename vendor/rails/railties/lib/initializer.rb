@@ -81,22 +81,23 @@ module Rails
       initialize_dependency_mechanism
       initialize_whiny_nils
       initialize_temporary_session_directory
+      initialize_time_zone
       initialize_framework_settings
 
       add_support_load_paths
 
       load_plugins
 
-      # Observers are loaded after plugins in case Observers or observed models are modified by plugins.
-      load_observers
-
-      # Routing must be initialized after plugins to allow the former to extend the routes
-      initialize_routing
+      load_application_initializers
 
       # the framework is now fully initialized
       after_initialize
 
-      load_application_initializers
+      # Routing must be initialized after plugins to allow the former to extend the routes
+      initialize_routing
+
+      # Observers are loaded after plugins in case Observers or observed models are modified by plugins.
+      load_observers
     end
 
     # Check for valid Ruby version
@@ -250,7 +251,10 @@ module Rails
         begin
           logger = ActiveSupport::BufferedLogger.new(configuration.log_path)
           logger.level = ActiveSupport::BufferedLogger.const_get(configuration.log_level.to_s.upcase)
-          logger.auto_flushing = false if configuration.environment == "production"
+          if configuration.environment == "production"
+            logger.auto_flushing = false
+            logger.set_non_blocking_io
+          end
         rescue StandardError =>e
           logger = ActiveSupport::BufferedLogger.new(STDERR)
           logger.level = ActiveSupport::BufferedLogger::WARN
@@ -310,6 +314,16 @@ module Rails
       if configuration.frameworks.include?(:action_controller)
         session_path = "#{configuration.root_path}/tmp/sessions/"
         ActionController::Base.session_options[:tmpdir] = File.exist?(session_path) ? session_path : Dir::tmpdir
+      end
+    end
+
+    def initialize_time_zone
+      if configuration.time_zone
+        Time.zone_default = TimeZone[configuration.time_zone]
+        if configuration.frameworks.include?(:active_record)
+          ActiveRecord::Base.time_zone_aware_attributes = true
+          ActiveRecord::Base.default_timezone = :utc
+        end
       end
     end
 
@@ -452,6 +466,11 @@ module Rails
       )
     end
     alias_method :breakpoint_server=, :breakpoint_server
+
+    # Sets the default time_zone.  Setting this will enable time_zone
+    # awareness for ActiveRecord models and set the ActiveRecord default
+    # timezone to :utc.
+    attr_accessor :time_zone
 
     # Create a new Configuration instance, initialized with the default
     # values.

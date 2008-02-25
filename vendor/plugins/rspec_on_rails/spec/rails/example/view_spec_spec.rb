@@ -231,6 +231,13 @@ describe "An instantiated ViewExampleGroupController", :type => :view do
   end
 end
 
+describe "render :inline => ...", :type => :view do
+  it "should render ERB right in the spec" do
+    render :inline => %|<%= text_field_tag('field_name', 'Value') %>|
+    response.should have_tag("input[type=?][name=?][value=?]","text","field_name","Value")
+  end
+end
+
 module Spec
   module Rails
     module Example
@@ -242,6 +249,14 @@ module Spec
           end
           group.description.to_s.should == "foo"
           $nested_group.description.to_s.should == "foo bar"
+        end
+
+        it "should clear ActionView::Base.base_view_path on teardown" do
+          group = describe("base_view_path_cleared flag", :type => :view) {}
+          example = group.it{}
+          
+          ActionView::Base.should_receive(:base_view_path=).with(nil)
+          group.run_after_each(example)
         end
       end
     end
