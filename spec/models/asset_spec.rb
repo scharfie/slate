@@ -21,9 +21,9 @@ Slate::AttachmentFu.asset_root = File.expand_path(File.join(File.dirname(__FILE_
 describe Asset, "of dimensions 276x110" do
   fixtures :spaces, :assets
   
-  setup do
+  before(:each) do
     @space = Space.active = spaces(:test_space)
-    @asset = @space.assets.create :source_url => '276x110.png'
+    @asset = @space.assets.create! :source_url => '276x110.png'
   end
 
   it "should be created" do
@@ -69,7 +69,8 @@ end
 
 describe Asset, "of dimensions 16x16" do
   fixtures :spaces, :assets
-  setup do
+  
+  before(:each) do
     @space = Space.active = spaces(:test_space)
     @asset = @space.assets.create(:source_url => '16x16.png')
   end
@@ -98,7 +99,7 @@ end
 describe Asset, "ZIP file hello_world.zip" do
   fixtures :spaces, :assets
   
-  setup do
+  before(:each) do
     @space = Space.active = spaces(:test_space)
     @asset = @space.assets.create :source_url => 'hello_world.zip'
   end

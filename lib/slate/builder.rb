@@ -5,8 +5,6 @@ module Slate
     message "The template for this page is missing."; end
   
   module Builder
-    THEME_TEMPLATE_ROOT = '../../public/themes/'
-    
     def self.included(receiver)
       receiver.send(:helper, :builder)
       receiver.send(:helper, Helpers)
@@ -37,7 +35,7 @@ module Slate
       raise Slate::ThemeMissing if (theme = @space.theme).blank?
       raise Slate::TemplateMissing if (template = @page.template).blank?
       
-      template = File.join(THEME_TEMPLATE_ROOT, theme, template) rescue nil
+      template = File.join(theme, template) rescue nil
       
       begin
         render :template => template, :layout => false

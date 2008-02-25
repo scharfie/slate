@@ -33,7 +33,7 @@ describe 'Slate::Builder' do
   
   it "should render public theme template portfolio/home" do
     get :show
-    template = File.join(Slate::Builder::THEME_TEMPLATE_ROOT, 'portfolio/home')
+    template = 'portfolio/home'
     response.should render_template(template)
   end
   

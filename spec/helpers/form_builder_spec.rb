@@ -18,7 +18,7 @@ class BuilderHelperController < ActionController::Base
   def initialize
     super
     @template = ::ActionView::Base.new
-    @template.view_paths = self.class.view_paths
+    @template.finder.view_paths = self.class.view_paths
     @assigns = {}
   end
   

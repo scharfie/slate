@@ -2,19 +2,26 @@ module Slate
   module ThemeSupport
     def self.included(base)
       base.class_eval do
-        # returns the view path for the current theme
-        def theme_view_path
-          File.join(App.root, 'public/themes', 
-            Space.active.theme, 'views') if Space.active && !Space.active.theme.blank?
-        end
+        before_filter :prepend_theme_view_paths
 
-        # returns view paths with theme_view_path
-        def view_paths_with_theme
-          ([theme_view_path] + view_paths_without_theme).uniq.compact
+      protected  
+        # Prepends theme-related view paths
+        # (Note that prepend_view_path is not thread-safe 
+        # according to Rails docs and should have a mutex)
+        def prepend_theme_view_paths
+          return true if Space.active.nil? || Space.active.theme.blank?
+          self.prepend_view_path [themes_view_path, theme_views_path]
         end
-      
-        # alias the normal view_paths
-        alias_method_chain :view_paths, :theme
+        
+        # Returns the path to public/themes
+        def themes_view_path
+          File.join(App.root, 'public/themes')
+        end
+        
+        # returns the view path for the current theme's "views" folder
+        def theme_views_path
+          File.join(App.root, 'public/themes', Space.active.theme, 'views')
+        end
       end
     end
   end
