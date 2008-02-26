@@ -1,16 +1,15 @@
 class Slate::Controller < ApplicationController
   # Path to /app/controllers within a particular plugin
   cattr_accessor :controller_base
+  before_filter :prepend_plugin_view_path
   
-  # Returns custom view path for this plugin
-  def self.view_path_for_plugin
-    File.join(self.controller_base, '../views')
+protected
+  # Prepends the path to the plugins view path
+  def prepend_plugin_view_path
+    self.class.prepend_view_path self.class.controller_base / '../views'
   end
-  
-  def self.view_paths
-    [view_path_for_plugin, super].flatten.uniq
-  end
-  
+
+public  
   # Sets the controller_base path by using the caller
   def self.inherited(subclass)
     begin
