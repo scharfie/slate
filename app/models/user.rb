@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   validates_presence_of :password_confirmation, :if => Proc.new { |user| !user.password.blank? }
   validates_confirmation_of :password, :if => Proc.new { |user| !user.password.blank? }
   validates_uniqueness_of :username, :email_address
-  validates_presence_of :first_name, :last_name, :email_address, :on => :create
+  validates_presence_of :email_address, :on => :create
 
 protected
   # extracts username and password from given

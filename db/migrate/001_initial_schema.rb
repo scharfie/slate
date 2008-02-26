@@ -49,6 +49,8 @@ class InitialSchema < ActiveRecord::Migration
       t.boolean  :is_hidden,      :default => false
       t.boolean  :is_default,     :default => false
       t.integer  :children_count, :default => 0
+      t.string   :behavior_type
+      t.integer  :behavior_id
     end
 
     create_table :plugin_schema_info, :force => true do |t|

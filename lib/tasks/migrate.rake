@@ -11,5 +11,10 @@ namespace :db do
         plugin.migrate(version) if plugin.name == name || name.nil?
       end  
     end
+    
+    desc "Run core and Slate plugin migrations"
+    task :all => ['db:migrate', 'db:migrate:plugins'] do
+      # Nothing else to do :-)
+    end
   end
 end

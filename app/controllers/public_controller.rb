@@ -1,26 +1,26 @@
 class PublicController < ApplicationController
+  include Slate::Builder
+  include Slate::ThemeSupport
+
   # we don't need to capture a user for the public side
   skip_before_filter :capture_user!
+  before_filter :capture_page
   
 protected
+  # Sets active space based on domain
   def capture_space
     @space = Space.active = Space.find_by_domain(request.host)
   end
   
+  # Captures page based on URL (defaults to default page for space)
+  def capture_page
+    page_path = params[:page_path]
+    @page = @space.pages.find_by_page_path(page_path, :include => :behavior) || 
+      @space.default_page
+  end
+  
 public
   def index
-    path = params[:page_path]
-    page = @space.pages.find_by_page_path(path)
-    
-    render :text => <<-HTML
-      <h1>TODO: render public side for path:</h1>
-        <strong>Domain:</strong>#{request.host}<br />
-        <strong>Path:</strong> /#{path.join('/')}
-      <br /><br />
-      <pre>
-        <br />#{params.to_yaml}
-        <br />#{page.to_yaml}
-      </pre>
-    HTML
+    view_page
   end
 end

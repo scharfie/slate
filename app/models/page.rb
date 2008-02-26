@@ -4,6 +4,7 @@ class Page < ActiveRecord::Base
     :ensure_root => true, :order => 'path, position ASC'
 
   # Associations
+  belongs_to :behavior, :polymorphic => true
   belongs_to :space
   has_many :areas
 
@@ -38,7 +39,7 @@ protected
   end
   
 public
-  def self.find_by_page_path(path)
+  def self.find_by_page_path(path, options={})
     return nil if path.blank?
     path = path.split('/') unless Array === path
     return nil if path.empty?    
@@ -62,8 +63,10 @@ public
     
     conditions[0] = conditions[0].join(' AND ')
  
-    self.find :first, :select => 'pages.*', 
-      :conditions => conditions, :include => includes
+    self.with_scope(:find => options) do
+      self.find :first, :select => 'pages.*', 
+        :conditions => conditions, :include => includes
+    end    
   end
 
   # returns the names of all items in the bloodline
