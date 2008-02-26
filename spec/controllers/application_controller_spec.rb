@@ -7,6 +7,12 @@ rescue
 end
 
 class ApplicationTestController < ApplicationController
+  before_filter :ensure_super_user!, :only => :super_user_action
+  
+  def super_user_action
+    render :text => 'ApplicationController#super_user_action'
+  end
+  
   def some_action
     render :text => 'ApplicationTest#some_action'
   end
@@ -45,6 +51,17 @@ describe ApplicationTestController do
     get 'some_action'
     response.should have_text('ApplicationTest#some_action')
     User.active.should == @user
+  end
+  
+  it "should redirect to login when not super-user on GET to /super_user_action" do
+    User.should_receive(:find_by_id).with(77).and_return(@user)
+    session[:user_id] = 77
+    
+    @user.should_receive(:super_user?).and_return(false)
+    
+    get 'super_user_action'
+    response.should redirect_to(login_url)
+    flash[:error].should == 'Super user is required to perform this task.'
   end
   
   it "should have a nil active space for non-RC controllers" do

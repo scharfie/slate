@@ -3,31 +3,13 @@ require 'digest/sha1'
 module Slate
   class UserError < Error; end
   class CurrentSpaceError < UserError; end
-  class PasswordAlreadyUsed < UserError; end
-  class PasswordInvalid < UserError
-    message "The given password does not match the password schema."
-  end
-  class PasswordIsCurrent < UserError; end
-  class AccountExpired < UserError; end
   class AccountLocked < UserError
     message "This account has been locked."
-  end
-  class AccountNotVerified < UserError
-    message "This account has not been verified." 
-  end
-  class AccountNotApproved < UserError
-    message "This account has not been approved." 
   end
   class AccountInvalid < UserError
     message "The username and/or password is invalid." 
   end 
-  class AccountVerificationInvalid < UserError; end
-  class AccountApprovalInvalid < UserError; end
-  class AccountAlreadyVerified < UserError; end
-  class AccountAlreadyApproved < UserError; end
-  class SuperUserRequiredForApproval < UserError; end
 end
-
 
 class User < ActiveRecord::Base
   # Attributes
@@ -40,33 +22,15 @@ class User < ActiveRecord::Base
   has_many :spaces, :through => :memberships, :select => 'spaces.*, memberships.role AS role'
 
   # Callbacks
-  before_validation :ensure_username
   before_save :encrypt_password
 
   # Validations
-  validate :password_validation
   validates_presence_of :password_confirmation, :if => Proc.new { |user| !user.password.blank? }
   validates_confirmation_of :password, :if => Proc.new { |user| !user.password.blank? }
   validates_uniqueness_of :username, :email_address
-  validates_presence_of :first_name, :last_name, :email_address, :reason_for_account, 
-    :on => :create, :if => Proc.new { |user| !user.ldap_user? }
+  validates_presence_of :first_name, :last_name, :email_address, :on => :create
 
 protected
-  # callback to ensure the password is valid
-  def password_validation
-    return if password.blank? 
-    if !self.class.valid_password?(password)
-      errors.add 'password', "does not match required schema"
-      return false
-    end
-  end
-
-  # ensures that the username attribute is set
-  # (optionally setting it to a generated value)
-  def ensure_username
-    self.username ||= self.class.generate_username(self)
-  end
-
   # extracts username and password from given
   # arguments (either directly or from first
   # argument if it's a hash)
@@ -95,6 +59,11 @@ protected
     return false
   end
 
+  # Raises Slate::AccountLocked if the account is locked
+  def self.account_active?(user)
+    raise Slate::AccountLocked if user.locked?
+  end
+  
 public
   # authenticates with the given credentials
   # return: user on success
@@ -102,12 +71,10 @@ public
   #         false if authentication is invalid
   def self.login(*args)
     username, password = extract_credentials(*args)
-    
     return nil if (user = find_by_username(username)).nil?
     
-    raise Slate::AccountLocked if user.locked?
-    raise Slate::AccountNotVerified unless user.verified?
-    raise Slate::AccountNotApproved unless user.approved?
+    # Check that the user account is active
+    account_active? user
 
     user.authenticate(password) ? process_valid_login(user) : process_invalid_login(user)
   end
@@ -120,120 +87,14 @@ public
   
   # finds user given a username or ID
   def self.find_user(username_or_id)
-    user = username_or_id =~ /^\d+$/ ? self.find_by_id(username_or_id) : self.find_by_username(username_or_id)
+    user = username_or_id.to_s =~ /^\d+$/ ? self.find_by_id(username_or_id) : self.find_by_username(username_or_id)
   end
   
-  # verifies the given account with the specified
-  # verification key
-  def self.verify_account(username_or_id, verify_key)
-    user = find_user(username_or_id)
-    
-    # skip verfication if 'require_verification' is disabled
-    return user if Slate.config.users.require_verification == false
-    
-    raise Slate::AccountInvalid if user.nil?
-    return user if user.verified?
-    raise Slate::AccountVerificationInvalid unless user.verification_key == verify_key
-    
-    user.update_attribute(:verified_on, Time.now)
-    user
-  end
-
-  # approves the given account
-  def self.approve_account(username_or_id, approval_key)
-    user = find_user(username_or_id)
-    
-    # skip approval if 'require_approval' is disabled
-    return user if Slate.config.users.require_approval == false
-    
-    raise Slate::AccountInvalid if user.nil?
-    raise Slate::AccountNotVerified unless user.verified?
-    raise Slate::AccountAlreadyApproved if user.approved?
-    raise Slate::AccountApprovalInvalid unless user.approval_key == approval_key
-    raise Slate::SuperUserRequiredForApproval if User.active.nil? || !User.active.super_user?
-
-    user.update_attributes(:approved_on => Time.now, :approved_by => User.active.username)
-    user
-  end
-
-  # requests a new account based on given attributes
-  def self.request_account(params)
-    returning self.new(params) do |user|
-      user.requested_on = params[:requested_on] || Time.now
-      user.username ||= self.generate_username(user)
-      user.save
-    end
-  end
-  
-  # checks to see if the given password is valid
-  # based on the following rules:
-  #   Your password must:
-  #   1. Be at least eight characters in length 
-  #   2. Contain characters from three of the following four categories:
-  #     a. English uppercase characters (A through Z)
-  #     b. English lowercase characters (a through z)
-  #     c. Base 10 digits (0 through 9) 
-  #     d. Nonalphanumeric characters (e.g., !, $, #, %)
-  def self.valid_password?(pw)
-    return true if Slate.config.users.password_validation == false
-    return false if pw.nil? || pw.length < 8
-    pass, rules = 0, [/[A-Z]/, /[a-z]/, /[0-9]/, /[!@#\$%]/]
-    rules.each { |re| pass += 1 if pw =~ re }
-    pass >= 3
-  end
-
   # encrypts the password using SHA1 
   # uses the password_salt defined in the 
   # configuration if available
   def self.encrypt_password(pw)
     pw.length == 40  ? pw : Digest::SHA1.hexdigest((Slate.config.users.password_salt || '') + pw) 
-  end
-  
-  # generates a local user account username
-  # based on a the name of the supplied user
-  # 
-  # Format:
-  #   [first letter of first name][initials][lastname]
-  def self.generate_username(user_object)
-    parts = [
-     (user_object.first_name || '').blank? ? '' : user_object.first_name[0].chr,
-     user_object.initial || '', 
-     user_object.last_name
-    ]
-    
-    parts.compact.join('').downcase
-  end
-  
-  # generates verification key for the given user
-  def self.generate_verification_key(user_object)
-    Digest::SHA1.hexdigest(user_object.username + user_object.requested_on.to_i.to_s)    
-  end
-
-  # generates approval key for the given user
-  def self.generate_approval_key(user_object)
-    Digest::SHA1.hexdigest(user_object.username + user_object.verified_on.to_i.to_s)    
-  end
-
-  # generates a random password
-  def self.generate_password
-    values = ['A'..'Z', 'a'..'z', '0'..'9'].map(&:to_a).flatten
-    password, size = [], 8
-
-    # seed the time
-    srand Time.now.usec
-    
-    # create the initial password
-    size.times { password << values[rand(values.length)].downcase }
-    
-    # pick random points in the password string to modify
-    keypoints = []
-    keypoints << rand(8) while (keypoints = keypoints.uniq).length < 3
-    
-    password[keypoints[0]] = values[rand(26)]
-    password[keypoints[1]] = values[rand(26) + 26]
-    password[keypoints[2]] = values[rand(10) + 52]
-        
-    password.join
   end
 
   # returns email addresses for all super users  
@@ -243,12 +104,6 @@ public
     ).map { |e| e.email_address }    
   end
 
-  # returns the time the user requested an account
-  # (defaults to created_on or current time)
-  def requested_on
-    super || self.created_on || Time.now.to_i
-  end
-  
   # logs the user out (sets the active user to nil)
   def logout
     User.active = nil
@@ -265,31 +120,6 @@ public
     (self[:role] ||= self.memberships.role(site, self)).to_i
   end
   
-  # returns true if the user is mapped to an ldap account
-  def ldap_user?
-    [self.class.to_s, self[:type]].include? 'LdapUser'
-  end
-  
-  # the password field will hold the verification 
-  # key until the account is verified
-  def verification_key
-    verified? ? nil : self.class.generate_verification_key(self)
-  end
-  
-  def approval_key
-    verified? ? self.class.generate_approval_key(self) : nil
-  end
-  
-  # returns true if the account has been approved
-  def approved?
-    Slate.config.users.require_approval == false || !self.approved_on.nil?
-  end
-
-  # returns true if the account has been verified
-  def verified?
-    Slate.config.users.require_verfication == false || !self.verified_on.nil?
-  end
-
   # returns true if the account is locked
   def locked?
     self[:locked] == true
