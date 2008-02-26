@@ -26,26 +26,13 @@ namespace :slate do
       console.say "Let's create a new superuser.  We'll need a few pieces of information."
       
       loop do
-        user.reason_for_account = "slate:setup:user account"
         user.super_user = true
-        user.approved_on = Time.now
-        user.verified_on = Time.now
         
         console.field user, :first_name, "First, we need your name:"
         console.field user, :last_name
         console.field user, :username, "Now, please enter the username for this new user:"
 
         message = "Next, we need a password.  "
-        message += <<-DETAIL.chomp if Slate.config.users.password_validation == true
-Your password must:
- 1. Be at least eight characters in length 
- 2. Contain characters from three of the following four categories:
-  a. English uppercase characters (A through Z)
-  b. English lowercase characters (a through z)
-  c. Base 10 digits (0 through 9) 
-  d. Nonalphanumeric characters (e.g., !, $, #, %)
-DETAIL
-        
         console.field(user, :password, message) { |q| q.echo = '*' }
         console.field(user, :password_confirmation, "Please confirm your password:") {|q| q.echo = '*'}
         console.field user, :email_address, "Finally, please enter an email address.  This address should be valid - the system will send emails to this address for certain events."
