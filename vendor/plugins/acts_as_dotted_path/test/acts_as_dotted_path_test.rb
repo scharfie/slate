@@ -381,4 +381,21 @@ class ActsAsDottedPathWithBeforeRootTest < Test::Unit::TestCase
     assert_equal(site.id, root.site_id)
     assert_equal(root, page.parent)
   end
+  
+  def test_address_example
+    site = Site.create!(:name => 'My Test Site')
+    @wv = site.pages.create!(:name => 'WV')
+    @morgantown = site.pages.create!(:name => 'Morgantown')
+    @wv.children << @morgantown
+    @address = site.pages.create!(:name => '1 Fine Arts Drive')
+    @morgantown.children << @address
+    
+    @wv.reload; @morgantown.reload; @address.reload
+    
+    assert_equal(1, @wv.depth)
+    assert_equal(2, @morgantown.depth)
+    assert_equal(3, @address.depth)
+    
+    assert_equal(@morgantown, site.pages.find(:first, :conditions => 'name = "Morgantown" AND depth = 2'))
+  end  
 end

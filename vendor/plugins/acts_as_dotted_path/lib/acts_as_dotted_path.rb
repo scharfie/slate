@@ -327,7 +327,7 @@ module ActiveRecord # :nodoc:
               sql = <<-SQL
                 UPDATE #{self.class.table_name}
                 SET path = ('#{new_base_path}' + #{substring_sql}), depth = depth + #{depth_delta}
-                WHERE #{scope_condition} AND path LIKE '#{base_path}%'
+                WHERE #{scope_condition} AND path LIKE '#{base_path}% AND id != #{self.id}'
               SQL
               ActiveRecord::Base.connection.execute(sql)
               
