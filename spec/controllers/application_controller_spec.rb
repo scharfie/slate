@@ -16,6 +16,10 @@ class ApplicationTestController < ApplicationController
   def some_action
     render :text => 'ApplicationTest#some_action'
   end
+  
+  # def request
+  #   ActionController::TestRequest.new
+  # end
 end
 
 class ApplicationRCTestController < ApplicationController
@@ -31,7 +35,17 @@ end
 describe ApplicationTestController do
   before(:each) do
     request.host = 'slate.local.host'
+    controller.request = request
     @user = mock(User)
+  end
+  
+  it "should return true for slate? for slate.local.host" do
+    controller.slate?.should == true
+  end
+  
+  it "should return false for slate? for example.local.host" do
+    request.host = 'example.local.host'
+    controller.slate?.should == false
   end
   
   it "should redirect to login when not logged in on GET to /some_action" do

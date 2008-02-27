@@ -23,10 +23,10 @@ protected
   # session.  If no user is found, a redirect to the 
   # login screen occurs
   # 
-  # Note that this filter returns true if the first
-  # subdomain is not 'slate'
+  # Note that this filter returns true if the request
+  # isn't from slate (see the +slate?+ method)
   def capture_user!
-    return true if request.subdomains.first != 'slate'
+    return true unless slate?
     
     unless capture_user
       flash[:notice] = "Please sign in first and then we'll take you back."
@@ -67,4 +67,12 @@ protected
       redirect_to login_url() and return false
     end
   end
+ 
+public  
+  # Returns true if the first subdomain is slate
+  def slate?
+    request.subdomains.first == 'slate'    
+  end
+  
+  helper_method :slate?
 end

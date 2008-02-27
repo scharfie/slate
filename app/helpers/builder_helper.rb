@@ -6,12 +6,12 @@ module BuilderHelper
       result = %{
         #{stylesheet_link_tag 'builder'}
         #{javascript_include_tag 'jquery', 'slate/builder'}
-      } if editor?
+      } if editor? && slate?
     end
     
     # renders the support toolbar
     def support_toolbar
-      render :partial => 'builder/support_toolbar'
+      render :partial => 'builder/support_toolbar' if slate?
     end
   
   end

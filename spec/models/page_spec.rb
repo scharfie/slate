@@ -21,11 +21,15 @@ describe Page do
   before(:each) do
     # the following creates WV > Morgantown > 1 Fine Arts Drive
     @space = spaces(:test_space)
-    @wv = @space.pages.create(:name => 'WV', :is_default => true)
-    @morgantown = @space.pages.create(:name => 'Morgantown')
+    @wv = @space.pages.create!(:name => 'WV', :is_default => true)
+    @morgantown = @space.pages.create!(:name => 'Morgantown')
     @wv.children << @morgantown
-    @address = @space.pages.create(:name => '1 Fine Arts Drive', :is_hidden => true)
+    @address = @space.pages.create!(:name => '1 Fine Arts Drive', :is_hidden => true)
     @morgantown.children << @address
+    
+    @wv.reload
+    @morgantown.reload
+    @address.reload
   end
 
   it "should return 'WV' via find_by_page_path" do
@@ -35,6 +39,10 @@ describe Page do
   it "should return 'Morgantown' via find_by_page_path" do
     Page.find_by_page_path('wv/morgantown').should == @morgantown
     Page.find_by_page_path(%w(wv morgantown)).should == @morgantown
+  end
+  
+  it "should return '1 Fine Arts Drive' via find_by_page_path" do
+    Page.find_by_page_path(%w(wv morgantown 1_fine_arts_drive)).should == @address
   end
   
   it "should return path names" do

@@ -15,12 +15,13 @@ protected
   # Captures page based on URL (defaults to default page for space)
   def capture_page
     page_path = params[:page_path]
-    @page = @space.pages.find_by_page_path(page_path) || 
-      @space.default_page
+    return @page = @space.default_page if page_path.blank?
+    return @page = @space.pages.find_by_page_path(page_path)
   end
   
 public
   def index
+    raise "No page found" if @page.nil?
     view_page
   end
 end

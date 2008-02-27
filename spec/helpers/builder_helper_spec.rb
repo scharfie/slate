@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe BuilderHelper, '(Base)' do
   include Slate::Builder::Helpers
   
+  before(:each) do
+    should_receive(:slate?).and_return(true)
+  end
+  
   it "should include necessary support files" do
     @files = support_files
     @files.should include('/stylesheets/builder.css')
