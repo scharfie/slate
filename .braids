@@ -4,11 +4,6 @@ vendor/plugins/tag_class:
   type: svn
   branch: master
   remote: http://svn.webtest.wvu.edu/repos/rails/plugins/tag_class
-vendor/plugins/resources_controller: 
-  local_branch: braid/svn/vendor/plugins/resources-controller
-  type: svn
-  branch: master
-  remote: http://svn.ardes.com/rails_plugins/resources_controller
 vendor/plugins/rspec: 
   local_branch: braid/svn/vendor/plugins/rspec
   type: svn
@@ -24,26 +19,26 @@ vendor/plugins/eztime:
   type: svn
   branch: master
   remote: http://svn.webtest.wvu.edu/repos/rails/plugins/eztime
-vendor/plugins/mimetype_fu: 
-  local_branch: braid/svn/vendor/plugins/mimetype-fu
-  type: svn
-  branch: master
-  remote: http://mimetype-fu.googlecode.com/svn/trunk
 vendor/plugins/attachment_fu: 
   local_branch: braid/svn/vendor/plugins/attachment-fu
   type: svn
   branch: master
   remote: http://svn.techno-weenie.net/projects/plugins/attachment_fu
-vendor/plugins/routing_tricks: 
-  local_branch: braid/svn/vendor/plugins/routing-tricks
+vendor/plugins/mimetype_fu: 
+  local_branch: braid/svn/vendor/plugins/mimetype-fu
   type: svn
   branch: master
-  remote: http://svn.jamisbuck.org/rails-plugins/routing_tricks
+  remote: http://mimetype-fu.googlecode.com/svn/trunk
 vendor/rails: 
   local_branch: braid/svn/vendor/rails
   type: svn
   branch: master
   remote: http://svn.rubyonrails.org/rails/trunk
+vendor/plugins/routing_tricks: 
+  local_branch: braid/svn/vendor/plugins/routing-tricks
+  type: svn
+  branch: master
+  remote: http://svn.jamisbuck.org/rails-plugins/routing_tricks
 vendor/plugins/dbstring: 
   local_branch: braid/svn/vendor/plugins/dbstring
   type: svn
@@ -54,13 +49,13 @@ vendor/plugins/rspec_on_rails:
   type: svn
   branch: master
   remote: http://rspec.rubyforge.org/svn/trunk/rspec_on_rails
-vendor/plugins/css_dryer: 
-  local_branch: braid/svn/vendor/plugins/css-dryer
-  type: svn
-  branch: master
-  remote: http://opensource.airbladesoftware.com/trunk/plugins/css_dryer
 vendor/plugins/acts_as_dotted_path: 
   local_branch: braid/svn/vendor/plugins/acts-as-dotted-path
   type: svn
   branch: master
   remote: http://svn.webtest.wvu.edu/repos/rails/plugins/acts_as_dotted_path
+vendor/plugins/css_dryer: 
+  local_branch: braid/svn/vendor/plugins/css-dryer
+  type: svn
+  branch: master
+  remote: http://opensource.airbladesoftware.com/trunk/plugins/css_dryer

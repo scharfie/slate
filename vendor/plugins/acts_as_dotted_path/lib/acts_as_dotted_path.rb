@@ -202,7 +202,7 @@ module ActiveRecord # :nodoc:
           nodes.each do |e|
             count = counters[e.id]  
             if e.children_count != count
-              e.update_attribute(:children_count, count) 
+              e.class.update_counters e.id, :children_count => count
             end  
           end
         end
@@ -231,6 +231,7 @@ module ActiveRecord # :nodoc:
       
             nodes[id.to_s] = { 
               :path => path.join('.'), 
+              :depth => path.length,
               :parent_id => pid.to_i, 
               :position => counters[-1] += 1 
             }
@@ -249,7 +250,7 @@ module ActiveRecord # :nodoc:
           original_nodes.each do |e|
             new_data = nodes[e.id.to_s]
             next if new_data.nil?
-            old_data = { :parent_id => e.parent_id, :path => e.path, :position => e.position }
+            old_data = { :parent_id => e.parent_id, :depth => e.depth, :path => e.path, :position => e.position }
             # puts "%s (%d) --> pos: %d (old) -- %d (new)" % [e.name, e.id, old_data[:position], new_data[:position]]
             unless old_data == new_data
               e.update_attributes(new_data) 
@@ -265,12 +266,14 @@ module ActiveRecord # :nodoc:
       end
 
       module InstanceMethods
-        attr_accessor :dotted_path_previous_parent_id
+        # attr_accessor :dotted_path_previous_parent_id
+        attr_accessor :dotted_path_previous_parent
         
         # sets dotted path related properties for given
         # child based on properties of current object (parent)
         def set_dotted_path_properties_for_child(child)
-          self.dotted_path_previous_parent_id = child.parent_id
+          # self.dotted_path_previous_parent_id = child.parent_id
+          self.dotted_path_previous_parent = child.parent
           child.set_dotted_path_properties_from_parent(self)
         end
         
@@ -299,7 +302,8 @@ module ActiveRecord # :nodoc:
         # hierarchy and counter caches are correct
         # (called after a child is added to an object)
         def update_dotted_path_for_children(child=nil)
-          old_parent = self.class.find_by_id(dotted_path_previous_parent_id)
+          # old_parent = self.class.find_by_id(dotted_path_previous_parent_id)
+          old_parent = dotted_path_previous_parent
           if !old_parent.nil?
             if old_parent != self
               # the path we need to find
@@ -328,12 +332,14 @@ module ActiveRecord # :nodoc:
               ActiveRecord::Base.connection.execute(sql)
               
               # decrement the old parent's counter cache
-              old_parent.decrement!(:children_count)
+              self.class.decrement_counter(:children_count, old_parent.id)
+              old_parent.children_count -=1
             end
           end
 
-          # increment the new parent's counter cache          
-          self.increment!(:children_count)
+          # increment the new parent's counter cache
+          self.class.increment_counter(:children_count, self.id)
+          self.children_count += 1
         end
 
         # returns the dotted path joined with

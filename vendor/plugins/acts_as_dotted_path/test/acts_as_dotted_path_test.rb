@@ -16,11 +16,12 @@ end
 class ActsAsDottedPathTest < Test::Unit::TestCase
   def setup
     create_fixtures :pages
+    Page.delete_all
   end
   
   def create_page(options={})
     options = {:name => options} if options.is_a?(String)
-    Page.create(options)
+    Page.create!(options)
   end
   
   def find_page(name)
@@ -33,15 +34,15 @@ class ActsAsDottedPathTest < Test::Unit::TestCase
   end
   
   def test_creating_a_page
-    page = Page.create(:name => 'Home')
+    page = Page.create!(:name => 'Home')
     assert_equal(1, Page.count())
     assert_equal(0, page.depth)
     assert_equal('', page.path)
-    assert_equal('1', page.path_with_id)
+    assert_equal(page.id.to_s, page.path_with_id)
   end
   
   def test_creating_a_child
-    parent = Page.create(:name => 'Home')
+    parent = Page.create!(:name => 'Home')
     child = Page.new(:name => 'Child')
     parent.children << child
     
@@ -49,10 +50,10 @@ class ActsAsDottedPathTest < Test::Unit::TestCase
     assert_equal(1, parent.children.count)
     
     # attributes
-    assert_equal(2, child.id)
+    # assert_equal(2, child.id)
     assert_equal(1, child.depth)
-    assert_equal('1', child.path)
-    assert_equal('1.2', child.path_with_id)
+    assert_equal(parent.id.to_s, child.path)
+    assert_equal("#{parent.id}.#{child.id}", child.path_with_id)
     
     # relationships
     assert_relationship(true, parent, child)
@@ -89,20 +90,21 @@ class ActsAsDottedPathTest < Test::Unit::TestCase
     assert_relationship(true, parent, child)
     assert_relationship(false, stepparent, child)
     
-    assert_equal(1, parent[:children_count])
-    assert_equal(0, stepparent[:children_count])
+    assert_equal(parent, child.parent)
+    
+    assert_equal(1, parent.children_count)
+    assert_equal(0, stepparent.children_count)
 
-        
     # change parent
-    # child.change_parent(stepparent)
     stepparent.children << child
     assert_relationship(false, parent, child)
     assert_relationship(true, stepparent, child)
     
     parent.reload
     stepparent.reload
-    assert_equal(0, parent[:children_count])
-    assert_equal(1, stepparent[:children_count])
+
+    assert_equal(0, parent.children_count)
+    assert_equal(1, stepparent.children_count)
   end
   
   def test_siblings
@@ -241,16 +243,19 @@ class ActsAsDottedPathTest < Test::Unit::TestCase
     root.reload
     staff.reload
 
+    assert_equal(root.children.size, root.children_count)
+    assert_equal(staff.children.size, staff.children_count)
+    
     assert_equal(1, root.children_count)
     assert_equal(3, staff.children_count)
   end
   
   def test_example_from_rdoc
-    pages = Page.create(:name => 'Pages')
+    pages = Page.create!(:name => 'Pages')
     pages.children << Page.new(:name => 'Home')
     pages.children << Page.new(:name => 'About')
     pages.children << Page.new(:name => 'Projects')
-    assert_equal(3, pages.children.size)
+    assert_equal(3, pages.children(true).size)
     
     projects = pages.children.find_by_name('Projects')
     projects.children << Page.new(:name => 'ActsAsDottedPath')
@@ -263,7 +268,7 @@ class ActsAsDottedPathTest < Test::Unit::TestCase
     pages.children << p
     assert_equal('Pages / ActsAsDottedPath', p.bloodline.map(&:name).join(' / '))
     
-    assert_equal(4, pages.children.size)
+    assert_equal(4, pages.children(true).size)
   end
 end
 
@@ -341,6 +346,8 @@ class ActsAsDottedPathWithBeforeRootTest < Test::Unit::TestCase
       self.name = 'Page Root Node'
       self.site_id = page.site_id        
     end
+    
+    tree_class.delete_all
   end
   
   def tree_class
@@ -363,8 +370,8 @@ class ActsAsDottedPathWithBeforeRootTest < Test::Unit::TestCase
   end
   
   def test_that_root_is_automatically_created_via_association
-    site = Site.create(:name => 'My Test Site')
-    page = site.pages.create(:name => 'Example page') 
+    site = Site.create!(:name => 'My Test Site')
+    page = site.pages.create!(:name => 'Example page') 
 
     assert_equal 2, site.pages(true).count
     
