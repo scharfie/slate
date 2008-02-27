@@ -10,8 +10,8 @@
   <% end %>
 <% end %>
 
-<%= form.check_box :is_default, :label => 'Set as default page? ' + @content_for_current_default %>
-<%= form.check_box :is_hidden, :label => 'Hide this page?' %>
+<%= form.check_box :is_default, :template => 'trailing_label_element', :label => 'Set as default page? ' + @content_for_current_default %>
+<%= form.check_box :is_hidden,  :template => 'trailing_label_element', :label => 'Hide this page?' %>
 
 <% form.actions do %>
   <%= submit_tag 'Save' %> or <%= link_to_cancel %>

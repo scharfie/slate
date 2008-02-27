@@ -225,3 +225,26 @@ ul#toolbar {
     }
   }
 }
+
+#pages {
+  li {
+   padding: 2px 0; 
+  }
+  
+  a.page {
+    color: #000;
+    font-weight: bold;
+  }
+  
+  span.actions {
+    a {
+      font-size: 0.9em;
+      color: #777;
+      text-decoration: none;
+      
+      :hover {
+        text-decoration: underline;
+      }
+    }  
+  }  
+}
