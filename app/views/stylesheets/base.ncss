@@ -226,25 +226,42 @@ ul#toolbar {
   }
 }
 
-#pages {
+ul#pages {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 1em;
+
   li {
-   padding: 2px 0; 
+    padding-top: 5px;
+  }  
+  
+  ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 20px;
   }
   
-  a.page {
-    color: #000;
-    font-weight: bold;
+  a {
+    text-decoration: none;
+    
+    :hover {
+      text-decoration: underline; 
+    }
+    
+    .page {
+      color: #000;
+      font-weight: bold;
+    }
   }
   
   span.actions {
     a {
       font-size: 0.9em;
       color: #777;
-      text-decoration: none;
-      
-      :hover {
-        text-decoration: underline;
-      }
     }  
   }  
+}
+
+img.glyph {
+  vertical-align: text-bottom;
 }
