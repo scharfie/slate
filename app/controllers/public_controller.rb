@@ -15,7 +15,7 @@ protected
   # Captures page based on URL (defaults to default page for space)
   def capture_page
     page_path = params[:page_path]
-    @page = @space.pages.find_by_page_path(page_path, :include => :behavior) || 
+    @page = @space.pages.find_by_page_path(page_path) || 
       @space.default_page
   end
   

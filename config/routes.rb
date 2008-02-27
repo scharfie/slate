@@ -1,6 +1,9 @@
 require 'slate/routing'
 
 ActionController::Routing::Routes.draw do |map|
+  map.connect 'stylesheets/:action.:format', 
+    :controller => 'stylesheets'
+  
   # Load plugin route definitions
   Slate.plugins.each do |plugin|
     plugin.route_definitions.each { |block| block.call(map) }
@@ -26,8 +29,6 @@ ActionController::Routing::Routes.draw do |map|
   map.default '', :controller => 'account', :action => 'login', 
     :erp => '/account/login'
 
-  map.connect 'stylesheets/:action.:format', :controller => 'stylesheets'
-  
   # ==========================================
   # mappings for accounts
   # ==========================================

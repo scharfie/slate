@@ -39,16 +39,16 @@ protected
   end
   
 public
-  def self.find_by_page_path(path, options={})
+  def self.find_by_page_path(path)
     return nil if path.blank?
     path = path.split('/') unless Array === path
     return nil if path.empty?    
         
     # find out how many pieces there are (separated by '/')
-    depth           = path.length
-    permalink       = path.pop
-    parent_permalink = path.pop
-    
+    depth            = path.length
+    permalink        = path[-1]
+    parent_permalink = path[-2]
+
     conditions = [[]]
     conditions[0] << "pages.depth = #{depth}" # " AND pages.space_id = #{Space.active.id}"
     conditions[0] << "pages.permalink = ?"
@@ -62,11 +62,8 @@ public
     end
     
     conditions[0] = conditions[0].join(' AND ')
- 
-    self.with_scope(:find => options) do
-      self.find :first, :select => 'pages.*', 
-        :conditions => conditions, :include => includes
-    end    
+    self.find :first, :select => 'pages.*', 
+      :conditions => conditions, :include => includes
   end
 
   # returns the names of all items in the bloodline
