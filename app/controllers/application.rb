@@ -61,18 +61,24 @@ protected
   # before filter which ensures that the active user 
   # is a super user
   def ensure_super_user!
-    unless User.active && User.active.super_user?
+    unless super_user?
       flash[:error] = "Super user is required to perform this task."
       session[:redirect_to] = url_for(:only_path => false)
       redirect_to login_url() and return false
     end
   end
- 
+  
 public  
+  # Returns true if the active user is a super user
+  def super_user?
+    User.active && User.active.super_user? || false
+  end
+ 
   # Returns true if the first subdomain is slate
   def slate?
     request.subdomains.first == 'slate'    
   end
-  
+
+  helper_method :super_user?
   helper_method :slate?
 end

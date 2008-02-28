@@ -16,10 +16,6 @@ class ApplicationTestController < ApplicationController
   def some_action
     render :text => 'ApplicationTest#some_action'
   end
-  
-  # def request
-  #   ActionController::TestRequest.new
-  # end
 end
 
 class ApplicationRCTestController < ApplicationController
@@ -46,6 +42,23 @@ describe ApplicationTestController do
   it "should return false for slate? for example.local.host" do
     request.host = 'example.local.host'
     controller.slate?.should == false
+  end
+  
+  it "should return true for super_user? when logged in as super user" do
+    User.should_receive(:active).twice.and_return(@user = mock(User))
+    @user.should_receive(:super_user?).and_return(true)
+    controller.super_user?.should == true
+  end
+
+  it "should return false for super_user? when logged but not super user" do
+    User.should_receive(:active).twice.and_return(@user = mock(User))
+    @user.should_receive(:super_user?).and_return(false)
+    controller.super_user?.should == false
+  end
+  
+  it "should return false for super_user? when not logged in" do
+    User.should_receive(:active).and_return(nil)
+    controller.super_user?.should == false
   end
   
   it "should redirect to login when not logged in on GET to /some_action" do

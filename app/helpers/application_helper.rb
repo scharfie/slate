@@ -47,4 +47,20 @@ module ApplicationHelper
   def js(text=nil)
     escape_javascript(text)
   end
+  
+  # Returns a link 'slate' to the main dashboard
+  def dashboard_heading
+    span link_to('slate', dashboard_path), :class => 'slate'
+  end
+  
+  # Returns a link to the active space
+  def space_heading
+    span link_to(Space.active.name, space_dashboard_path(Space.active)), 
+      :class => 'space' if Space.active
+  end
+  
+  # Returns 'Administrator' if super user
+  def admin_heading
+    span 'Administrator', :class => 'space' if super_user?
+  end
 end

@@ -72,6 +72,37 @@ describe ApplicationHelper do
   
   it "should create span tag" do
     span('chrisscharf').should == '<span>chrisscharf</span>'
-    span('chrisscharf', :class => 'name').should == '<span class="name">chrisscharf</span>'
+    span('chrisscharf', :class => 'name').should == 
+      '<span class="name">chrisscharf</span>'
   end
+  
+  it "should return 'slate' link to dashboard" do
+    dashboard_heading.should == 
+      '<span class="slate"><a href="/dashboard">slate</a></span>'
+  end
+  
+  it "should return nothing for space heading with no active space" do
+    Space.should_receive(:active).and_return(nil)
+    space_heading.should == nil
+  end
+  
+  it "should return link to active space" do
+    Space.stub!(:active).and_return(@space = mock(Space))
+    @space.stub!(:to_param).and_return(155)
+    @space.stub!(:name).and_return('Demo site')
+    space_heading.should == 
+      '<span class="space"><a href="/spaces/155/dashboard">Demo site</a></span>'
+  end
+  
+  it "should return 'Administrator' span when super user" do
+    should_receive(:super_user?).and_return(true)
+    admin_heading.should == 
+      '<span class="space">Administrator</span>'
+  end
+
+  it "should return nothing when not super user" do
+    should_receive(:super_user?).and_return(false)
+    admin_heading.should == nil
+  end
+
 end
