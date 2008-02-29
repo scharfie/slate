@@ -26,18 +26,17 @@ ActionController::Routing::Routes.draw do |map|
     m.connect '*page_path'
   end
 
-  map.default '', :controller => 'account', :action => 'login', 
-    :erp => '/account/login'
-
   # ==========================================
   # mappings for accounts
   # ==========================================
-  map.resource :account, :controller => 'account', 
-    :member => { :login => :any, :logout => :get }
+  map.resource :session, :controller => 'sessions', :collection => {
+    :destroy => :any
+  }
   
-  map.with_options :controller => 'account' do |m|
-    m.login 'login', :action => 'login', :erp => '/account/login'
-    m.logout 'logout', :action => 'logout', :erp => '/account/logout'
+  map.with_options :controller => 'sessions' do |m|
+    m.default '', :action => 'new', :erp => '/session/new'
+    m.login '/login', :action => 'new', :erp => '/session/new'
+    m.logout '/logout', :action => 'destroy', :erp => '/session/destroy'
   end
 
   map.resources :users

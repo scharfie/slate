@@ -6,7 +6,7 @@
 
 <%#= content_tag(:p, @account.errors.on_base.to_a.join("<br />"), :class => 'error') if @account.errors.any? -%>
 
-<% form_for :account do |form| %>
+<% form_for_resource do |form| %>
   <table>
   <% form.default_template = 'row' %>
   <% form.label_append = ':' %>

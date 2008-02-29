@@ -4,7 +4,7 @@
   <ul id="meta-nav">
     <li><%= space_chooser %></li>
     <li class="separator">|</li>
-    <li><%= link_to 'Sign out', logout_url %></li>
+    <li><%= link_to 'Sign out', logout_url, :method => :delete %></li>
   </ul>  
 <% end %>
 <%= navigation %>
