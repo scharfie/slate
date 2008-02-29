@@ -13,6 +13,7 @@ end
 
 class User < ActiveRecord::Base
   # Attributes
+  attr_accessor :remember_me
   attr_protected :super_user
   cattr_accessor :active
   attr_accessor :password
@@ -45,7 +46,7 @@ protected
   # resets the login attempts counter, updates the 
   # last login time and makes the given user active
   def self.process_valid_login(user)
-    user.update_attributes(:login_attempts => 0, :last_login => Time.now) 
+    user.update_attributes(:login_attempts => 0, :last_login => Time.now)
     User.active = user
   end
   
@@ -90,11 +91,11 @@ public
     user = username_or_id.to_s =~ /^\d+$/ ? self.find_by_id(username_or_id) : self.find_by_username(username_or_id)
   end
   
-  # encrypts the password using SHA1 
+  # encrypts the value using SHA1 
   # uses the password_salt defined in the 
   # configuration if available
-  def self.encrypt_password(pw)
-    pw.length == 40  ? pw : Digest::SHA1.hexdigest((Slate.config.users.password_salt || '') + pw) 
+  def self.encrypt(value)
+    Digest::SHA1.hexdigest((Slate.config.users.password_salt || '') + value) 
   end
 
   # returns email addresses for all super users  
@@ -138,11 +139,54 @@ public
   # before save which encrypts the password
   def encrypt_password
     return if password.blank?
-    self.crypted_password = self.class.encrypt_password(password)
+    self.crypted_password = self.class.encrypt(password)
   end
   
   # Authenticate user with given password
   def authenticate(password)
-    self.crypted_password == self.class.encrypt_password(password)
+    self.crypted_password == self.class.encrypt(password)
+  end
+  
+  # The following 'remember' methods were taken from 
+  # restful_authentication and modified
+
+  # Returns true if the user has a valid remember token
+  # (token that hasn't expired)
+  def remember_token?
+    remember_token_expires_at && Time.now.utc < remember_token_expires_at 
+  end
+
+  # These create and unset the fields required for 
+  # remembering users between browser closes
+  def remember_me!
+    remember_me_for 2.weeks
+  end
+  
+  # Returns true if the remember_me attribute is on
+  def remember_me?
+    (self[:remember_me] || 0).to_i == 1
+  end
+
+  # Remember user for duration of time
+  def remember_me_for(time)
+    remember_me_until time.from_now.utc
+  end
+
+  # Remember user until given time
+  def remember_me_until(time)
+    self.remember_token_expires_at = time
+    self.remember_token            = self.class.encrypt("#{email_address}--#{remember_token_expires_at}")
+    save(false)
+  end
+  
+  # Forget this user by clearing and token
+  def forget_me!
+    self.remember_token_expires_at = nil
+    self.remember_token            = nil
+    save(false)
+  end    
+  
+  def remember_token_as_cookie
+    { :value => remember_token, :expires => remember_token_expires_at } if remember_token?
   end
 end

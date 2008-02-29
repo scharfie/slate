@@ -4,18 +4,13 @@
 
 <% head stylesheet_link_tag('login') %>
 
-<%#= content_tag(:p, @account.errors.on_base.to_a.join("<br />"), :class => 'error') if @account.errors.any? -%>
-
 <% form_for_resource do |form| %>
   <table>
-  <% form.default_template = 'row' %>
-  <% form.label_append = ':' %>
-  <%= form.text_field 'username', :size => 30 %>
-  <%= form.password_field 'password', :size => 20 %>
-  
-  <tr class="field">
-    <td class="info"></td>
-    <td class="input"><%= submit_tag 'Sign in' %></td>
-  </tr>  
+    <% form.default_template = 'row' %>
+    <% form.label_append = ':' %>
+    <%= form.text_field 'username', :size => 30 %>
+    <%= form.password_field 'password', :size => 20 %>
+    <%= form.check_box 'remember_me', :label => 'Remember me on this computer?' %>
+    <%= form.submit 'Sign in', :label => nil %>
   </table>  
 <% end %>

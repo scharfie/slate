@@ -176,3 +176,46 @@ end
 #     @user.check_permissions?.should == true
 #   end
 # end
+
+describe User do
+  include UserSpecHelper
+  fixtures :users
+  
+  before(:each) do
+    # freeze time
+    @time = Time.now; Time.stub!(:now).and_return(@time)
+    @expires_at = 2.weeks.from_now.utc
+    
+    @user  = users(:cbscharf)
+    @user.remember_me!
+
+    @token = @user.remember_token
+  end
+
+  it "should be remembered" do
+    User.find_by_remember_token(@token).should == @user
+    @user.remember_token_expires_at.should == @expires_at
+  end
+  
+  it "should be remembered for 3 days" do
+    @user.remember_me_for(3.days)
+    @user.remember_token_expires_at.should == 3.days.from_now.utc
+  end
+  
+  it "should be forgotten" do
+    @user.forget_me!
+    @user.remember_token.should be_nil
+    User.find_by_remember_token(@token).should be_nil
+  end
+  
+  it "should have remember_token_as_cookie when remembered" do
+    @user.remember_token_as_cookie.should == {
+      :value => @token, :expires => @expires_at
+    }
+  end
+  
+  it "should have remember_token_as_cookie when forgotten" do
+    @user.forget_me!
+    @user.remember_token_as_cookie.should be_nil
+  end
+end

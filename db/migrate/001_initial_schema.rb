@@ -92,6 +92,8 @@ class InitialSchema < ActiveRecord::Migration
       t.boolean  :super_user,         :default => false
       t.datetime :created_on
       t.datetime :last_login
+      t.string   :remember_token
+      t.datetime :remember_token_expires_at
     end
   end  
 end

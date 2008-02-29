@@ -10,7 +10,13 @@ class SessionsController < ApplicationController
 protected
   # Called when a login is successful
   def successful_login
+    save_login_cookie if remember_me?
     redirect_back_to resource.super_user? ? dashboard_url() : spaces_url()
+  end
+  
+  # Was the remember me checkbox checked?
+  def remember_me?
+    params[resource_name][:remember_me] == '1' rescue false
   end
   
 public    
@@ -36,7 +42,7 @@ public
   # Logout the current user
   def destroy
     reset_session
-    resource_service.active = nil
+    logout_current_user
     redirect_to login_url
   end
 end

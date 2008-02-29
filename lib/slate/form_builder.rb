@@ -12,7 +12,7 @@ module Slate
     attr_accessor_with_default :label_append, ''
         
     # redefine the field helpers 
-    (field_helpers + %w(date_select datetime_select collection_select select)).each do |helper|
+    (field_helpers + %w(date_select datetime_select collection_select select submit)).each do |helper|
       define_method(helper) do |*args|
         args << Hash.new unless Hash === args.last
 
@@ -34,6 +34,7 @@ module Slate
         :label => label_for(helper_args.first, label),
         :element => element,
         :tip => tip,
+        :helper => helper,
         :errors => @template.error_message_on("#{@object_name}","#{helper_args[0]}", helper_args[0].to_s.humanize + ' ')
       }
 

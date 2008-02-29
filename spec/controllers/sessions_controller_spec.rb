@@ -51,7 +51,6 @@ describe SessionsController do
     response.should redirect_to(google)
   end
   
-  
   it "should render 'new' with invalid password on POST to /create" do
     @credentials = { 'username' => 'cbscharf', 'password' => 'p@ssworD'}
     User.should_receive(:login!).with(@credentials).and_raise(Slate::AccountInvalid)
@@ -88,9 +87,10 @@ describe SessionsController, "when logged in" do
   
   it "should logout successfully" do
     User.active = @user
+    @user.should_receive(:forget_me!)
+    
     delete 'destroy'
     response.should redirect_to(login_url)
-    User.active.should == nil
   end
 end
 
@@ -105,5 +105,22 @@ describe SessionsController, "when not logged in" do
     User.should_receive(:find_by_id).with(77).and_return(nil)
     get 'show'
     response.should redirect_to(login_url)
+  end
+end
+
+describe SessionsController do
+  before(:each) do
+    @user = mock(User)
+  end
+  
+  it "should login from cookie" do
+    controller.should_receive(:login_from_session).and_return(nil)
+    controller.should_receive(:login_from_cookie).and_return(@user)
+
+    @user.should_receive(:new_record?).and_return(false)
+    @user.should_receive(:super_user?).and_return(false)
+    
+    get 'new'
+    response.should redirect_to(spaces_url)
   end
 end
