@@ -23,9 +23,7 @@ module Slate
 
     # loads configuration files from the given path
     def self.process(path)
-      Dir.glob(path).each do |config_file|
-        load config_file
-      end
+      Dir.glob(path).each { |config_file| load config_file }
     end
     
     # shortcut Configuration.config.something

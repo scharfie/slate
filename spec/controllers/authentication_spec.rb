@@ -82,6 +82,25 @@ describe AuthenticationTestController do
     response.should redirect_to(login_url)
     flash[:error].should == 'Super user is required to perform this task.'
   end
+  
+  it "should login from cookie" do
+    User.should_receive(:find_by_remember_token).with('abcdef').and_return(@user)
+    controller.stub!(:cookies).and_return(:auth_token => 'abcdef')
+    controller.should_receive(:save_login_cookie)
+    controller.login_from_cookie
+    controller.current_user.should == @user
+  end
+  
+  it "should save login cookie" do
+    cookie = { :value => 'abcdef', :expires => Time.now }
+    @user.should_receive(:remember_me!)
+    @user.should_receive(:remember_token_as_cookie).and_return(cookie)
+    controller.current_user = @user
+    controller.stub!(:cookies).and_return({})
+    controller.cookies[:auth_token].should == nil
+    controller.save_login_cookie
+    controller.cookies[:auth_token].should == cookie
+  end
 end
 
 describe AuthenticationTestController, 'with user logged in' do

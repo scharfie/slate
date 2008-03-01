@@ -191,6 +191,19 @@ describe User do
 
     @token = @user.remember_token
   end
+  
+  it "should return true for remember_me?" do
+    @user.remember_me = '1'
+    @user.should be_remember_me
+    @user.remember_me = 1
+    @user.should be_remember_me
+  end
+  
+  it "should return false for remember_me?" do
+    @user.should_not be_remember_me
+    @user.remember_me = 0
+    @user.should_not be_remember_me
+  end 
 
   it "should be remembered" do
     User.find_by_remember_token(@token).should == @user

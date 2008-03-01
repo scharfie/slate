@@ -164,7 +164,7 @@ public
   
   # Returns true if the remember_me attribute is on
   def remember_me?
-    (self[:remember_me] || 0).to_i == 1
+    (remember_me || 0).to_i == 1
   end
 
   # Remember user for duration of time
