@@ -83,7 +83,34 @@ module Slate
     # Path to migrations directory
     def migrations_path
       File.join(directory, 'db/migrate')
-    end    
+    end
+    
+    # Returns true if there are pending migrations
+    def pending_migrations?
+      current_version < migratable_version
+    end
+    
+    # Renders error message to stderr if the plugin
+    # cannot be loaded due to pending migrations
+    def pending_migrations_error
+      message = "   Migrations pending: please run 'rake db:migrate:plugins PLUGIN=#{key}'"
+      $stderr.puts message
+    end
+        
+    # Returns migrated version of plugin based on 
+    # plugin schema table
+    def current_version
+      schema_info.version
+    end
+    
+    # Returns the highest migration version number from 
+    # available migration files in migrations path
+    def migratable_version
+      migration_file = Dir["#{migrations_path}/[0-9]*_*.rb"].sort.last
+      migration_file.scan(/[0-9]+/).first.to_i
+    rescue
+      0  
+    end
     
     # Returns ActiveRecord object from the plugin schema
     # table for this plugin
@@ -125,6 +152,9 @@ module Slate
     # plugin to Slate.plugins)
     def load(initializer)
       return if loaded?
+      
+      # Prevent this plugin from loading if we have pending migrations
+      pending_migrations_error and return if pending_migrations?
 
       # initialize dependences and load plugin.rb
       init_dependencies(initializer)
