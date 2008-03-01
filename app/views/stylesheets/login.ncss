@@ -27,16 +27,18 @@ h2 {
   }
 }
 
-div.actions {
-	margin-bottom: -10px;
-}
-
-textarea#account_reason_for_account {
-  width: 99%;
-}
-
 label {
   font-weight: bold;
+}
+
+td.input label {
+  font-weight: normal;
+  color: #777;
+  font-size: 0.85em;
+}
+
+td.input {
+  padding-left: 0;
 }
 
 p.tip {
@@ -51,4 +53,8 @@ table {
 
 td.info {
   padding-right: 5px;
+}
+
+#session_username, #session_password {
+  margin-left: 3px;
 }
