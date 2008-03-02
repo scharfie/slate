@@ -11,3 +11,13 @@ class String
     File.join(self, other)
   end
 end
+
+class Object
+  # Credit: http://ozmm.org/posts/try.html
+  #   @person ? @person.name : nil
+  # vs
+  #   @person.try(:name)
+  def try(method)
+    send method if respond_to? method
+  end
+end

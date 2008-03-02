@@ -29,3 +29,22 @@ describe 'String#/' do
     end
   end
 end
+
+describe 'Object#try' do
+  before(:each) do
+    @object = Object.new
+  end
+  
+  it "should fail on message 'invalid_message'" do
+    # there's no "real" way to test a failure for try...
+    # adding should_not_receive makes the object respond to
+    # that message, so we just have to assume it failed :/
+    @object.try(:invalid_message).should == nil
+    @object.respond_to?(:invalid_message).should == false
+  end
+  
+  it "should pass on message 'valid_message'" do
+    @object.stub!(:valid_message).and_return('Passed')
+    @object.try(:valid_message).should == 'Passed'
+  end
+end
