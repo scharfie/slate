@@ -12,7 +12,7 @@ class Asset < ActiveRecord::Base
       :lg => '1024x1024>' \
     }, :storage => :file_system
     
-  # ensure that the site id is properly set for thumbnails  
+  # Ensure that the site id is properly set for thumbnails  
   before_thumbnail_saved do |asset, thumbnail|
     thumbnail.space_id = asset.space_id
   end  
@@ -20,12 +20,12 @@ class Asset < ActiveRecord::Base
   include Slate::AttachmentFu
 
 public
-  # returns name of this asset (defaulting to filename)
+  # Returns name of this asset (defaulting to filename)
   def name
     super.blank? ? filename : super
   end
   
-  # opens the zip file and returns ZipEntry for each entry
+  # Opens the zip file and returns ZipEntry for each entry
   def entries
     return nil unless self.zip?
     Zip::ZipFile.open(self.full_filename) do |zip|
@@ -35,7 +35,7 @@ public
     end
   end
   
-  # extracts the ZIP file
+  # Extracts the ZIP file
   def extract!
     return nil unless self.zip?
     self.entries.map do |entry|

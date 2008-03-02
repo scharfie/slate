@@ -14,7 +14,7 @@ class UploadedFile
   
   # rewinds the file if there is a file object
   def rewind
-    file ? file.rewind : nil
+    file.try(:rewind)
   end
   
   # returns the content type of the file

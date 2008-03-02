@@ -3,7 +3,7 @@ class Area < ActiveRecord::Base
   belongs_to :page
   belongs_to :user
 
-  # version 0 is draft, version 1 is published, 
+  # Version 0 is draft, version 1 is published, 
   # versions 2-5 are previously published 
   has_many :versions, :class_name => 'Area', 
     :foreign_key => 'area_id', :dependent => :delete_all
@@ -15,30 +15,32 @@ class Area < ActiveRecord::Base
   before_validation :ensure_user
 
 protected  
-  # ensures that user is set
+  # Ensures that user is set
   def ensure_user  
     self.user = User.active
   end
   
-  # increments all versions of this area
+  # Increments all versions of this area
   def increment_versions
     self.class.update_all 'version = version + 1', 
       "area_id = #{self.id} AND version > 0"
   end
 
-  # removes old versions (any version >= 5) of this area
+  # Removes old versions (any version >= 5) of this area
   def clear_old_versions
     self.class.delete_all "version >= 5 AND area_id = #{self.id}"
   end
     
 public
+  # Finds area with key in given space that is marked
+  # as default (if any)
   def self.default_content_for(space_id, key)
     find_by_sql(['SELECT a.* FROM areas a INNER JOIN pages p on p.id=a.page_id ' +
       'WHERE a.key = ? AND (p.space_id = ? AND a.is_default = ?) ' +
       "ORDER BY a.is_default ASC", key, space_id, true]).first
   end
 
-  # publishes this area
+  # Publishes this area
   def publish!
     return false if new_record?
     
@@ -52,22 +54,22 @@ public
     end  
   end
 
-  # finds currently published version
+  # Finds currently published version
   def published_version
     versions.find_by_version(1)
   end 
 
-  # returns key for URL parameter
+  # Returns key for URL parameter
   def to_param
     self.key
   end
   
-  # returns custom DOM ID
+  # Returns custom DOM ID
   def dom_id
     ['area', page_id, key].join('-')
   end
   
-  # returns true if the area is marked as default
+  # Returns true if the area is marked as default
   # and, optionally, if the given page is the associated 
   # page for this area
   def default?(page=nil)
@@ -76,18 +78,16 @@ public
     self.page == page
   end
 
-  # returns true if given area is default
+  # Returns true if given area is default
   # but not associated with given page
   def using_default?(page)
     return false unless is_default?
     self.page != page
   end
   
-  # marks this area as default
+  # Marks this area as default
   def mark!
-    if default_content = self.class.default_content_for(page.space_id, self.key)
-      default_content.unmark!
-    end
+    self.class.default_content_for(page.space_id, self.key).try(:unmark!)
 
     save if new_record?    
     self.class.update_all(['is_default = ?', true], 
@@ -95,7 +95,7 @@ public
     self.is_default = true
   end
   
-  # unmarks this area as default
+  # Unmarks this area as default
   def unmark!
     save if new_record?
     self.class.update_all(['is_default = ?', false], 

@@ -1,4 +1,7 @@
 class Page < ActiveRecord::Base
+  alias_attribute :default, :is_default
+  alias_attribute :hidden, :is_hidden
+  
   permalink_column :name, :glue => '_'
   acts_as_dotted_path :scope => :space_id, 
     :ensure_root => true, :order => 'path, position ASC'
@@ -17,21 +20,21 @@ class Page < ActiveRecord::Base
   validates_presence_of :name
 
 protected
-  # ensures that the root node has the name
-  # "Pages"
+  # Callback which ensures that the root node 
+  # has the name 'Pages'
   def ensure_name
     self.name = 'Pages' if self.root?
   end
   
-  # ensures that only one default page exists
-  # for this page's space
+  # Callback which ensures that only one 
+  # default page exists for this page's space
   def ensure_one_default_page
     return unless is_default?
     return unless default_page = space.default_page
     default_page.update_attribute(:is_default, false)
   end
 
-  # callback from acts_as_dotted_path which is invoked
+  # Callback from acts_as_dotted_path which is invoked
   # before automatically creating a root node (when 
   # ensure_root option is true)
   def before_root(page)
@@ -39,6 +42,7 @@ protected
   end
   
 public
+  # Finds page based on given path (array or '/' separated string)
   def self.find_by_page_path(path)
     return nil if path.blank?
     path = path.split('/') unless Array === path
@@ -50,13 +54,13 @@ public
     parent_permalink = path[-2]
 
     conditions = [[]]
-    conditions[0] << "pages.depth = #{depth}" # " AND pages.space_id = #{Space.active.id}"
-    conditions[0] << "pages.permalink = ?"
+    conditions[0] << 'pages.depth = ' + depth.to_s
+    conditions[0] << 'pages.permalink = ?'
     conditions << permalink
     includes = []
     
     if parent_permalink
-      conditions[0] << "parents_pages.permalink = ?"
+      conditions[0] << 'parents_pages.permalink = ?'
       conditions << parent_permalink
       includes << :parent
     end
@@ -66,23 +70,13 @@ public
       :conditions => conditions, :include => includes
   end
 
-  # returns the names of all items in the bloodline
+  # Returns the names of all items in the bloodline
   # (except the root page)
   def path_names
     bloodline[1..-1].map(&:name)
   end
   
-  # alias to is_default?
-  def default?
-    is_default?
-  end
-  
-  # alias to is_hidden?
-  def hidden?
-    is_hidden?
-  end
-
-  # custom collection which returns areas for page
+  # Custom collection which returns areas for page
   # as well as areas marked as default
   def areas_with_default(conditions=nil)
     Area.send(:with_scope, :find => { :conditions => conditions}) do
@@ -94,7 +88,7 @@ public
     end      
   end
   
-  # retrieves content for given key with options
+  # Retrieves content for given key with options
   def content_for(key, mode=:draft)
     conditions = [['key = ?'], key.to_s]
     conditions.first << 'version = 0' if mode == :draft
