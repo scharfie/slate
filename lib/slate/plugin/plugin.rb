@@ -5,7 +5,7 @@ module Slate
   
   self.plugins = []
   
-  class Plugin < Rails::Plugin
+  class Plugin < ::Rails::Plugin
     class << self
       attr_accessor :name, :description
       
@@ -131,7 +131,7 @@ module Slate
     
     # Returns the "friendly" name of the plugin
     def name
-      self.class.name || plugin_name.gsub(/_plugin/, '').humanize
+      self.class.name || key.gsub(/_plugin/i, '').humanize
     end
     
     # Returns the description of the plugin
