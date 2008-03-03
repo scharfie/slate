@@ -1,6 +1,6 @@
 <% head stylesheet_link_tag('assets') %>
 <% heading 'Files' %>
-<% toolbar_item link_to(glyph('application_get') + ' Upload', new_resource_path) %>
+<% toolbar_link glyph('application_get') + ' Upload', new_resource_path %>
 
 <table class="assets">
   <% for asset in resources %>

@@ -34,6 +34,12 @@ describe ToolbarHelper do
       
     toolbar_collection.items.first.should == 'Administrator Dashboard'
   end
+
+  it "should create toolbar link item using toolbar_link" do
+    toolbar_collection.items.should be_empty
+    toolbar_link 'Google', 'http://www.google.com'
+    toolbar_collection.items.first.should == '<a href="http://www.google.com">Google</a>'
+  end
   
   it "should create new toolbar item in 'actions' toolbar" do
     toolbar_collection.items.should be_empty

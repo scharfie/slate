@@ -1,15 +1,21 @@
 module ToolbarHelper
-  # returns a collectible for toolbars
+  # Returns a collectible for toolbars
   def toolbar_collection
     @toolbar_collection ||= Slate::Collectible.new(:toolbar)
   end
   
-  # creates a new collectible item
+  # Creates a new collectible item
   def toolbar_item(key=nil, content=nil, &block)
     toolbar_collection.push(key, content, &block)
   end
   
-  # renders collectible
+  # Creates a link_to with given arguments for current
+  # toolbar
+  def toolbar_link(*args)
+    toolbar_item link_to(*args)
+  end
+  
+  # Renders collectible
   def toolbar(*args)
     options = Hash === args.last ? args.pop : {}
         key = args.first unless Hash === args.first

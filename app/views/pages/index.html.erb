@@ -1,7 +1,7 @@
 <% heading 'Pages' %>
 
-<% toolbar_item link_to(glyph('add') + ' New page', new_resource_path()) %>
-<% toolbar_item link_to('Organize', organize_resources_path()) %>
+<% toolbar_link glyph('add') + ' New page', new_resource_path() %>
+<% toolbar_link 'Organize', organize_resources_path() %>
 
 <ul id="pages">
   <%= render :partial => 'page', :collection => self.resource.children %>
