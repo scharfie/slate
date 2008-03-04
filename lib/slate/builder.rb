@@ -29,13 +29,24 @@ module Slate
     end
     
     include Helpers
-    
-    # renders the template for the current page
+
+  protected
+    # Loads behavior object into instance variable
+    def load_behavior
+      return unless behavior = @page.behavior
+      instance_variable_set '@' + behavior.class.to_s.underscore,
+        behavior
+    end
+
+  public
+    # Renders the template for the current page
     def view_page
       raise Slate::ThemeMissing if (theme = @space.theme).blank?
       raise Slate::TemplateMissing if (template = @page.template).blank?
       
       template = File.join(theme, template) rescue nil
+      
+      load_behavior
       
       begin
         render :template => template, :layout => false
@@ -44,7 +55,7 @@ module Slate
       end  
     end
 
-    # renders the content for the given key in current page
+    # Renders the content for the given key in current page
     def content_for(key)
       @area = @page.content_for(key, production? ? :production : :draft)
       @area.body_html = '<em class="b-empty">(empty)</em>' if @area.new_record? && editor?

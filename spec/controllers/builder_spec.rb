@@ -23,9 +23,10 @@ describe 'Slate::Builder' do
   
   before(:each) do
     @space = mock(Space)
-    @page = mock(Space)
+    @page = mock(Page)
     @space.stub!(:theme).and_return('portfolio')
     @page.stub!(:template).and_return('home')
+    @page.stub!(:behavior).and_return(nil)
     
     Space.stub!(:find).and_return(@space)
     Page.stub!(:find).and_return(@page)
@@ -45,6 +46,17 @@ describe 'Slate::Builder' do
     get :invoke_content_for_header
     response.should render_template('builder/_area')
   end
+  
+  it "should load behavior 'Blog'" do
+    @blog = mock('Blog')
+    @blog.stub!(:class).and_return('Blog')
+    
+    @page.should_receive(:behavior).and_return(@blog)
+    
+    get :show
+    response.should render_template('portfolio/home')
+    assigns[:blog].should == @blog
+  end
 end
 
 describe 'Slate::Builder with integrated views' do
@@ -53,9 +65,10 @@ describe 'Slate::Builder with integrated views' do
 
   before(:each) do
     @space = mock(Space)
-    @page = mock(Space)
+    @page = mock(Page)
     @space.stub!(:theme).and_return('portfolio')
     @page.stub!(:template).and_return('home')
+    @page.stub!(:behavior).and_return(nil)
     
     Space.stub!(:find).and_return(@space)
     Page.stub!(:find).and_return(@page)
