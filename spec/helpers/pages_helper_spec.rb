@@ -1,11 +1,19 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe PagesHelper do
-  
-  #Delete this example and add some real ones or delete this file
-  it "should include the PagesHelper" do
-    included_modules = self.class.send :included_modules
-    included_modules.should include(PagesHelper)
+  before(:each) do
+    @page = mock(Page)
+    @page.stub!(:default?).and_return(false)        
   end
   
+  it "should return proper glyph for normal page" do
+    should_receive(:glyph).with('page_white')
+    page_glyph(@page)
+  end
+  
+  it "should return proper glyph for default page" do
+    should_receive(:glyph).with('house')
+    @page.should_receive(:default?).and_return(true)
+    page_glyph(@page)
+  end
 end

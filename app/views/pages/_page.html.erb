@@ -1,5 +1,6 @@
 <li>
-  <%= glyph('page_white') %> <%= link_to page.name, resource_path(page), :class => 'page' %>
+  <%= page_glyph(page) %> 
+  <%= link_to page.name, resource_path(page), :class => 'page' %>
   <span class="actions">
     <%= link_to 'Edit', edit_resource_path(page) %>
     <%= link_to 'Add child', new_resource_path(page) %>
