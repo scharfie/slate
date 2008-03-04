@@ -2,20 +2,20 @@ div#flash {
 	div {
 	  .flash {
 		  margin: 5px 0 10px 0;
-	    padding: 0.75em 40px;
+	    padding: 0.75em 38px;
 		  font: bold 1em Lucida Grande;
 		  border: 1px dotted transparent;
 		  border-width: 1px 0;
 	  }
 	
 	  .notice {
-		  background: #eeffee url(/images/glyphs/check.png) no-repeat 16px center;
+		  background: #eeffee url(/images/glyphs/check.png) no-repeat 18px center;
 		  border-color: #9c9;
 		  color: #696;
 		}
 		
 		.error {
-			background: #933 url(/images/glyphs/error.png) no-repeat 16px center;
+			background: #933 url(/images/glyphs/error.png) no-repeat 18px center;
 			border-color: #c99;
 			color: #fff;
 			background-color: #FFE5E5;
