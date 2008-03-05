@@ -32,10 +32,28 @@ module Slate
 
   protected
     # Loads behavior object into instance variable
-    def load_behavior
+    # (based on the behavior object's class)
+    # For example, a page with a behavior object of type Blog would
+    # create an instance variable named @blog
+    def load_behavior_object
       return unless behavior = @page.behavior
       instance_variable_set '@' + behavior.class.to_s.underscore,
         behavior
+    end
+    
+    # Loads behavior helper
+    # (based on pluralized form of behavior object's class)
+    # For example, a page with a behavior object of type Blog would
+    # expect a helper module BlogsHelper
+    def load_behavior_helper
+      return unless behavior = @page.behavior
+
+      # Why does it have to be this hard?  Calling +self.class.helper+ doesn't
+      # work... the template already exists at that point :-/
+      helper_module = (behavior.class.to_s.pluralize + 'Helper').constantize
+      response.template.extend helper_module
+    rescue
+      nil
     end
 
   public
@@ -46,7 +64,8 @@ module Slate
       
       template = File.join(theme, template) rescue nil
       
-      load_behavior
+      load_behavior_object
+      load_behavior_helper
       
       begin
         render :template => template, :layout => false

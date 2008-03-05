@@ -13,7 +13,6 @@ describe "Slate::Routing" do
     ActionController::Routing::Routes.draw do |map|
       map.public_routes { |m| self.route = m.connect(*args) }
     end
-    
     return route
   end
 
@@ -24,7 +23,9 @@ describe "Slate::Routing" do
   end
   
   after(:each) do
-    ActionController::Routing::Routes.reload
+    # Force routes to reload (otherwise some controller
+    # tests randomly fail)
+    ActionController::Routing::Routes.reload!
   end
   
   it "should map public route /hello" do

@@ -5,7 +5,7 @@ class PublicController < ApplicationController
   # we don't need to capture a user for the public side
   skip_before_filter :capture_user!
   before_filter :capture_page
-  
+
 protected
   # Sets active space based on domain
   def capture_space

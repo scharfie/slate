@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 Object.send(:remove_const, :BuilderTestController) rescue
+Object.send(:remove_const, :BlogsHelper) rescue
 
 class BuilderTestController < ActionController::Base
   include Slate::Builder
@@ -18,10 +19,18 @@ class BuilderTestController < ActionController::Base
   end
 end
 
+module BlogsHelper
+  def blogs_helper_method
+    
+  end
+end
+
 describe 'Slate::Builder' do
   controller_name 'BuilderTest'
   
   before(:each) do
+    controller.request = request
+    
     @space = mock(Space)
     @page = mock(Page)
     @space.stub!(:theme).and_return('portfolio')
@@ -30,6 +39,10 @@ describe 'Slate::Builder' do
     
     Space.stub!(:find).and_return(@space)
     Page.stub!(:find).and_return(@page)
+  end
+  
+  after(:each) do
+    ActionController::Routing::Routes.reload
   end
   
   it "should render public theme template portfolio/home" do
@@ -50,12 +63,21 @@ describe 'Slate::Builder' do
   it "should load behavior 'Blog'" do
     @blog = mock('Blog')
     @blog.stub!(:class).and_return('Blog')
-    
-    @page.should_receive(:behavior).and_return(@blog)
+    @page.stub!(:behavior).and_return(@blog)
     
     get :show
+    response.template.should respond_to(:blogs_helper_method)
     response.should render_template('portfolio/home')
     assigns[:blog].should == @blog
+  end
+  
+  it "should not load behavior helper due to missing helper" do
+    @blog = mock('Blog')
+    @blog.stub!(:class).and_return('MyBlog')
+    @page.should_receive(:behavior).and_return(@blog)
+    controller.instance_variable_set(:@page, @page)
+    
+    controller.send(:load_behavior_helper).should == nil
   end
 end
 

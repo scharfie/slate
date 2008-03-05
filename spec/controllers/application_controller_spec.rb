@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 begin
+  Object.send :remove_const, :ApplicationTestController
   Object.send :remove_const, :ApplicationRCTestController
 rescue
 end
