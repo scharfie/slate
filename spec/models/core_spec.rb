@@ -48,3 +48,13 @@ describe 'Object#try' do
     @object.try(:valid_message).should == 'Passed'
   end
 end
+
+describe 'Hash#+' do
+  it "should add two hashes" do
+    first = { :first => 'Chris' }
+    last  = { :last  => 'Scharf' }
+    name = first + last
+    
+    name.keys.should == [:first, :last]
+  end
+end

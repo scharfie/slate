@@ -20,4 +20,16 @@ class Object
   def try(method)
     send method if respond_to? method
   end
+  
+  # Returns true if the object is not nil
+  def not_nil?
+    !nil?
+  end  
+end
+
+class Hash
+  # Simply invokes merge on the hash
+  def +(other)
+    merge(other)
+  end  
 end
