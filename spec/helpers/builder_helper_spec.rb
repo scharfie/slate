@@ -3,11 +3,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe BuilderHelper, '(Base)' do
   include Slate::Builder::Helpers
   
-  before(:each) do
-    should_receive(:slate?).and_return(true)
-  end
-  
   it "should include necessary support files" do
+    should_receive(:slate?).and_return(true)
     @files = support_files
     @files.should include('/stylesheets/builder.css')
     @files.should include('/javascripts/jquery.js')
@@ -15,8 +12,16 @@ describe BuilderHelper, '(Base)' do
   end
   
   it "should render support toolbar" do
+    should_receive(:slate?).and_return(true)
     should_receive(:render).with(:partial => 'builder/support_toolbar')
     support_toolbar
+  end
+  
+  it "should return '/themes/my_theme' for theme_path" do
+    @space = mock(Space)
+    @space.should_receive(:theme).and_return('my_theme')
+    
+    theme_path.should == '/themes/my_theme'
   end
 end
 

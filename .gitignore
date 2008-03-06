@@ -9,3 +9,5 @@ config/database.yml
 coverage
 spec/public/*
 public/assets
+vendor/plugins/*_plugin
+public/stylesheets/

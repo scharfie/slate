@@ -47,6 +47,17 @@ describe 'Object#try' do
     @object.stub!(:valid_message).and_return('Passed')
     @object.try(:valid_message).should == 'Passed'
   end
+  
+  it "should return true for not_nil? when object is not nil" do
+    @object.should be_not_nil
+    @object.should_not be_nil
+  end
+  
+  it "should return false for not_nil? when object is nil" do
+    @object = nil
+    @object.should be_nil
+    @object.should_not be_not_nil
+  end
 end
 
 describe 'Hash#+' do

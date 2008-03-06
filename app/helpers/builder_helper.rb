@@ -14,6 +14,10 @@ module BuilderHelper
       render :partial => 'builder/support_toolbar' if slate?
     end
   
+    # Returns URL path to the current theme
+    def theme_path
+      '/themes' / @space.theme
+    end
   end
   
   module Admin
