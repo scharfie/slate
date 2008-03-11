@@ -45,6 +45,10 @@ describe Page do
     Page.find_by_page_path(%w(wv morgantown 1_fine_arts_drive)).should == @address
   end
   
+  it "should return 'wv/morgantown/1_fine_arts_drive' for page url" do
+    @address.url.should == 'wv/morgantown/1_fine_arts_drive'.split('/')
+  end
+  
   it "should return path names" do
     @address.path_names.should == ['WV', 'Morgantown', '1 Fine Arts Drive']
   end

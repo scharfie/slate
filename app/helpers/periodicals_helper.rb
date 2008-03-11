@@ -18,4 +18,19 @@ module PeriodicalsHelper
   def periodicals_by_year?
     params[:year] && !params[:month]
   end
+  
+  # Returns URL path to periodical
+  # Note: The periodical must respond to 
+  # +published_on+ and +permalink+
+  def periodical_path(e, options={})
+    year, month, day = e.published_on.strftime('%Y/%m/%d').split('/')
+    slug = e.permalink
+    options.reverse_merge! :page_path => params[:page_path], :year => year, :month => month, :day => day, :slug => slug
+    url_for options
+  end
+  
+  # Returns full URL (including host) to periodical
+  def periodical_url(e, options={})
+    periodical_path e, options.merge(:only_path => false)
+  end
 end

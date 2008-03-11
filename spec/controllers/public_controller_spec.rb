@@ -14,10 +14,12 @@ describe PublicController do
   
   it "should return default page on 'slate.example.com' (with no page path)" do
     @space.should_receive(:default_page).and_return(@page)
+    @page.should_receive(:url).and_return('some/page/path')
     controller.should_receive(:view_page)
       
     get 'index', :page_path => nil
     response.should be_success
+    params[:page_path].should == 'some/page/path'
   end
 
   it "should return specific page on 'slate.example.com/home/demo'" do

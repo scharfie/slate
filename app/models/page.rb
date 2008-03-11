@@ -76,6 +76,11 @@ public
     bloodline[1..-1].map(&:name)
   end
   
+  # Returns the url path to this page
+  def url
+    bloodline[1..-1].map(&:permalink)
+  end
+  
   # Custom collection which returns areas for page
   # as well as areas marked as default
   def areas_with_default(conditions=nil)
