@@ -2,9 +2,8 @@ module Slate
   module ThemeSupport
     def self.included(base)
       base.class_eval do
-        before_filter :prepend_theme_view_paths
 
-      protected  
+      protected
         # Prepends theme-related view paths
         # (Note that prepend_view_path is not thread-safe 
         # according to Rails docs and should have a mutex)
@@ -18,7 +17,7 @@ module Slate
           File.join(App.root, 'public/themes')
         end
         
-        # returns the view path for the current theme's "views" folder
+        # Returns the view path for the current theme's "views" folder
         def theme_views_path
           File.join(App.root, 'public/themes', Space.active.theme, 'views')
         end

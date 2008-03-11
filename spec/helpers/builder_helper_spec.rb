@@ -3,6 +3,11 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe BuilderHelper, '(Base)' do
   include Slate::Builder::Helpers
   
+  def mock_theme(name='my_theme')
+    @space = mock(Space)
+    @space.stub!(:theme).and_return(name)
+  end
+  
   it "should include necessary support files" do
     should_receive(:slate?).and_return(true)
     @files = support_files
@@ -18,10 +23,24 @@ describe BuilderHelper, '(Base)' do
   end
   
   it "should return '/themes/my_theme' for theme_path" do
-    @space = mock(Space)
-    @space.should_receive(:theme).and_return('my_theme')
-    
+    mock_theme 'my_theme'
     theme_path.should == '/themes/my_theme'
+  end
+  
+  it "should have qualified theme path 'my_theme/header' for 'header'" do
+    mock_theme 'my_theme'
+    qualified_theme_path('header').should == 'my_theme/header'
+  end
+  
+  it "should have qualified theme path 'shared/header' for 'shared/header'" do
+    mock_theme 'my_theme'
+    qualified_theme_path('shared/header').should == 'shared/header'
+  end
+  
+  it "should render 'some_theme/footer' for partial(:footer)" do
+    mock_theme 'some_theme'
+    should_receive(:render).with(:partial => 'some_theme/footer')
+    partial :footer
   end
 end
 

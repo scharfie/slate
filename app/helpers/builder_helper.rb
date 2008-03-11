@@ -18,6 +18,23 @@ module BuilderHelper
     def theme_path
       '/themes' / @space.theme
     end
+    
+    # Renders partial with given name
+    def partial(name, options={})
+      render options.merge!(:partial => qualified_theme_path(name))
+    end
+    
+    # Makes the given name into a qualified theme path
+    # by prepending the theme name (unless the name begins
+    # with 'shared/')
+    # 
+    # This is primarily used when rendering partials with
+    # the +partial+ helper
+    def qualified_theme_path(name)
+      name = name.to_s
+      name = @space.theme / name unless name.starts_with?('shared/')
+      name
+    end
   end
   
   module Admin
