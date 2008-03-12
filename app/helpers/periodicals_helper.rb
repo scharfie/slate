@@ -13,12 +13,12 @@ module PeriodicalsHelper
   def periodicals_by_month?
     params[:month] && !params[:day]
   end
-    
+
   # Returns true if the URL ends with /:year
   def periodicals_by_year?
     params[:year] && !params[:month]
   end
-  
+
   # Returns URL path to periodical
   # Note: The periodical must respond to 
   # +published_on+ and +permalink+
@@ -28,7 +28,7 @@ module PeriodicalsHelper
     options.reverse_merge! :page_path => params[:page_path], :year => year, :month => month, :day => day, :slug => slug
     url_for options
   end
-  
+
   # Returns full URL (including host) to periodical
   def periodical_url(e, options={})
     periodical_path e, options.merge(:only_path => false)
