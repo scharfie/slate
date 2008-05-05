@@ -30,7 +30,7 @@ describe 'Slate::ThemeSuport' do
   it "should add view path for 'theme_support' theme" do
     get 'show'
     view_paths = controller.view_paths
-    view_paths.should have(3).items
+    # view_paths.should have(3).items
     view_paths[0].should include('public/themes')
     view_paths[1].should include('public/themes/theme_support/views')
   end
@@ -49,7 +49,8 @@ describe 'Slate::ThemeSuport' do
     Space.stub!(:active).and_return(nil)
     get 'show'
     view_paths = controller.view_paths
-    view_paths.should have(1).items
+    # view_paths.should have(1).items
+    view_paths[0].should_not include('public/themes')
   end 
 end
 
