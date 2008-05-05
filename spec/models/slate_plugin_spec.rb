@@ -24,7 +24,7 @@ describe Slate::Plugin, ' (DummyPlugin)' do
     Slate.plugins.clear
     @plugin = load_plugin 'DummyPlugin'
   end
-
+  
   it "should return path to /app" do
     @plugin.send(:app_path).should include('dummy_plugin/app')
   end

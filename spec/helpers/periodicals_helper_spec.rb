@@ -29,4 +29,19 @@ describe PeriodicalsHelper do
     self.params = year
     should be_periodicals_by_year
   end
+  
+  it "should return periodical URL and path for article" do
+    self.params = { :page_path => ['some', 'page', 'path'], 
+      :controller => 'public', :action => 'index' }
+    @periodical = mock('SomePeriodical')
+    @periodical.stub!(:published_on).and_return(Time.local(2008, 3, 20, 12, 0, 0))
+    @periodical.stub!(:permalink).and_return('an-example-article-permalink')
+    
+    url = '/some/page/path/2008/03/20/an-example-article-permalink'
+    
+    # We have to manually pass the controller and action for rspec
+    options = { :controller => 'public', :action => 'index' }
+    periodical_path(@periodical, options).should == url
+    periodical_url(@periodical, options).should == 'http://test.host' + url
+  end
 end

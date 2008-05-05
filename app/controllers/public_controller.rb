@@ -5,6 +5,7 @@ class PublicController < ApplicationController
   # we don't need to capture a user for the public side
   skip_before_filter :capture_user!
   before_filter :capture_page
+  before_filter :prepend_theme_view_paths
 
 protected
   # Sets active space based on domain
@@ -22,6 +23,7 @@ protected
 public
   def index
     raise "No page found" if @page.nil?
+    params[:page_path] = @page.url if params[:page_path].blank?
     view_page
   end
 end

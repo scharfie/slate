@@ -4,6 +4,7 @@ Object.send(:remove_const, :ThemeSupportTestController) rescue
 
 class ThemeSupportTestController < ActionController::Base
   include Slate::ThemeSupport
+  before_filter :prepend_theme_view_paths
   
   attr_accessor :template
   

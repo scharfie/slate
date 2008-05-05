@@ -5,6 +5,8 @@ Object.send(:remove_const, :RoutingTestController) rescue
 class RoutingTestController < ActionController::Base
 end
 
+# Note: For whatever reason, this spec file 
+# must be run last
 describe "Slate::Routing" do
   controller_name 'RoutingTest'
   attr_accessor :route
