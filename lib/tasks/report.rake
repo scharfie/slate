@@ -19,6 +19,10 @@ def report_files
 end
 
 Spec::Rake::SpecTask.new(:_report) do |t|
+  # these blasted specs are so picky, they simply must be run last
+  FileUtils.touch('spec/controllers/theme_support_spec.rb')
+  FileUtils.touch('spec/controllers/routing_spec.rb')
+  
   t.rcov       = true
   t.spec_opts  = report_spec_options
   t.rcov_opts  = report_rcov_options
