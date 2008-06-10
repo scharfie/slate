@@ -24,3 +24,10 @@ end
 # load extra configuration files from config/slate
 Slate::Configuration.process File.join(RAILS_ROOT, "config/slate/*.rb")
 ActionView::Base.default_form_builder = Slate::FormBuilder
+
+# Patch ActiveRecord::Migrator for auto_migrations
+class ActiveRecord::Migrator
+  class << self
+    alias_method :schema_info_table_name, :schema_migrations_table_name
+  end
+end

@@ -11,6 +11,11 @@ class Space < ActiveRecord::Base
   cattr_accessor :active
   
 public  
+  # Finds space matching given domain
+  def self.find_by_domain(domain)
+    Domain.find_by_name(domain, :include => [:space]).try(:space)
+  end
+
   # Returns the given user's role for this site
   def role(user=nil)
     (self[:role] ||= self.memberships.role(self, user)).to_i

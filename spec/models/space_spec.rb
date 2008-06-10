@@ -25,6 +25,11 @@ describe Space do
     @space2.pages.find_root.should_not == @root
     @space.pages.find_root.should_not == @root2
   end
+  
+  it "should assign domain 'test.example.com'" do
+    @space.domains << Domain.new(:name => 'test.example.com')
+    Space.find_by_domain('test.example.com').should == @space
+  end
 end
 
 describe Space, "with plugins A, B, and C" do

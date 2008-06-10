@@ -2,7 +2,6 @@ log/*.log
 tmp/**/*
 .DS_Store
 db/*.sqlite3
-db/schema.rb
 lib/tasks/wvu.rake
 config/slate/wvu.rb
 config/database.yml

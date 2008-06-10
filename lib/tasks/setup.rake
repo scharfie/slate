@@ -8,7 +8,7 @@ namespace :slate do
   
   task :verify_schema => :environment do
     schema_version = begin
-      ActiveRecord::Base.connection.execute('SELECT * FROM schema_info')
+      ActiveRecord::Base.connection.execute('SELECT * FROM schema_migrations')
     rescue
       0
     end
