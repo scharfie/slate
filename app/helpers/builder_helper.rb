@@ -72,6 +72,33 @@ module BuilderHelper
     end
   end
   
+  module Navigation
+    def active_page
+      @page
+    end
+    
+    def active_page?(page)
+      page == active_page
+    end
+    
+    # Returns link to given page
+    # It will also attach the class 'active' to the link
+    # if the page is the active page
+    def link_to_page(page, options={})
+      (options[:class] ||= '') << ' active' if active_page?(page)
+      options[:href] = page.permalink
+      content_tag :a, page.name, options
+    end
+    
+    # Returns top-level pages as UL
+    def site_menu
+      pages = @space.pages.root.children
+      links = pages.map { |e| content_tag :li, link_to_page(e) }
+      content_tag :ul, links.join
+    end
+  end
+  
   include Base
   include Admin
+  include Navigation
 end
