@@ -1,17 +1,33 @@
-== Version 1.1.4 (trunk)
+== Version 1.1.5 (in git)
+
+* Added additional characters to be escaped in step strings (patch from Jake Cahoon). Closes #417.
+* Disable color codes on STDOUT when STDOUT.tty? is false (patch from Tim Pope). Closes #413.
+* mock(:null_object=>true) plays nice with HTML (patch from Gerrit Kaiser). Closes #230.
+* a step definition with no block is treated as pending
+* make sure consolidate_failures only grabs _spec files. Closes #369
+* Simplifying ExampleGroupMethods#registration_backtrace. (From Wilson Bilkovich - http://metaclass.org/2008/6/7/calling-in-the-dark)
+
+== Version 1.1.4
 
 Maintenance release.
-Note: we've removed the metaclass method from Object. There were some generated specs that
-used it, and they will now break. Just replace the metaclass call with (class << self; self; end)
-and all will be well.
 
+Note: we've removed the metaclass method from Object. There were some
+generated specs that used it, and they will now break. Just replace the
+metaclass call with (class << self; self; end) and all will be well.
+
+* added hash_including mock argument matcher. Closes #332 (patch from Rick DeNatale)
+* pending steps print out yellow in stories (patch from Kyle Hargraves)
+* Deprecation warnings for specs that assume auto-inclusion of modules. Closes #326 (patch from Scott Taylor)
+* mock.should_not_receive(:anything) fails fast (once again)
+* Patch from Antti Tarvainen to stop files from being loaded repeatedly when running heckle. Closes #333.
+* Fixed bug in which session object in example was not the same instance used in the controller. Closes #331. 
+* Applied patch from Antti Tarvainen to fix bug where heckle runs rspec runs heckle runs rspec etc. Closes #280.
+* Applied patch from Zach Dennis to merge :steps functionality to :steps_for. Closes #324.
+* Applied patch from Ryan Davis to add eval of block passed to raise_error matcher. Closes #321.
+* alias :context :describe in example_group_methods. Closes #312.
 * Applied patch from Ben Mabey to make the Story runner exit with a non-0 exit code on failing stories. Closes #228.
-* Added #helper and #assigns to helper specs.
-* Applied patch from Bryan Helmkamp to tweak format of generated spec.opts to be more obvious. Closes #162.
-* Tweaked list of exceptions (ignores) for autotest with rspec_on_rails.
 * Applied patch from Coda Hale to get the :red hook called in autotest. Closes #279.
 * Applied patch from Patrick Ritchie to support --drb in spec.opts. Closes #274, #293.
-* Applied patch from Rick Olson to get rspec_on_rails working with rails edge (>= 8862)
 * Moved metaclass method from Object to an internal module which gets included where it is needed.
 * Applied patch from Dayo Esho: and_yield clobbers return value from block. Closes #217.
 * Applied patch from Bob Cotton:  ExampleGroupFactory.default resets previously registered types. Closes #222.
@@ -19,9 +35,11 @@ and all will be well.
 * ExampleGroupMethods#xspecify aliases #xit
 * A SharedExampleGroup can be created within another ExampleGroup.
 * Applied patch from Bob Cotton: Nested ExampleGroups do not have a spec_path. Closes #224.
-* Applied patch from Wincent Colaiuta to invert sense of "spec --diff". Closes #281.
-* Allow any type of render in view specs. Closes #57.
-* Applied patch from Ian White to get rspec working with edge rails (8804). Closes #271.
+* Add before_suite and after_suite callbacks to ExampleGroupMethods and Options. Closes #210.
+* The after(:suite) callback lambda is passed a boolean representing whether the suite passed or failed
+* Added NestedTextFormatter. Closes #366.
+* decoupled mock framework from global extensions used by rspec - supports use of flexmock or mocha w/ rails
+* Applied patch from Roman Chernyatchik to allow the user to pass in the ruby version into spectask. Closes #325, #370
 
 == Version 1.1.3
 
