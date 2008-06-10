@@ -6,6 +6,7 @@ class Space < ActiveRecord::Base
   has_many :assets_with_thumbnails, :class_name => 'Asset'
   has_many :pages, :extend => ActiveRecord::Acts::DottedPath::AssociationExtension
   has_many :plugins
+  has_many :domains
   
   cattr_accessor :active
   
