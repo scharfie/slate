@@ -24,7 +24,10 @@ protected
   end
   
 public
-  # returns resource name for this resource
+  # Returns resource name for this resource
+  # We're using _space here because 'space' is 
+  # used by the nested resources and points to the
+  # active space
   def resource_name
     '_space'
   end
@@ -41,8 +44,4 @@ public
   def show
     redirect_to space_dashboard_url(params[:id])
   end
-  
-  # def update
-  #   raise params.to_yaml
-  # end
 end
