@@ -42,4 +42,13 @@ public
       keys.include?(plugin.key) ? plugin.enable! : plugin.disable!
     end
   end
+  
+  # Updates domains associated with this space
+  alias_method :domain_objects=, :domains=
+  def domains=(domains=[])
+    self.domain_objects = domains.map do |attributes| 
+      next if (name = attributes[:name]).blank?
+      Domain.find_or_initialize_by_name(attributes[:name]) {|e| e.attributes = attributes}
+    end.compact
+  end
 end

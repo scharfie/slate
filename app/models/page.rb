@@ -31,6 +31,7 @@ protected
   def ensure_one_default_page
     return unless is_default?
     return unless default_page = space.default_page
+    return if default_page.new_record?
     default_page.update_attribute(:is_default, false)
   end
 

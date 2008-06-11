@@ -1,6 +1,19 @@
 <%= form.text_field :name %>
 <%= form.text_field :theme %>
 
+<h3>
+  Domain(s) 
+  <a href="#" onclick="var u=$('ul.domains');var li=u.find('li:last').clone();li.find('input').val('');u.append(li);return false;">(+)</a>
+</h3>
+<ul class="domains">
+<% (resource.domains + [Domain.new]).each do |domain| %>
+  <li>
+    <%= text_field_tag "_space[domains][][name]", domain.name, :size => 30 %>
+    <a href="#" onclick="var li=$(this).parents('li');  if (li.siblings().length > 0) li.remove(); return false;">(-)</a>
+  </li>
+<% end %>
+</ul>
+
 <h3>Plugins</h3>
 <%= hidden_field_tag '_space[plugins][]', '' %>
 <% resource.available_plugins.each do |plugin| %>
