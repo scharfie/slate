@@ -10,6 +10,10 @@ describe Plugin do
       :description => 'This is the A plugin'
     )]
   end
+  
+  after(:all) do
+    Slate.plugins = []
+  end
 
   it 'should find slate plugin A' do
     @plugin.slate_plugin.should == @slate_plugin

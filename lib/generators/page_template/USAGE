@@ -1,0 +1,3 @@
+./script/generate page_template template_name theme
+
+template_name and theme both required
