@@ -73,10 +73,12 @@ module BuilderHelper
   end
   
   module Navigation
+    # Returns the active page
     def active_page
       @page
     end
     
+    # Returns true if the given page is active
     def active_page?(page)
       page == active_page
     end
@@ -87,14 +89,15 @@ module BuilderHelper
     def link_to_page(page, options={})
       (options[:class] ||= '') << ' active' if active_page?(page)
       options[:href] = page.permalink
+      options[:href] = '/' if options[:href].blank?
       content_tag :a, page.name, options
     end
     
     # Returns top-level pages as UL
-    def site_menu
+    def site_menu(options={})
       pages = @space.pages.root.children
       links = pages.map { |e| content_tag :li, link_to_page(e) }
-      content_tag :ul, links.join
+      content_tag :ul, links.join, options
     end
   end
   
