@@ -69,7 +69,7 @@ module Slate
       
       begin
         render :template => template, :layout => false
-      rescue ActionController::MissingTemplate => e
+      rescue ActionView::MissingTemplate => e
         raise Slate::TemplateMissing
       end  
     end
