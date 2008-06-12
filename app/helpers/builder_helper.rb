@@ -83,12 +83,19 @@ module BuilderHelper
       page == active_page
     end
     
+    # Returns true if given page is a parent of 
+    # the active page
+    def parent_of_active_page?(page)
+      active_page.ancestor?(page)
+    end
+    
     # Returns link to given page
     # It will also attach the class 'active' to the link
     # if the page is the active page
     def link_to_page(page, options={})
       (options[:class] ||= '') << ' active' if active_page?(page)
-      options[:href] = page.permalink
+      (options[:class] ||= '') << ' has-active' if parent_of_active_page?(page)
+      options[:href] = slate? ? space_page_path(@space, page) : page.permalink
       options[:href] = '/' if options[:href].blank?
       content_tag :a, page.name, options
     end
