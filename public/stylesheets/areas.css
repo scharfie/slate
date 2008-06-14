@@ -1,0 +1,118 @@
+body {
+	background: #eee;
+}
+
+#panels {
+	margin: 0;
+	padding: 0;
+}
+
+#panels fieldset {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#panels .textile-toolbar {
+	margin-left: 0px;
+	padding-top: 5px;
+}
+
+textarea {
+	border: none;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+.panel {
+  border-top: solid 1px #bbb;
+  margin-top: 0px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.panel .header h2 {
+  margin: 0;
+  padding: 0;
+  font: normal 1em Lucida Grande;
+  padding: 3px;
+  background: #ddd;
+  color: #888;
+  position: relative;
+  cursor: pointer;
+}
+
+.panel .header h2 span {
+  position: absolute;
+  right: 5px;
+  font-size: 0.9em;
+}
+
+.panel .body {
+  background: #eee;
+}
+
+.panel .collapsed {
+	height: 0;
+}
+
+.version .content {
+  padding: 10px;
+  margin:  0 10px 20px 10px;
+  position: relative;
+  top: 10px;
+  height: 363px;
+  height: 363px;
+  background: #fff;
+  border: solid 1px #ccc;
+  overflow: hidden;
+}
+
+.panel .actions {
+  margin: 0;
+  background: transparent;
+}
+
+/**********/
+
+#versions {
+	list-style: none;
+}
+#versions div.content {
+  background: #fff;
+}
+#versions h2 {
+  margin: 0;
+  padding: 0;
+  font: normal 1em Lucida Grande;
+  padding: 3px 5px;
+  background: #ddd;
+  color: #888;
+  position: relative;
+  cursor: pointer;
+}
+
+
+#preview h2 { background: #3A74B6; background: #00b7ff; color: #fff; }
+#draft h2 { background: #000 url(/images/draft-stripe.png) repeat top left; color: #fff; }
+
+#version-4 h2 { background: #efefef;}
+#version-3 h2 { background: #e5e5e5;}
+#version-2 h2 { background: #d7d7d7;}
+#version-1 h2 { background: #666; color: #fff; }
+
+#version-1 .header h2 {
+  font-size: 1.2em; padding: 5px;
+}
+#draft .header h2 {
+  font-size: 1.2em; padding: 5px;
+}
+#preview .header h2 {
+  font-size: 1.2em; padding: 5px;
+}
+
+#draft div.actions {
+	position: auto;
+	margin: 0;
+}

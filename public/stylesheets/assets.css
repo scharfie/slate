@@ -1,0 +1,20 @@
+table.assets {
+	width: 100%;
+}
+table.assets h3 {
+  margin: 0;
+  font-size: 1.4em;
+}
+table.assets td.preview {
+  vertical-align: center;
+  text-align: center;
+  padding: 4px;
+  width: 75px;
+}
+table.assets td.info {
+  color: #777;
+  padding: 4px 8px;
+}
+table.assets tr.odd td {
+  background: #f5f5f5;
+}

@@ -1,0 +1,31 @@
+div#flash div.flash {
+  margin: 5px 0 10px 0;
+  padding: 0.75em 38px;
+  font: bold 1em Lucida Grande;
+  border: 1px dotted transparent;
+  border-width: 1px 0;
+}
+div#flash div.notice {
+  background: #eeffee url(/images/glyphs/check.png) no-repeat 18px center;
+  border-color: #9c9;
+  color: #696;
+}
+div#flash div.error {
+  background: #933 url(/images/glyphs/error.png) no-repeat 18px center;
+  border-color: #c99;
+  color: #fff;
+  background-color: #FFE5E5;
+  color: #966;
+}
+div#flash a.close {
+  font-weight: bold;
+  text-align: right;
+  float: right;
+  margin-right: -15px;
+  margin-top: -1.25em;
+  text-decoration: none;
+  color: #966;
+}
+div#flash a.close:hover {
+  background: none;
+}
