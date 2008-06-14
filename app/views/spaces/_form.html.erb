@@ -22,5 +22,5 @@
 <% end %>
 
 <% form.actions do %>
-  <%= submit_tag 'Save' %> or <%= link_to_cancel Space.active ? space_dashboard_url(Space.active) : dashboard_url %>
+  <%= submit_tag 'Save' %> or <%= cancel_link Space.active ? space_dashboard_url(Space.active) : dashboard_url %>
 <% end %>

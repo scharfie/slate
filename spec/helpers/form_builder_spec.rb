@@ -40,6 +40,7 @@ describe Slate::FormBuilder do
     # begin hacking (not _too_ bad)
     @controller = BuilderHelperController.new
     @template = @controller.template
+    @template.output_buffer = ''
     
     @builder_options = {}
     @assume_templates_exist = false
@@ -126,7 +127,7 @@ describe Slate::FormBuilder do
     
     form_builder do |f|
       f.actions do
-        concat submit_tag('Save changes'), current_binding
+        helper.concat submit_tag('Save changes'), current_binding
       end
     end
     

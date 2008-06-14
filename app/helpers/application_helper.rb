@@ -20,7 +20,7 @@ module ApplicationHelper
   end
   
   # creates 'Cancel' link to given URL
-  def link_to_cancel(url=nil)
+  def cancel_link(url=nil)
     url = resources_url if url.nil? && respond_to?(:resources_url)
     link_to 'Cancel', url, :class => 'cancel'
   end

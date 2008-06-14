@@ -6,32 +6,40 @@ describe PeriodicalsHelper do
   def day()   { :day   => 20 } end
   def slug()  { :slug  => 'my-first-article' } end
     
+  before(:each) do
+    assigns[:controller] = self
+  end  
+    
+  def helper.params=(v)
+    stub!(:params).and_return(v)
+  end
+
   def params=(v)
     stub!(:params).and_return(v)
   end
   
   it "should return true for periodicals_by_slug with /:year/:month/:day/:slug" do
-    self.params = year + month + day + slug
-    should be_periodicals_by_slug
+    helper.params = year + month + day + slug
+    helper.should be_periodicals_by_slug
   end
 
   it "should return true for periodicals_by_day with /:year/:month/:day" do
-    self.params = year + month + day
-    should be_periodicals_by_day
+    helper.params = year + month + day
+    helper.should be_periodicals_by_day
   end
 
   it "should return true for periodicals_by_month with /:year/:month" do
-    self.params = year + month
-    should be_periodicals_by_month
+    helper.params = year + month
+    helper.should be_periodicals_by_month
   end
 
   it "should return true for periodicals_by_year with /:year" do
-    self.params = year
-    should be_periodicals_by_year
+    helper.params = year
+    helper.should be_periodicals_by_year
   end
   
   it "should return periodical URL and path for article" do
-    self.params = { :page_path => ['some', 'page', 'path'], 
+    helper.params = { :page_path => ['some', 'page', 'path'], 
       :controller => 'public', :action => 'index' }
     @periodical = mock('SomePeriodical')
     @periodical.stub!(:published_on).and_return(Time.local(2008, 3, 20, 12, 0, 0))
@@ -41,7 +49,7 @@ describe PeriodicalsHelper do
     
     # We have to manually pass the controller and action for rspec
     options = { :controller => 'public', :action => 'index' }
-    periodical_path(@periodical, options).should == url
-    periodical_url(@periodical, options).should == 'http://test.host' + url
+    helper.periodical_path(@periodical, options).should == url
+    helper.periodical_url(@periodical, options).should == 'http://test.host' + url
   end
 end
