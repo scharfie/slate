@@ -4,7 +4,6 @@ West Virginia University Web Services (http://www.wvu.edu).
 = Setup =
 
 * Configure your database connection (database.yml)
-* Install rubyzip gem ([sudo] gem install rubyzip)
 * Create your database and auto migrate (rake db:auto:migrate)
 * Run slate setup to create a login (rake slate:setup)
 
