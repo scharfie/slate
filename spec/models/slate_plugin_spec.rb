@@ -82,14 +82,14 @@ describe Slate::Plugin, ' (DummyPlugin)' do
   it "should set configuration paths when loaded" do
     path = @plugin.directory / 'app'
     
-    Dependencies.stub!(:load_paths).and_return([])
+    ActiveSupport::Dependencies.stub!(:load_paths).and_return([])
     ActionController::Base.should_receive(:append_view_path).
       with(path / 'views')
     
     @initializer = create_mock_initializer
     @plugin.init_dependencies(@initializer)
     
-    Dependencies.load_paths.should == [
+    ActiveSupport::Dependencies.load_paths.should == [
       path / 'controllers',
       path / 'models',
       path / 'helpers'

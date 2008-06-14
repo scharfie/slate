@@ -174,9 +174,9 @@ module Slate
       model_path = File.join(app_path, 'models')
       helper_path = File.join(app_path, 'helpers')
       
-      Dependencies.load_paths << controller_path
-      Dependencies.load_paths << model_path
-      Dependencies.load_paths << helper_path
+      ActiveSupport::Dependencies.load_paths << controller_path
+      ActiveSupport::Dependencies.load_paths << model_path
+      ActiveSupport::Dependencies.load_paths << helper_path
       
       # we must explicitly tell Rails that app/controllers
       # contains valid controllers (security issue)
