@@ -33,7 +33,8 @@ Rails::Initializer.run do |config|
   # locate slate plugins unless we're in test environment
   config.plugin_locators += [Slate::Plugin::Locator] unless RAILS_ENV =~ /test/
   
-  # config.gem 'rubyzip' 
+  # Configure gems
+  config.gem 'rubyzip', :lib => 'zip/zip' 
   config.gem 'highline'
   
   # Force all environments to use the same logger level
