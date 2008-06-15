@@ -8,7 +8,7 @@ class String
   
   # Joins strings together using File.join
   def /(other)
-    File.join(self, other)
+    File.join(self, other.to_s)
   end
 end
 

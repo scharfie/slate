@@ -40,6 +40,8 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resources :users
+  
+  map.resources :themes
 
   # ==========================================
   # mappings for spaces
