@@ -4,12 +4,12 @@ require 'vendor/plugins/rspec/lib/spec/rake/spectask'
 require 'vendor/plugins/rspec/lib/spec/rake/verify_rcov'
 
 def report_spec_options
-  options_file = File.join(RAILS_ROOT, 'spec/spec.opts')
+  options_file = File.join(Rails.root, 'spec/spec.opts')
   File.readlines(options_file).map {|e|e.chomp}
 end
 
 def report_rcov_options
-  options_file = File.join(RAILS_ROOT, 'spec/rcov.opts')
+  options_file = File.join(Rails.root, 'spec/rcov.opts')
   options = File.readlines(options_file).map {|e|e.chomp}
   options
 end
