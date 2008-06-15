@@ -1,7 +1,7 @@
 module Slate
   module AttachmentFu
     mattr_accessor :asset_root
-    self.asset_root = RAILS_ROOT
+    self.asset_root = Rails.public_path
     
     def self.included(base)
       base.send :include, Common
@@ -14,7 +14,7 @@ module Slate
       # e.g.: [asset root]/public/assets/51/0000/0047/turkey_small.jpg
       def full_filename(thumbnail = nil)
         thumbnail = nil unless has_thumbnail?(thumbnail)
-        file_system_path = "public/assets/#{self.space_id}"
+        file_system_path = "assets/#{self.space_id}"
         File.join(Slate::AttachmentFu.asset_root, file_system_path, *partitioned_path(thumbnail_name_for(thumbnail)))
       end
             

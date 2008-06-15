@@ -2,22 +2,22 @@ module App
   module ClassMethods
     # production environment?
     def production?
-      RAILS_ENV == 'production'  
+      Rails.env == 'production'  
     end
     
     # development environment?
     def development?
-      RAILS_ENV == 'development'
+      Rails.env == 'development'
     end
     
     # test environment?
     def test?
-      RAILS_ENV == 'test'
+      Rails.env == 'test'
     end
     
     # root path for application
     def root
-      RAILS_ROOT
+      Rails.root
     end  
   end
   

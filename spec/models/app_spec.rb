@@ -13,7 +13,7 @@ describe App do
     App.should be_test
   end
   
-  it "should have root == #{RAILS_ROOT}" do
-    App.root.should == RAILS_ROOT
+  it "should have root == #{Rails.root}" do
+    App.root.should == Rails.root
   end
 end

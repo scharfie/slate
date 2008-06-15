@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-SPEC_ASSET_PATH = RAILS_ROOT / 'spec/assets'
+SPEC_ASSET_PATH = Rails.root / 'spec/assets'
 
 describe UploadedFile, 'via path string' do
   before(:each) do

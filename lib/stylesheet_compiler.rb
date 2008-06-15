@@ -19,7 +19,7 @@ class StylesheetCompiler
   #     ...
   #   ]
   def default_files
-    source_files = Dir[RAILS_ROOT / 'app/views/stylesheets/*.ncss']
+    source_files = Dir[Rails.root / 'app/views/stylesheets/*.ncss']
     source_files.map do |source|
       [source, destination_path(source)]
     end
@@ -27,7 +27,7 @@ class StylesheetCompiler
   
   # Returns the destination path to given source file
   def destination_path(source)
-    File.join RAILS_ROOT, 'public/stylesheets', 
+    File.join Rails.public_path, 'stylesheets', 
       File.basename(source, '.ncss') + '.css'
   end
   

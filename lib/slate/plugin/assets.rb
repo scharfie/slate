@@ -7,9 +7,9 @@ module Slate
       File.join(directory, 'assets')
     end
     
-    # Returns target path for assets (RAILS_ROOT/public)
+    # Returns target path for assets (Rails.public_path)
     def target_assets_path
-      File.join(RAILS_ROOT, 'public')
+      Rails.public_path
     end
     
     # Returns target path for given asset by replacing
