@@ -1,6 +1,7 @@
 # configure slate
 require 'extensions/core'
 require 'extensions/active_record'
+require 'extensions/inflector'
 
 require 'slate/error'
 require 'slate/configuration'
