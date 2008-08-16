@@ -6,7 +6,7 @@ public
   def refresh
     @theme = Theme.find(params[:id])
     result = @theme.update
-    render :text => result
+    render :inline => result
   end
 
   # Installs theme

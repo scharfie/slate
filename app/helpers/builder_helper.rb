@@ -6,7 +6,7 @@ module BuilderHelper
       result = %{
         #{stylesheet_link_tag 'builder'}
         #{javascript_include_tag 'jquery', 'slate/builder'}
-      } if editor? && slate?
+      } if (editor? || preview?) && slate?
     end
     
     # renders the support toolbar

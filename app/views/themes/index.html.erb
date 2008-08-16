@@ -3,7 +3,7 @@
 
 <ul>
 <% Theme.installed.each do |theme| %>
-  <li><%= theme %> <%= link_to '(update)', refresh_theme_path(theme) %></li>
+  <li><%= theme %> <%= link_to '(update)', refresh_theme_path(theme.to_s) %></li>
 <% end %>  
 </ul>
 

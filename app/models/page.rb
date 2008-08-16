@@ -96,9 +96,9 @@ public
   
   # Retrieves content for given key with options
   def content_for(key, mode=:draft)
-    conditions = [['key = ?'], key.to_s]
-    conditions.first << 'version = 0' if mode == :draft
-    conditions.first << 'version = 1' if mode == :production
+    conditions = [['`key` = ?'], key.to_s]
+    conditions.first << '`version` = 0' if mode == :draft
+    conditions.first << '`version` = 1' if mode == :production
     conditions[0] = conditions[0].join(' AND ')
     
     areas_with_default(conditions).first || areas.build(:key => key.to_s)

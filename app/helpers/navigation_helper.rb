@@ -23,6 +23,7 @@ protected
     tabs['Pages']      = space_pages_path(Space.active)
     tabs['Files']      = space_assets_path(Space.active)
     tabs.merge!          plugin_navigation_items
+    tabs['Themes']     = themes_path
     tabs['Settings']   = edit_space_path(Space.active)
     tabs
   end
