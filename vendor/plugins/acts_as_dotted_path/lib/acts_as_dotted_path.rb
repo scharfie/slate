@@ -100,6 +100,7 @@ module ActiveRecord # :nodoc:
             root.depth = 0
             root[root.parent_column] = 0
             root.send(:before_root, node) if node && root.respond_to?(:before_root)
+            # raise root.to_yaml
             root.save
           end  
         end

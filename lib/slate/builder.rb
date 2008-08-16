@@ -59,10 +59,10 @@ module Slate
   public
     # Renders the template for the current page
     def view_page
-      raise Slate::ThemeMissing if (theme = @space.theme).blank?
+      raise Slate::ThemeMissing if (theme = @space.theme).nil?
       raise Slate::TemplateMissing if (template = @page.template).blank?
       
-      template = File.join(theme, template) rescue nil
+      template = File.join(theme.to_s, template) rescue nil
       
       load_behavior_object
       load_behavior_helper

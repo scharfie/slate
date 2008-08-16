@@ -154,7 +154,7 @@ module Slate
       return if loaded?
       
       # Prevent this plugin from loading if we have pending migrations
-      pending_migrations_error and return if pending_migrations?
+      # pending_migrations_error and return if pending_migrations?
 
       # initialize dependences and load plugin.rb
       init_dependencies(initializer)

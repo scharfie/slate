@@ -1,6 +1,6 @@
 <%= form.text_field :name %>
 <%= form.text_field :permalink %>
-<%= form.text_field :template %>
+<%= form.select :template, @space.theme.templates %>
 
 <% content_for_variable(:current_default) do %>
   <% if (default_page = enclosing_resource.default_page) && default_page != resource %>

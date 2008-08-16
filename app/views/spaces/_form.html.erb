@@ -1,5 +1,5 @@
 <%= form.text_field :name %>
-<%= form.text_field :theme %>
+<%= form.select :theme, Theme.installed.map { |e| [e.name, e.name] } %>
 
 <h3>
   Domain(s) 

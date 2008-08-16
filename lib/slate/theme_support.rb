@@ -19,7 +19,7 @@ module Slate
         
         # Returns the view path for the current theme's "views" folder
         def theme_views_path
-          File.join(App.root, 'public/themes', Space.active.theme, 'views')
+          File.join(App.root, 'public/themes', Space.active.theme.to_s, 'views')
         end
       end
     end

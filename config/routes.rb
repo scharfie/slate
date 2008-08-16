@@ -41,7 +41,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users
   
-  map.resources :themes
+  map.resources :themes, :member => {
+    :refresh => :any
+  }
 
   # ==========================================
   # mappings for spaces

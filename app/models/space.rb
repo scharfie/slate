@@ -10,6 +10,17 @@ class Space < ActiveRecord::Base
   
   cattr_accessor :active
   
+  # Callbacks
+  after_create :create_default_page
+  
+protected
+  # after_create callback
+  # Creates default page 'Home' for space
+  def create_default_page
+    pages.create! :name => 'Home', :template => 'index.html.erb',
+      :is_default => true
+  end  
+  
 public  
   # Finds space matching given domain
   def self.find_by_domain(domain)
@@ -50,5 +61,9 @@ public
       next if (name = attributes[:name]).blank?
       Domain.find_or_initialize_by_name(attributes[:name]) {|e| e.attributes = attributes}
     end.compact
+  end
+  
+  def theme
+    Theme.find(self[:theme])
   end
 end
