@@ -37,11 +37,10 @@ class Theme < ActiveRecord::Base
   end
   
   def install
-    puts name
     `git clone #{url} #{Rails.public_path / 'themes' / name}`
   end
   
   def update
-    `git pull origin master`
+    `cd "#{Rails.public_path / 'themes' / name}" && git pull origin master`
   end
 end

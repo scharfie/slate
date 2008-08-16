@@ -5,14 +5,14 @@ public
   # Refreshes theme (SCM 'update')
   def refresh
     @theme = Theme.find(params[:id])
-    result = @theme.update
-    render :inline => result
+    flash[:notice] = @theme.update
+    redirect_to resources_url
   end
 
   # Installs theme
   def create
     @theme = Theme.new(params[:theme])
-    @theme.install
+    flash[:notice] = @theme.install
     redirect_to resources_url
   end
 end
