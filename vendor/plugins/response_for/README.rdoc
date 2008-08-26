@@ -1,0 +1,48 @@
+= response_for
+
+response_for (see Ardes::ResponseFor::ClassMethods) allows you to decorate the respond_to block of actions on sublcassed controllers.  This works nicely with http://plugins.ardes.com/doc/resources_controller
+
+== Important for rails 2.0.x users
+
+If you are on 2.0.2 or 2.0-stable, you must checkout the 2.0-stable branch of response_for.
+
+Edge users should use the master branch.
+
+=== Example
+
+  class FooController < ApplicationController
+    def index
+      @foos = Foo.find(:all)
+    end
+    
+    def show
+      @foo = Foo.find(params[:id])
+    end
+  end
+  
+  # this controller needs to respond_to fbml on index, and
+  # js, html and xml (templates) on index and show
+  class SpecialFooController < FooController
+    response_for :index do |format|
+      format.fbml { render :inline => turn_into_facebook(@foos) }
+    end
+    
+    response_for :index, :show, :types => [:html, :xml, :js]
+  end
+  
+=== works with rails 2.0-stable and edge
+
+response_for works with rails 2 and edge.
+
+=== Specs and Coverage
+
+* The SPECDOC lists the specifications
+* Coverage is 100% (C0), and the spec suite is quite comprehensive
+
+RSpec is used for testing, so the tests are in <tt>spec/</tt> rather than
+<tt>test/</tt> Do rake --tasks for more details.
+
+=== Continuous Integration
+
+garlic (at http://github.com/ianwhite/garlic) is used for CI.  To run the CI suite have a look at
+garlic_example.rb

@@ -16,7 +16,7 @@ module BuilderHelper
   
     # Returns URL path to the current theme
     def theme_path
-      '/themes' / @space.theme
+      '/themes' / @space.theme.to_s
     end
     
     # Renders partial with given name
@@ -32,7 +32,7 @@ module BuilderHelper
     # the +partial+ helper
     def qualified_theme_path(name)
       name = name.to_s
-      name = @space.theme / name unless name.starts_with?('shared/')
+      name = @space.theme.to_s / name unless name.starts_with?('shared/')
       name
     end
   end

@@ -1,0 +1,50 @@
+
+BackToFooController
+- get :foo, :format => 'xml' should not render foo
+
+FooBailOutController
+- get :foo, :bail_out => true should redirect
+
+FooController
+- get :foo should render text/html: foo
+- get :foo should assign @foo
+- get :foo, :format => 'html' should render foo
+- get :foo, :format => 'xml' should not render foo
+
+FooAController
+- get :foo should call a
+- get :baz should call bazza (inside the response_for block)
+
+FooBController
+- get :foo should call b
+
+InlineXmlFooController
+- get :foo should assign @foo
+- get :foo, :format => 'html' should render 'foo'
+- get :foo, :format => 'xml' should call xml_call with 'foo
+- get :foo, :format => 'xml' should have response.body of 'XML'
+
+XmlFooController
+- get :foo should render foo
+- get :foo should assign @foo
+- get :foo, :format => 'html' should render foo
+- get :foo, :format => 'xml' should render foo
+- get :bar, :format => 'xml' should render bar
+
+XmlOnlyFooController
+- get :foo should render xml: foo
+- get :bar should render xml: bar
+- get :foo should assign @foo
+- get :foo, :format => 'html' should not render foo
+- get :foo, :format => 'xml' should render foo
+
+class method #action_responses
+- @child.action_responses[:action] should be copy of parent's action response for :action
+- @grandchild.action_responses[:action] should be copy of @child.action_responses[:action]
+- @child.action_responses[:action] not be same object as parent's action response for :action
+- @grandchild.action_responses[:action] not be same object as @child.action_responses[:action]
+- adding to @grandchild.action_responses[:action] should not change parents
+
+Finished in 0.328216 seconds
+
+28 examples, 0 failures
