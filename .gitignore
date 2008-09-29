@@ -10,3 +10,4 @@ spec/public/*
 public/assets
 vendor/plugins/*_plugin
 public/stylesheets/
+public/themes
