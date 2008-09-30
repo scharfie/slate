@@ -1,0 +1,114 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	font-weight: normal;
+	vertical-align: top;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/* ERIC MEYER RESET END */
+
+.clearfix { clear: both; }
+.left { float: left; }
+.right { float: right; }
+
+body {
+  background: #323232;
+}
+#hdr {
+  background: url(images/hdr-bg.jpg) repeat-x left top;
+  width: 100%;
+}
+#hdr #inner {
+  background: url(images/hdr.jpg) no-repeat center top;
+  margin: auto;
+  width: 750px;
+}
+#wrapper {
+  width: 800px;
+  margin: 25px auto;
+  border: 5px solid #2d2d2d;
+  background: #fff;
+}
+#menu {
+  background: #d3e5ef;
+  padding: 10px 10px 0 10px;
+}
+#menu ul {
+  font-family: 'lucida grande', sans-serif;
+}
+#menu ul li {
+  float: left;
+  margin-right: 4px;
+}
+#menu ul li a:link,
+#menu ul li a:visited {
+  display: block;
+  padding: 8px;
+  font-size: 18px;
+  text-decoration: none;
+  color: #777;
+  background: url(images/nav-bg.jpg) repeat-x left top;
+}
+#menu ul li a:hover {
+  background: #c5d9e5;
+  color: #222;
+}
+#menu ul li a.active:link,
+#menu ul li a.active:visited,
+#menu ul li a.active:hover {
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+}
+#content {
+  padding: 12px;
+}
+#main {
+  width: 500px;
+}
+#sidebar {
+  width: 260px;
+  border: 1px solid #DCD553;
+  background: #ffffcc;
+  height: 400px;
+}
