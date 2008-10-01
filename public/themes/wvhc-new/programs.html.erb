@@ -24,47 +24,21 @@
       </div>
       <div id="content">
         <div id="main" class="left">
-          
+          <%= content_for :main %>
+          <div class="upcoming">
+            <%= content_for :coming_up %>
+          </div>
         </div>
         <div id="sidebar" class="right">
-          
+          <%= content_for :sidebar %>
         </div>
         <div class="clearfix"></div>
       </div>
     </div>
     
-<!--
-    <div id="container">
-      <div id="hdr">
-        <table cellspacing="0">
-          <tr>
-            <td><img src="<%= theme_path %>/images/mainpagewvhclogocutout.jpg" alt="" /></td>
-            <td><img src="<%= theme_path %>/images/banner.jpg" alt="" class="right" /></td>
-          </tr>
-          <tr>
-            <td class="donate"><a href="/">Donate Today</a></td>
-            <td class="menu">
-              <%= site_menu %>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div id="content">
-        <table>
-          <tr>
-            <td class="sidebar">
-              <%= content_for :sidebar %>
-            </td>
-            <td class="content">
-              <%= content_for :main %>
-              <div class="upcoming">
-                <%= content_for :coming_up %>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
+    <div id="ftr">
+      <span class="right">&copy 2008</span>
+      West Virginia Humanities Council 
     </div>
--->
   </body>
 </html>
