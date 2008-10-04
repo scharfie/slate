@@ -80,7 +80,6 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "updated_on"
     t.string   "path"
     t.integer  "depth"
-    t.string   "permalink"
     t.string   "template"
     t.integer  "position",       :default => 9999
     t.boolean  "is_hidden",      :default => false
@@ -88,6 +87,13 @@ ActiveRecord::Schema.define(:version => 1) do
     t.integer  "children_count", :default => 0
     t.string   "behavior_type"
     t.integer  "behavior_id"
+  end
+  
+  create_table "permalinks", :force => true do |t|
+    t.string  "name"
+    t.string  "permalinkable_type"
+    t.integer "permalinkable_id"
+    t.boolean "is_default", :default => false
   end
 
   create_table "plugin_schema_info", :force => true do |t|

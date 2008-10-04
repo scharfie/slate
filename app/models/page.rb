@@ -2,7 +2,7 @@ class Page < ActiveRecord::Base
   alias_attribute :default, :is_default
   alias_attribute :hidden, :is_hidden
   
-  permalink_column :name, :glue => '_'
+  # permalink_column :name, :glue => '_'
   acts_as_dotted_path :scope => :space_id, 
     :ensure_root => true, :order => 'path, position ASC'
 
@@ -10,6 +10,7 @@ class Page < ActiveRecord::Base
   belongs_to :behavior, :polymorphic => true
   belongs_to :space
   has_many :areas
+  has_many :permalinks, :as => :permalinkable
 
   # Callbacks
   before_validation :ensure_name
@@ -43,34 +44,16 @@ protected
   end
   
 public
-  # Finds page based on given path (array or '/' separated string)
-  def self.find_by_page_path(path)
-    return nil if path.blank?
-    path = path.split('/') unless Array === path
-    return nil if path.empty?    
-        
-    # find out how many pieces there are (separated by '/')
-    depth            = path.length
-    permalink        = path[-1]
-    parent_permalink = path[-2]
-
-    conditions = [[]]
-    conditions[0] << 'pages.depth = ' + depth.to_s
-    conditions[0] << 'pages.permalink = ?'
-    conditions << permalink
-    includes = []
-    
-    if parent_permalink
-      conditions[0] << 'parents_pages.permalink = ?'
-      conditions << parent_permalink
-      includes << :parent
-    end
-    
-    conditions[0] = conditions[0].join(' AND ')
-    self.find :first, :select => 'pages.*', 
-      :conditions => conditions, :include => includes
+  def self.find_by_permalink(permalink)
+    Permalink.with_type('Page').first(:conditions => { 
+      :name => permalink 
+    }).try(:permalinkable)
   end
-
+  
+  def permalink
+    permalinks.primary.first
+  end
+  
   # Returns the names of all items in the bloodline
   # (except the root page)
   def path_names

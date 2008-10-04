@@ -10,74 +10,32 @@ describe Page do
     @page.parent_id.should == 1
     @page.reload
     @page.parent.should_not be_nil
-    
-    @page.permalink.should == 'my_test_page'
   end
 end
 
 describe Page do
-  fixtures :pages, :spaces
+  fixtures :pages, :spaces, :permalinks
   
   before(:each) do
-    # the following creates WV > Morgantown > 1 Fine Arts Drive
-    @space = spaces(:test_space)
-    @wv = @space.pages.create!(:name => 'WV', :is_default => true)
-    @morgantown = @space.pages.create!(:name => 'Morgantown')
-    @wv.children << @morgantown
-    @address = @space.pages.create!(:name => '1 Fine Arts Drive', :is_hidden => true)
-    @morgantown.children << @address
-    
-    @wv.reload
-    @morgantown.reload
-    @address.reload
+    @page = Page.create!(:name => 'Address', :space_id => 1)
+    @page.permalinks << Permalink.new(:name => '/wv/morgantown', :is_default => true)
+    @page.permalinks << Permalink.new(:name => '/wv/granville')
   end
 
-  it "should return 'WV' via find_by_page_path" do
-    Page.find_by_page_path('wv').should == @wv
+  it "should find page by permalink '/wv/morgantown'" do
+    Page.find_by_permalink('/wv/morgantown').should == @page
   end
   
-  it "should return 'Morgantown' via find_by_page_path" do
-    Page.find_by_page_path('wv/morgantown').should == @morgantown
-    Page.find_by_page_path(%w(wv morgantown)).should == @morgantown
+  it "should find page by permalink /wv/granville" do
+    Page.find_by_permalink('/wv/morgantown').should == @page
   end
   
-  it "should return '1 Fine Arts Drive' via find_by_page_path" do
-    Page.find_by_page_path(%w(wv morgantown 1_fine_arts_drive)).should == @address
+  it "should not find page with invalid permalink" do
+    Page.find_by_permalink('/wv/sabraton').should be_nil
   end
   
-  it "should return 'wv/morgantown/1_fine_arts_drive' for page url" do
-    @address.url.should == 'wv/morgantown/1_fine_arts_drive'.split('/')
-  end
-  
-  it "should return path names" do
-    @address.path_names.should == ['WV', 'Morgantown', '1 Fine Arts Drive']
-  end
-  
-  it "'WV' should be default page" do
-    @wv.should be_default
-    @space.default_page.should == @wv
-  end
-  
-  it "'Morgantown' should become default page" do
-    @space.default_page.should == @wv
-    @morgantown.update_attribute(:is_default, true)
-    @space.default_page.should == @morgantown
-    @wv.reload
-    @wv.should_not be_default
-    @morgantown.should be_default
-  end
-  
-  it "'1 Fine Arts Drive' should be hidden" do
-    @address.should be_hidden
-  end
-  
-  it "should return proper permalinks" do
-    @wv.permalink.should == 'wv'
-    @morgantown.permalink.should == 'morgantown'
-    @address.permalink.should == '1_fine_arts_drive'
-    
-    @p = Page.new(:name => 'This IS SomethinG CRAZY!!!!')
-    @p.permalink.should == 'this_is_something_crazy'
+  it "should return default permalink '/wv/morgantown" do
+    @page.permalink.name.should == '/wv/morgantown'
   end
 end
 
