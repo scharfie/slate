@@ -53,15 +53,15 @@ $(function() {
   }));
   
   var items = <%= associated_objects.each { |e| e.id ||= '' }.to_json %>
-
+  
   $.each(items, function(index, item) {
     if (typeof item.id != 'undefined') $('#<%= dom_id %> .items').items('add', item);
   });
   
-  // $('#<%= dom_id %> ul.toolbar a.new').click(function() {
-  //   $('#<%= dom_id %> .items').items('add', blank); 
-  //   return false    
-  // })
+  $('#<%= dom_id %> ul.toolbar a.new').click(function() {
+    $('#<%= dom_id %> .items').items('add', blank); 
+    return false    
+  })
   
   $('#<%= dom_id %> .items')
     .parents('form').submit(function() {

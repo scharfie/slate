@@ -1,3 +1,17 @@
+module Kernel
+  def examine(*args)
+    result = args.map do |e| 
+      begin
+        e.to_yaml
+      rescue TypeError
+        e.inspect
+      end
+    end
+          
+    raise result.join
+  end  
+end
+
 class String
   # Converts the string to all lowercase,
   # replaces all non-alphanumeric characters with specified glue

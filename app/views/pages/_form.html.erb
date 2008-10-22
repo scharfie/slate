@@ -2,6 +2,7 @@
 
 <% associated_form :permalinks do |item| %>
   <%= item.text_field :name %>
+  <%= item.hidden_field :id, :template => 'hidden_field' %>
 <% end %>
 
 <%= form.select :template, @space.theme.templates %>
@@ -19,5 +20,8 @@
 <%= form.check_box :is_hidden,  :template => 'trailing_label_element', :label => 'Hide this page?' %>
 
 <% form.actions do %>
-  <%= submit_tag 'Save' %> or <%= cancel_link %>
+  <%= submit_tag 'Save and continue editing', :style => 'font-weight: bold' %> 
+  <%= submit_tag 'Save' %>
+  or 
+  <%= cancel_link %>
 <% end %>

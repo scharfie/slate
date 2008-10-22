@@ -37,6 +37,10 @@ public
     self.resource = resource_service.root
   end
   
+  # def update
+  #   examine params
+  # end
+  
   # PUT remap
   def remap
     mappings = params[:mappings]

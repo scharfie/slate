@@ -11,10 +11,10 @@ module AssociatedFormHelper
     from             = reflection.options[:from]
     association      = resource.send(association_name)
     locals           = {}
-    
+
     locals[:sortable] = options.has_key?(:sortable) ? options[:sortable] : true
     locals[:association_name]   = association_name
-    locals[:associated_objects] = options[:collection] || resource.associated_save_objects(association_name) || association
+    locals[:associated_objects] = options[:collection] || resource.associated_save_objects(association_name) || association.all
     
     locals[:label] = options[:label] || resource_name.humanize + ' ' + association_name.to_s.humanize
     locals[:path]  = path = options[:path] || "#{resource_name}[#{from}][]"

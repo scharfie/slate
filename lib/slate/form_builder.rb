@@ -29,13 +29,21 @@ module Slate
 
   private
     # renders the form element using partials from forms/
-    def render_form_element(helper, label, tip, template, helper_args, element)
+    def render_form_element(helper, label, tip, template, helper_args, element, include_errors=true)
+      errors = if include_errors
+        begin
+          @template.error_message_on("#{@object_name}","#{helper_args[0]}", helper_args[0].to_s.humanize + ' ')
+        rescue 
+          nil
+        end  
+      end
+            
       locals = {
         :label => label_for(helper_args.first, label),
         :element => element,
         :tip => tip,
         :helper => helper,
-        :errors => @template.error_message_on("#{@object_name}","#{helper_args[0]}", helper_args[0].to_s.humanize + ' ')
+        :errors => errors
       }
 
       begin
