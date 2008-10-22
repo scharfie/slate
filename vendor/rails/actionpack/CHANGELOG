@@ -1,18 +1,18 @@
-*Edge*
+*2.1.1 (September 4th, 2008)*
 
-* Ensure ActionView::TemplateFinder view cache is rebuilt on initialize [Josh Peek]
+* All 2xx requests are considered successful [Josh Peek]
 
-* Drop ActionController::Base.allow_concurrency flag [Josh Peek]
+* Deprecate the limited follow_redirect in functional tests.  If you wish to follow redirects, use integration tests. [Michael Koziarski]
 
-* More efficient concat and capture helpers. Remove ActionView::Base.erb_variable.  [Jeremy Kemper]
+* Fixed that AssetTagHelper#compute_public_path shouldn't cache the asset_host along with the source or per-request proc's won't run [DHH]
 
-* Added page.reload functionality. Resolves #277. [Sean Huber]
+* Deprecate define_javascript_functions, javascript_include_tag and friends are much better [Michael Koziarski]
+
+* Fix polymorphic_url with singleton resources.  #461 [Tammer Saleh]
+
+* Deprecate ActionView::Base.erb_variable. Use the concat helper method instead of appending to it directly.  [Jeremy Kemper]
 
 * Fixed Request#remote_ip to only raise hell if the HTTP_CLIENT_IP and HTTP_X_FORWARDED_FOR doesn't match (not just if they're both present) [Mark Imbriaco, Bradford Folkens]
-
-* Allow caches_action to accept a layout option [José Valim]
-
-* Added Rack processor [Ezra Zygmuntowicz, Josh Peek]
 
 
 *2.1.0 (May 31st, 2008)*

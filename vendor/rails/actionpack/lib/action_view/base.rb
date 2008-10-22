@@ -156,11 +156,9 @@ module ActionView #:nodoc:
     attr_reader   :finder
     attr_accessor :base_path, :assigns, :template_extension, :first_render
     attr_accessor :controller
-
+    
     attr_writer :template_format
     attr_accessor :current_render_extension
-
-    attr_accessor :output_buffer
 
     # Specify trim mode for the ERB compiler. Defaults to '-'.
     # See ERb documentation for suitable values.
@@ -180,6 +178,12 @@ module ActionView #:nodoc:
     # that alert()s the caught exception (and then re-raises it). 
     @@debug_rjs = false
     cattr_accessor :debug_rjs
+
+    @@erb_variable = '_erbout'
+    cattr_accessor :erb_variable
+    class << self
+      deprecate :erb_variable= => 'The erb variable will no longer be configurable. Use the concat helper method instead of appending to it directly.'
+    end
 
     attr_internal :request
 
@@ -258,7 +262,7 @@ If you are rendering a subtemplate, you must now use controller-like partial syn
         if partial_layout = options.delete(:layout)
           if block_given?
             wrap_content_for_layout capture(&block) do 
-              concat(render(options.merge(:partial => partial_layout)))
+              concat(render(options.merge(:partial => partial_layout)), block.binding)
             end
           else
             wrap_content_for_layout render(options) do
@@ -316,10 +320,9 @@ If you are rendering a subtemplate, you must now use controller-like partial syn
 
     private
       def wrap_content_for_layout(content)
-        original_content_for_layout, @content_for_layout = @content_for_layout, content
-        yield
-      ensure
-        @content_for_layout = original_content_for_layout
+        original_content_for_layout = @content_for_layout
+        @content_for_layout = content
+        returning(yield) { @content_for_layout = original_content_for_layout }
       end
 
       # Evaluate the local assigns and pushes them to the view.

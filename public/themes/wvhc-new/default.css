@@ -1,0 +1,208 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	font-weight: normal;
+	vertical-align: top;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/* ERIC MEYER RESET END */
+
+.clearfix { clear: both; }
+.left { float: left; }
+.right { float: right; }
+strong { font-weight: bold; }
+
+body {
+  background: #323232 url(images/body-bg.jpg) repeat-x left bottom fixed;
+  margin: 0;
+  padding: 0;
+  font-family: 'lucida grande', sans-serif, arial;
+}
+#hdr {
+  background: url(images/hdr-bg.jpg) repeat-x left top;
+  width: 100%;
+}
+#hdr #inner {
+  background: url(images/hdr.jpg) no-repeat center top;
+  margin: auto;
+  width: 750px;
+}
+#wrapper {
+  width: 800px;
+  margin: 25px auto 0 auto;
+  border: 5px solid #2d2d2d;
+  background: #fff;
+}
+#menu {
+  background: #b4cad4;
+  padding: 10px 10px 0 10px;
+}
+#menu ul {
+  font-family: 'lucida grande', sans-serif;
+}
+#menu ul li {
+  float: left;
+  margin-right: 2px;
+}
+#menu ul li a:link,
+#menu ul li a:visited {
+  display: block;
+  padding: 8px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #777;
+  background: url(images/nav-bg.jpg) repeat-x left top;
+}
+#menu ul li a:hover {
+  background: #c5d9e5;
+  color: #222;
+}
+#menu ul li a.active:link,
+#menu ul li a.active:visited,
+#menu ul li a.active:hover {
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+}
+#content {
+  padding: 12px;
+}
+#main {
+  width: 470px;
+  padding: 15px;
+}
+#main h3, #main h4 {
+  font-size: 20px;
+  color: #1d6083;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+  margin: 0 -5px 10px -5px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+#main h4 {
+  color: #444;
+  font-size: 18px;
+}
+#main p {
+  color: #555;
+  font-size: 15px;
+  line-height: 150%;
+  margin-bottom: 15px;
+}
+#main p#msg {
+  background: url(images/msg.jpg) no-repeat center top;
+  height: 80px;
+  margin-bottom: 20px;
+  padding: 25px 25px 15px 110px;
+  font-size: 18px;
+  border-bottom: 3px solid #eee;
+}
+#main p#msg span.big {
+  font-weight: bold;
+  text-decoration: underline;
+}
+#main .contact,
+#main .upcoming {
+  padding: 10px 15px;
+  border: 1px dotted #999;
+  background: #eee;
+}
+#main .contact h4,
+#main .upcoming h4 {
+  color: #1d6083;
+  background: none;
+  border: 0;
+  text-transform: none;
+}
+#main .upcoming h4 {
+  text-transform: none;
+  color: #777;
+  font-size: 16px;
+}
+#sidebar {
+  width: 240px;
+  padding: 10px;
+  border: 1px solid #DCD553;
+  background: #ffffcc;
+}
+#sidebar h4,
+#sidebar h3 {
+  color: #D2390E;
+  background: #f3f3b7;
+  border: 1px dotted #e7e790;
+  border-right: 0;
+  border-left: 0;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 -10px 10px -10px;
+  line-height: 130%;
+}
+#sidebar ul {
+  border: 2px solid #ffff55;
+  border-top: 0;
+  border-bottom: 0;
+  margin-bottom: 15px;
+}
+#sidebar ul li {
+  padding: 5px 12px;
+  margin-bottom: 4px;
+  background: #f7f7c1;
+  font-style: italic;
+  color: #555;
+}
+#sidebar p {
+  color: #757560;
+  font-size: 12px;
+  line-height: 130%;
+  margin-bottom: 15px;
+}
+#ftr {
+  padding: 5px;
+  color: #999;
+  font-size: 13px;
+  width: 800px;
+  margin: 0 auto 10px auto;
+  font-family: 'lucida grande', sans-serif;
+}

@@ -1,5 +1,3 @@
-require 'active_support/ordered_hash'
-
 module Enumerable
   # Ruby 1.8.7 introduces group_by, but the result isn't ordered. Override it.
   remove_method(:group_by) if [].respond_to?(:group_by) && RUBY_VERSION < '1.9'
@@ -20,19 +18,10 @@ module Enumerable
   #   "2006-02-24 -> Transcript, Transcript"
   #   "2006-02-23 -> Transcript"
   def group_by
-    assoc = ActiveSupport::OrderedHash.new
-
-    each do |element|
-      key = yield(element)
-
-      if assoc.has_key?(key)
-        assoc[key] << element
-      else
-        assoc[key] = [element]
-      end
+    inject ActiveSupport::OrderedHash.new do |grouped, element|
+      (grouped[yield(element)] ||= []) << element
+      grouped
     end
-
-    assoc
   end unless [].respond_to?(:group_by)
 
   # Calculates a sum from the elements. Examples:

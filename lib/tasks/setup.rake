@@ -2,6 +2,7 @@ namespace :slate do
   desc "Setup slate with an initial user and space"
   task :setup do
     Rake::Task['slate:setup:user'].invoke
+    Rake::Task['slate:setup:directories'].invoke
   end
   
   task :verify_schema => :environment do
@@ -42,6 +43,12 @@ namespace :slate do
       end
       
       console.notice "\nSuperuser '#{user.username}' created!\n"
+    end
+    
+    desc "Creates directories expected by slate"
+    task :directories do
+      path = "#{Rails.root}/public/themes"
+      FileUtils.mkdir_p(path) unless File.directory?(path)
     end
   end
 end

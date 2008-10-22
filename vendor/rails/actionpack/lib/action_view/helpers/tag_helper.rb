@@ -68,9 +68,12 @@ module ActionView
       def content_tag(name, content_or_options_with_block = nil, options = nil, escape = true, &block)
         if block_given?
           options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
-          concat(content_tag_string(name, capture(&block), options, escape))
+          content = capture(&block)
+          content_tag = content_tag_string(name, content, options, escape)
+          block_is_within_action_view?(block) ? concat(content_tag, block.binding) : content_tag
         else
-          content_tag_string(name, content_or_options_with_block, options, escape)
+          content = content_or_options_with_block
+          content_tag_string(name, content, options, escape)
         end
       end
 
@@ -121,6 +124,10 @@ module ActionView
             end
             " #{attrs.sort * ' '}" unless attrs.empty?
           end
+        end
+
+        def block_is_within_action_view?(block)
+          eval("defined? _erbout", block.binding)
         end
     end
   end

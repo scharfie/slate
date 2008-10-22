@@ -23,7 +23,7 @@ class Theme < ActiveRecord::Base
   end
   
   def name
-    @name ||= File.basename(url, '.git')
+    @name ||= File.basename(url.to_s, '.git')
   end
   
   def templates

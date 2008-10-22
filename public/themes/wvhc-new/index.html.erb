@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <title><%= @space.name %> | <%= @page.name %></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" type="text/css" href="<%= theme_path %>/default.css" />
+    <%= support_files %>
+  </head>
+  <body>
+  <%= support_toolbar %>
+  
+    <div id="hdr">
+      <div id="inner">
+        <img src="<%= theme_path %>/images/hdr.jpg" alt="" />
+      </div>
+    </div>
+    
+    <div id="wrapper">
+      <div id="menu">
+        <%= site_menu %>
+        <div class="clearfix"></div>
+      </div>
+      <div id="content">
+        <div id="main" class="left">
+          <p id="msg">
+            The <span class="big">West Virginia Encyclopedia</span> to go <span class="big">Online</span>!
+          </p>
+          <%= content_for :main %>
+          <%= content_for :humanities %>
+          <div class="contact">
+            <h4>Contact Us</h4>
+            <%= content_for :contact %>
+          </div>
+        </div>
+        <div id="sidebar" class="right">
+          <%= content_for :news %>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    
+    <div id="ftr">
+      <span class="right">&copy 2008</span>
+      West Virginia Humanities Council 
+    </div>
+  </body>
+</html>

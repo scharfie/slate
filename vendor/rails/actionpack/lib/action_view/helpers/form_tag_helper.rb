@@ -129,7 +129,7 @@ module ActionView
       #   label_tag 'name', nil, :class => 'small_label'
       #   # => <label for="name" class="small_label">Name</label>
       def label_tag(name, text = nil, options = {})
-        content_tag :label, text || name.humanize, { "for" => name }.update(options.stringify_keys)
+        content_tag :label, text || name.to_s.humanize, { "for" => name }.update(options.stringify_keys)
       end
 
       # Creates a hidden form input field used to transmit data that would be lost due to HTTP's statelessness or
@@ -348,11 +348,13 @@ module ActionView
         options.stringify_keys!
         
         if disable_with = options.delete("disable_with")
+          disable_with = "this.value='#{disable_with}'"
+          disable_with << ";#{options.delete('onclick')}" if options['onclick']
+          
           options["onclick"] = [
             "this.setAttribute('originalValue', this.value)",
             "this.disabled=true",
-            "this.value='#{disable_with}'",
-            "#{options["onclick"]}",
+            disable_with,
             "result = (this.form.onsubmit ? (this.form.onsubmit() ? this.form.submit() : false) : this.form.submit())",
             "if (result == false) { this.value = this.getAttribute('originalValue'); this.disabled = false }",
             "return result;",
@@ -407,10 +409,10 @@ module ActionView
       #   # => <fieldset><legend>Your details</legend><p><input id="name" name="name" type="text" /></p></fieldset>
       def field_set_tag(legend = nil, &block)
         content = capture(&block)
-        concat(tag(:fieldset, {}, true))
-        concat(content_tag(:legend, legend)) unless legend.blank?
-        concat(content)
-        concat("</fieldset>")
+        concat(tag(:fieldset, {}, true), block.binding)
+        concat(content_tag(:legend, legend), block.binding) unless legend.blank?
+        concat(content, block.binding)
+        concat("</fieldset>", block.binding)
       end
       
       private
@@ -442,9 +444,9 @@ module ActionView
         
         def form_tag_in_block(html_options, &block)
           content = capture(&block)
-          concat(form_tag_html(html_options))
-          concat(content)
-          concat("</form>")
+          concat(form_tag_html(html_options), block.binding)
+          concat(content, block.binding)
+          concat("</form>", block.binding)
         end
 
         def token_tag

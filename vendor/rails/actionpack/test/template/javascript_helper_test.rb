@@ -4,11 +4,14 @@ class JavaScriptHelperTest < ActionView::TestCase
   tests ActionView::Helpers::JavaScriptHelper
 
   def test_define_javascript_functions
-    # check if prototype.js is included first
-    assert_not_nil define_javascript_functions.split("\n")[1].match(/Prototype JavaScript framework/)
+    assert_deprecated(/javascript_include_tag/) do
+      # check if prototype.js is included first
+      src = define_javascript_functions
+      assert_not_nil src.split("\n")[1].match(/Prototype JavaScript framework/)
 
-    # check that scriptaculous.js is not in here, only needed if loaded remotely
-    assert_nil define_javascript_functions.split("\n")[1].match(/var Scriptaculous = \{/)
+      # check that scriptaculous.js is not in here, only needed if loaded remotely
+      assert_nil src.split("\n")[1].match(/var Scriptaculous = \{/)
+    end
   end
 
   def test_escape_javascript
@@ -82,12 +85,8 @@ class JavaScriptHelperTest < ActionView::TestCase
   end
 
   def test_javascript_tag
-    self.output_buffer = 'foo'
-
     assert_dom_equal "<script type=\"text/javascript\">\n//<![CDATA[\nalert('hello')\n//]]>\n</script>",
       javascript_tag("alert('hello')")
-
-    assert_equal 'foo', output_buffer, 'javascript_tag without a block should not concat to output_buffer'
   end
 
   def test_javascript_tag_with_options
@@ -96,13 +95,15 @@ class JavaScriptHelperTest < ActionView::TestCase
   end
 
   def test_javascript_tag_with_block
-    javascript_tag { concat "alert('hello')" }
-    assert_dom_equal "<script type=\"text/javascript\">\n//<![CDATA[\nalert('hello')\n//]]>\n</script>", output_buffer
+    _erbout = ''
+    javascript_tag { _erbout.concat "alert('hello')" }
+    assert_dom_equal "<script type=\"text/javascript\">\n//<![CDATA[\nalert('hello')\n//]]>\n</script>", _erbout
   end
 
   def test_javascript_tag_with_block_and_options
-    javascript_tag(:id => "the_js_tag") { concat "alert('hello')" }
-    assert_dom_equal "<script id=\"the_js_tag\" type=\"text/javascript\">\n//<![CDATA[\nalert('hello')\n//]]>\n</script>", output_buffer
+    _erbout = ''
+    javascript_tag(:id => "the_js_tag") { _erbout.concat "alert('hello')" }
+    assert_dom_equal "<script id=\"the_js_tag\" type=\"text/javascript\">\n//<![CDATA[\nalert('hello')\n//]]>\n</script>", _erbout
   end
 
   def test_javascript_cdata_section

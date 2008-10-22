@@ -484,7 +484,16 @@ class BaseTest < Test::Unit::TestCase
       assert_equal "the_prefixthe_param_value", person_class.prefix(:the_param => "the_param_value")
     end
   end
-  
+
+  def test_set_prefix_twice_should_clear_params
+    SetterTrap.rollback_sets(Person) do |person_class|
+      person_class.prefix = "the_prefix/:the_param1"
+      assert_equal Set.new([:the_param1]), person_class.prefix_parameters
+      person_class.prefix = "the_prefix/:the_param2"
+      assert_equal Set.new([:the_param2]), person_class.prefix_parameters
+    end
+  end
+
   def test_set_prefix_with_default_value
     SetterTrap.rollback_sets(Person) do |person_class|
       person_class.set_prefix
@@ -810,7 +819,7 @@ class BaseTest < Test::Unit::TestCase
   
   def test_to_xml
     matz = Person.find(1)
-    xml = matz.to_xml
+    xml = matz.encode
     assert xml.starts_with?('<?xml version="1.0" encoding="UTF-8"?>')
     assert xml.include?('<name>Matz</name>')
     assert xml.include?('<id type="integer">1</id>')

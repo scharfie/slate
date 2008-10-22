@@ -10,10 +10,6 @@ module ActionController
           # Development mode callbacks
           before_dispatch :reload_application
           after_dispatch :cleanup_application
-
-          to_prepare :reload_view_path_cache do
-            ActionView::TemplateFinder.reload! unless ActionView::Base.cache_template_loading
-          end
         end
 
         # Common callbacks
@@ -100,7 +96,7 @@ module ActionController
     include ActiveSupport::Callbacks
     define_callbacks :prepare_dispatch, :before_dispatch, :after_dispatch
 
-    def initialize(output = $stdout, request = nil, response = nil)
+    def initialize(output, request = nil, response = nil)
       @output, @request, @response = output, request, response
     end
 
@@ -127,17 +123,12 @@ module ActionController
       failsafe_rescue exception
     end
 
-    def call(env)
-      @request = RackRequest.new(env)
-      @response = RackResponse.new(@request)
-      dispatch
-    end
-
     def reload_application
       # Run prepare callbacks before every request in development mode
       run_callbacks :prepare_dispatch
 
       Routing::Routes.reload
+      ActionView::TemplateFinder.reload! unless ActionView::Base.cache_template_loading
     end
 
     # Cleanup the application by clearing out loaded classes so they can

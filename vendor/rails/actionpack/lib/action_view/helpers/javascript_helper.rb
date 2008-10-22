@@ -80,10 +80,9 @@ module ActionView
       #       return false;">Show me more</a>
       #
       def link_to_function(name, *args, &block)
-        html_options = args.extract_options!
+        html_options = args.extract_options!.symbolize_keys
         function = args[0] || ''
 
-        html_options.symbolize_keys!
         function = update_page(&block) if block_given?
         content_tag(
           "a", name, 
@@ -111,10 +110,9 @@ module ActionView
       #     page[:details].visual_effect :toggle_slide
       #   end
       def button_to_function(name, *args, &block)
-        html_options = args.extract_options!
+        html_options = args.extract_options!.symbolize_keys
         function = args[0] || ''
 
-        html_options.symbolize_keys!
         function = update_page(&block) if block_given?
         tag(:input, html_options.merge({ 
           :type => "button", :value => name, 
@@ -147,6 +145,8 @@ module ActionView
         javascript << '</script>'
       end
 
+      deprecate :define_javascript_functions=>"use javascript_include_tag instead"
+
       # Escape carrier returns and single and double quotes for JavaScript segments.
       def escape_javascript(javascript)
         (javascript || '').gsub('\\','\0\0').gsub('</','<\/').gsub(/\r\n|\n|\r/, "\\n").gsub(/["']/) { |m| "\\#{m}" }
@@ -172,17 +172,20 @@ module ActionView
       #     alert('All is good')
       #   <% end -%>
       def javascript_tag(content_or_options_with_block = nil, html_options = {}, &block)
-        content =
-          if block_given?
-            html_options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
-            capture(&block)
-          else
-            content_or_options_with_block
-          end
+        if block_given?
+          html_options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
+          content = capture(&block)
+        else
+          content = content_or_options_with_block
+        end
 
-        tag = content_tag("script", javascript_cdata_section(content), html_options.merge(:type => Mime::JS))
-
-        block_given? ? concat(tag) : tag
+        javascript_tag = content_tag("script", javascript_cdata_section(content), html_options.merge(:type => Mime::JS))
+        
+        if block_given? && block_is_within_action_view?(block)
+          concat(javascript_tag, block.binding)
+        else
+          javascript_tag
+        end
       end
 
       def javascript_cdata_section(content) #:nodoc:
@@ -201,6 +204,11 @@ module ActionView
           "'#{option}'"
         end
         js_option
+      end
+
+    private
+      def block_is_within_action_view?(block)
+        eval("defined? _erbout", block.binding)
       end
     end
     

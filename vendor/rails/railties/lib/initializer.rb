@@ -8,7 +8,6 @@ require 'rails/version'
 require 'rails/plugin/locator'
 require 'rails/plugin/loader'
 require 'rails/gem_dependency'
-require 'rails/rack'
 
 
 RAILS_ENV = (ENV['RAILS_ENV'] || 'development').dup unless defined?(RAILS_ENV)
@@ -37,6 +36,7 @@ module Rails
     end
   
     def env
+      require 'active_support/string_inquirer'
       ActiveSupport::StringInquirer.new(RAILS_ENV)
     end
   
@@ -113,10 +113,10 @@ module Rails
       check_ruby_version
       install_gem_spec_stubs
       set_load_path
-      
+      add_gem_load_paths
+
       require_frameworks
       set_autoload_paths
-      add_gem_load_paths
       add_plugin_load_paths
       load_environment
 
@@ -242,12 +242,12 @@ module Rails
     def add_gem_load_paths
       unless @configuration.gems.empty?
         require "rubygems"
-        @configuration.gems.each &:add_load_paths
+        @configuration.gems.each { |gem| gem.add_load_paths }
       end
     end
 
     def load_gems
-      @configuration.gems.each(&:load)
+      @configuration.gems.each { |gem| gem.load }
     end
 
     def check_gem_dependencies
@@ -256,11 +256,16 @@ module Rails
         @gems_dependencies_loaded = false
         # don't print if the gems rake tasks are being run
         unless $rails_gem_installer
-          puts %{These gems that this application depends on are missing:}
-          unloaded_gems.each do |gem|
-            puts " - #{gem.name}"
-          end
-          puts %{Run "rake gems:install" to install them.}
+          abort <<-end_error
+Missing these required gems:
+  #{unloaded_gems.map { |gem| "#{gem.name}  #{gem.requirement}" } * "\n  "}
+
+You're running:
+  ruby #{Gem.ruby_version} at #{Gem.ruby}
+  rubygems #{Gem::RubyGemsVersion} at #{Gem.path * ', '}
+
+Run `rake gems:install` to install the missing gems.
+          end_error
         end
       else
         @gems_dependencies_loaded = true
@@ -482,6 +487,7 @@ module Rails
     end
 
     def prepare_dispatcher
+      return unless configuration.frameworks.include?(:action_controller)
       require 'dispatcher' unless defined?(::Dispatcher)
       Dispatcher.define_dispatcher_callbacks(configuration.cache_classes)
       Dispatcher.new(RAILS_DEFAULT_LOGGER).send :run_callbacks, :prepare_dispatch
@@ -624,13 +630,17 @@ module Rails
     # You can add gems with the #gem method.
     attr_accessor :gems
 
-    # Adds a single Gem dependency to the rails application.
+    # Adds a single Gem dependency to the rails application. By default, it will require
+    # the library with the same name as the gem. Use :lib to specify a different name.
     #
     #   # gem 'aws-s3', '>= 0.4.0'
     #   # require 'aws/s3'
     #   config.gem 'aws-s3', :lib => 'aws/s3', :version => '>= 0.4.0', \
     #     :source => "http://code.whytheluckystiff.net"
     #
+    # To require a library be installed, but not attempt to load it, pass :lib => false
+    #
+    #   config.gem 'qrp', :version => '0.4.1', :lib => false
     def gem(name, options = {})
       @gems << Rails::GemDependency.new(name, options)
     end
@@ -702,6 +712,7 @@ module Rails
     # contents of the file are processed via ERB before being sent through
     # YAML::load.
     def database_configuration
+      require 'erb'
       YAML::load(ERB.new(IO.read(database_configuration_file)).result)
     end
 

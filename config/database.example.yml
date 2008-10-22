@@ -1,3 +1,26 @@
+# mysql
+development:
+  adapter: mysql
+  database: slate_development
+  username: root
+  password:
+  host: localhost
+
+test:
+  adapter: mysql
+  database: slate_test
+  username: root
+  password:
+  host: localhost
+
+production:
+  adapter: mysql
+  database: slate_production
+  username: root
+  password: 
+  host: localhost
+
+# sqlite3
 development:
   adapter: sqlite3
   database: db/development.sqlite3

@@ -77,6 +77,10 @@ class PrototypeHelperTest < PrototypeHelperBaseTest
       link_to_remote("Remote outauthor", :failure => "alert(request.responseText)", :url => { :action => "whatnot"  })
     assert_dom_equal %(<a href=\"#\" onclick=\"new Ajax.Request('http://www.example.com/whatnot?a=10&amp;b=20', {asynchronous:true, evalScripts:true, onFailure:function(request){alert(request.responseText)}}); return false;\">Remote outauthor</a>),
       link_to_remote("Remote outauthor", :failure => "alert(request.responseText)", :url => { :action => "whatnot", :a => '10', :b => '20' })
+    assert_dom_equal %(<a href=\"#\" onclick=\"new Ajax.Request('http://www.example.com/whatnot', {asynchronous:false, evalScripts:true}); return false;\">Remote outauthor</a>),
+      link_to_remote("Remote outauthor", :url => { :action => "whatnot" }, :type => :synchronous)
+    assert_dom_equal %(<a href=\"#\" onclick=\"new Ajax.Request('http://www.example.com/whatnot', {asynchronous:true, evalScripts:true, insertion:'bottom'}); return false;\">Remote outauthor</a>),
+      link_to_remote("Remote outauthor", :url => { :action => "whatnot" }, :position => :bottom)
   end
   
   def test_link_to_remote_html_options
@@ -118,46 +122,52 @@ class PrototypeHelperTest < PrototypeHelperBaseTest
   end
 
   def test_form_remote_tag_with_block
-    form_remote_tag(:update => "glass_of_beer", :url => { :action => :fast  }) { concat "Hello world!" }
-    assert_dom_equal %(<form action=\"http://www.example.com/fast\" method=\"post\" onsubmit=\"new Ajax.Updater('glass_of_beer', 'http://www.example.com/fast', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;\">Hello world!</form>), output_buffer
+    _erbout = ''
+    form_remote_tag(:update => "glass_of_beer", :url => { :action => :fast  }) { _erbout.concat "Hello world!" }
+    assert_dom_equal %(<form action=\"http://www.example.com/fast\" method=\"post\" onsubmit=\"new Ajax.Updater('glass_of_beer', 'http://www.example.com/fast', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;\">Hello world!</form>), _erbout
   end
 
   def test_remote_form_for_with_record_identification_with_new_record
+    _erbout = ''
     remote_form_for(@record, {:html => { :id => 'create-author' }}) {}
     
     expected = %(<form action='#{authors_path}' onsubmit="new Ajax.Request('#{authors_path}', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;" class='new_author' id='create-author' method='post'></form>)
-    assert_dom_equal expected, output_buffer
+    assert_dom_equal expected, _erbout
   end
 
   def test_remote_form_for_with_record_identification_without_html_options
+    _erbout = ''
     remote_form_for(@record) {}
     
     expected = %(<form action='#{authors_path}' onsubmit="new Ajax.Request('#{authors_path}', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;" class='new_author' method='post' id='new_author'></form>)
-    assert_dom_equal expected, output_buffer
+    assert_dom_equal expected, _erbout
   end
 
   def test_remote_form_for_with_record_identification_with_existing_record
     @record.save
+    _erbout = ''
     remote_form_for(@record) {}
     
     expected = %(<form action='#{author_path(@record)}' id='edit_author_1' method='post' onsubmit="new Ajax.Request('#{author_path(@record)}', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;" class='edit_author'><div style='margin:0;padding:0'><input name='_method' type='hidden' value='put' /></div></form>)
-    assert_dom_equal expected, output_buffer
+    assert_dom_equal expected, _erbout
   end
 
   def test_remote_form_for_with_new_object_in_list
+    _erbout = ''
     remote_form_for([@author, @article]) {}
     
     expected = %(<form action='#{author_articles_path(@author)}' onsubmit="new Ajax.Request('#{author_articles_path(@author)}', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;" class='new_article' method='post' id='new_article'></form>)
-    assert_dom_equal expected, output_buffer
+    assert_dom_equal expected, _erbout
   end
   
   def test_remote_form_for_with_existing_object_in_list
     @author.save
     @article.save
+    _erbout = ''
     remote_form_for([@author, @article]) {}
     
     expected = %(<form action='#{author_article_path(@author, @article)}' id='edit_article_1' method='post' onsubmit="new Ajax.Request('#{author_article_path(@author, @article)}', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;" class='edit_article'><div style='margin:0;padding:0'><input name='_method' type='hidden' value='put' /></div></form>)
-    assert_dom_equal expected, output_buffer
+    assert_dom_equal expected, _erbout
   end
 
   def test_on_callbacks
@@ -282,13 +292,13 @@ class JavaScriptGeneratorTest < PrototypeHelperBaseTest
   end
   
   def test_insert_html_with_string
-    assert_equal 'new Insertion.Top("element", "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E");',
+    assert_equal 'Element.insert("element", { top: "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E" });',
       @generator.insert_html(:top, 'element', '<p>This is a test</p>')
-    assert_equal 'new Insertion.Bottom("element", "\\u003Cp\u003EThis is a test\\u003C/p\u003E");',
+    assert_equal 'Element.insert("element", { bottom: "\\u003Cp\u003EThis is a test\\u003C/p\u003E" });',
       @generator.insert_html(:bottom, 'element', '<p>This is a test</p>')
-    assert_equal 'new Insertion.Before("element", "\\u003Cp\u003EThis is a test\\u003C/p\u003E");',
+    assert_equal 'Element.insert("element", { before: "\\u003Cp\u003EThis is a test\\u003C/p\u003E" });',
       @generator.insert_html(:before, 'element', '<p>This is a test</p>')
-    assert_equal 'new Insertion.After("element", "\\u003Cp\u003EThis is a test\\u003C/p\u003E");',
+    assert_equal 'Element.insert("element", { after: "\\u003Cp\u003EThis is a test\\u003C/p\u003E" });',
       @generator.insert_html(:after, 'element', '<p>This is a test</p>')
   end
   
@@ -341,11 +351,6 @@ class JavaScriptGeneratorTest < PrototypeHelperBaseTest
       @generator.redirect_to("http://www.example.com/welcome?a=b&c=d")
   end
   
-  def test_reload
-    assert_equal 'window.location.reload();',
-      @generator.reload
-  end
-
   def test_delay
     @generator.delay(20) do
       @generator.hide('foo')
@@ -361,8 +366,8 @@ class JavaScriptGeneratorTest < PrototypeHelperBaseTest
     @generator.replace_html('baz', '<p>This is a test</p>')
     
     assert_equal <<-EOS.chomp, @generator.to_s
-new Insertion.Top("element", "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E");
-new Insertion.Bottom("element", "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E");
+Element.insert("element", { top: "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E" });
+Element.insert("element", { bottom: "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E" });
 ["foo", "bar"].each(Element.remove);
 Element.update("baz", "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E");
     EOS
@@ -424,6 +429,8 @@ Element.update("baz", "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E");
   def test_sortable
     assert_equal %(Sortable.create("blah", {onUpdate:function(){new Ajax.Request('http://www.example.com/order', {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("blah")})}});), 
       @generator.sortable('blah', :url => { :action => "order" })
+    assert_equal %(Sortable.create("blah", {onUpdate:function(){new Ajax.Request('http://www.example.com/order', {asynchronous:false, evalScripts:true, parameters:Sortable.serialize("blah")})}});),
+      @generator.sortable('blah', :url => { :action => "order" }, :type => :synchronous)
   end
   
   def test_draggable
@@ -434,6 +441,8 @@ Element.update("baz", "\\u003Cp\\u003EThis is a test\\u003C/p\\u003E");
   def test_drop_receiving
     assert_equal %(Droppables.add("blah", {onDrop:function(element){new Ajax.Request('http://www.example.com/order', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}});), 
       @generator.drop_receiving('blah', :url => { :action => "order" })
+    assert_equal %(Droppables.add("blah", {onDrop:function(element){new Ajax.Request('http://www.example.com/order', {asynchronous:false, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}});),
+      @generator.drop_receiving('blah', :url => { :action => "order" }, :type => :synchronous)
   end
 
   def test_collection_first_and_last

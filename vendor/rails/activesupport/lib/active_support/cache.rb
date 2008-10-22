@@ -7,13 +7,10 @@ module ActiveSupport
 
       case store
       when Symbol
-        require "active_support/cache/#{store.to_s}"
-
         store_class_name = (store == :drb_store ? "DRbStore" : store.to_s.camelize)
         store_class = ActiveSupport::Cache.const_get(store_class_name)
         store_class.new(*parameters)
       when nil
-        require "active_support/cache/memory_store"
         ActiveSupport::Cache::MemoryStore.new
       else
         store
@@ -22,7 +19,7 @@ module ActiveSupport
 
     def self.expand_cache_key(key, namespace = nil)
       expanded_cache_key = namespace ? "#{namespace}/" : ""
-      
+
       if ENV["RAILS_CACHE_ID"] || ENV["RAILS_APP_VERSION"]
         expanded_cache_key << "#{ENV["RAILS_CACHE_ID"] || ENV["RAILS_APP_VERSION"]}/" 
       end
@@ -34,6 +31,8 @@ module ActiveSupport
         key.collect { |element| expand_cache_key(element) }.to_param
       when key.respond_to?(:to_param)
         key.to_param
+      else
+        key.to_s
       end
 
       expanded_cache_key
@@ -140,3 +139,9 @@ module ActiveSupport
     end
   end
 end
+
+require 'active_support/cache/file_store'
+require 'active_support/cache/memory_store'
+require 'active_support/cache/drb_store'
+require 'active_support/cache/mem_cache_store'
+require 'active_support/cache/compressed_mem_cache_store'

@@ -249,9 +249,9 @@ module ActionView
           args.unshift object
         end
 
-        concat(form_tag(options.delete(:url) || {}, options.delete(:html) || {}))
+        concat(form_tag(options.delete(:url) || {}, options.delete(:html) || {}), proc.binding)
         fields_for(object_name, *(args << options), &proc)
-        concat('</form>')
+        concat('</form>', proc.binding)
       end
 
       def apply_form_for_options!(object_or_array, options) #:nodoc:
@@ -601,7 +601,11 @@ module ActionView
       end
 
       def object
-        @object || (@template_object.instance_variable_get("@#{@object_name}") rescue nil)
+        @object || @template_object.instance_variable_get("@#{@object_name}")
+      rescue NameError
+        # As @object_name may contain the nested syntax (item[subobject]) we
+        # need to fallback to nil.
+        nil
       end
 
       def value(object)

@@ -283,6 +283,13 @@ module ActionController #:nodoc:
     @@debug_routes = true
     cattr_accessor :debug_routes
 
+    # Indicates to Mongrel or Webrick whether to allow concurrent action
+    # processing. Your controller actions and any other code they call must
+    # also behave well when called from concurrent threads. Turned off by
+    # default.
+    @@allow_concurrency = false
+    cattr_accessor :allow_concurrency
+
     # Modern REST web services often need to submit complex data to the web application.
     # The <tt>@@param_parsers</tt> hash lets you register handlers which will process the HTTP body and add parameters to the
     # <tt>params</tt> hash. These handlers are invoked for POST and PUT requests.
@@ -606,8 +613,9 @@ module ActionController #:nodoc:
       #
       # This takes the current URL as is and only exchanges the action. In contrast, <tt>url_for :action => 'print'</tt>
       # would have slashed-off the path components after the changed action.
-      def url_for(options = nil) #:doc:
-        case options || {}
+      def url_for(options = {})
+        options ||= {}
+        case options
           when String
             options
           when Hash
@@ -736,6 +744,9 @@ module ActionController #:nodoc:
       #   # Renders the template located in [TEMPLATE_ROOT]/weblog/show.r(html|xml) (in Rails, app/views/weblog/show.erb)
       #   render :template => "weblog/show"
       #
+      #   # Renders the template with a local variable
+      #   render :template => "weblog/show", :locals => {:customer => Customer.new}
+      #
       # === Rendering a file
       #
       # File rendering works just like action rendering except that it takes a filesystem path. By default, the path
@@ -858,7 +869,7 @@ module ActionController #:nodoc:
             render_for_file(file, options[:status], options[:use_full_path], options[:locals] || {})
 
           elsif template = options[:template]
-            render_for_file(template, options[:status], true)
+            render_for_file(template, options[:status], true, options[:locals] || {})
 
           elsif inline = options[:inline]
             add_variables_to_assigns
@@ -1140,7 +1151,7 @@ module ActionController #:nodoc:
 
       def log_processing
         if logger && logger.info?
-          logger.info "\n\nProcessing #{controller_class_name}\##{action_name} (for #{request_origin}) [#{request.method.to_s.upcase}]"
+          logger.info "\n\nProcessing #{self.class.name}\##{action_name} (for #{request_origin}) [#{request.method.to_s.upcase}]"
           logger.info "  Session ID: #{@_session.session_id}" if @_session and @_session.respond_to?(:session_id)
           logger.info "  Parameters: #{respond_to?(:filter_parameters) ? filter_parameters(params).inspect : params.inspect}"
         end

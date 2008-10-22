@@ -22,6 +22,6 @@ klass.module_eval do
 
   def run_callbacks(kind, options = {}, &block)
     options.reverse_merge!( :object => self, :parent => self )
-    ::ActiveSupport::Callbacks::Callback.run(self.class.send("#{kind}_callback_chain"), options[:object], options, &block)
+    ::ActiveSupport::Callbacks::CallbackChain.new(self.class.send("#{kind}_callback_chain")).run(options[:object], options, &block)
   end      
 end

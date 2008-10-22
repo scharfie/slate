@@ -10,12 +10,10 @@ module ActiveSupport
   # If you discover an incorrect inflection and require it for your application, you'll need
   # to correct it yourself (explained below).
   module Inflector
-    extend self
-
     # A singleton instance of this class is yielded by Inflector.inflections, which can then be used to specify additional
     # inflection rules. Examples:
     #
-    #   ActiveSupport::Inflector.inflections do |inflect|
+    #   Inflector.inflections do |inflect|
     #     inflect.plural /^(ox)$/i, '\1\2en'
     #     inflect.singular /^(ox)en/i, '\1'
     #
@@ -93,11 +91,13 @@ module ActiveSupport
       end
     end
 
+    extend self
+
     # Yields a singleton instance of Inflector::Inflections so you can specify additional
     # inflector rules.
     #
     # Example:
-    #   ActiveSupport::Inflector.inflections do |inflect|
+    #   Inflector.inflections do |inflect|
     #     inflect.uncountable "rails"
     #   end
     def inflections
@@ -134,7 +134,7 @@ module ActiveSupport
     #   "posts".singularize            # => "post"
     #   "octopi".singularize           # => "octopus"
     #   "sheep".singluarize            # => "sheep"
-    #   "word".singularize             # => "word"
+    #   "word".singluarize             # => "word"
     #   "the blue mailmen".singularize # => "the blue mailman"
     #   "CamelOctopi".singularize      # => "CamelOctopus"
     def singularize(word)
@@ -277,11 +277,14 @@ module ActiveSupport
     # NameError is raised when the name is not in CamelCase or the constant is
     # unknown.
     def constantize(camel_cased_word)
-      unless /\A(?:::)?([A-Z]\w*(?:::[A-Z]\w*)*)\z/ =~ camel_cased_word
-        raise NameError, "#{camel_cased_word.inspect} is not a valid constant name!"
-      end
+      names = camel_cased_word.split('::')
+      names.shift if names.empty? || names.first.empty?
 
-      Object.module_eval("::#{$1}", __FILE__, __LINE__)
+      constant = Object
+      names.each do |name|
+        constant = constant.const_defined?(name) ? constant.const_get(name) : constant.const_missing(name)
+      end
+      constant
     end
 
     # Turns a number into an ordinal string used to denote the position in an
@@ -307,4 +310,4 @@ module ActiveSupport
   end
 end
 
-require 'active_support/inflections'
+require File.dirname(__FILE__) + '/inflections'
