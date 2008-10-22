@@ -1,0 +1,63 @@
+= AssociatedSave =
+
+The best way to describe this is with an example:
+
+  # models
+  class Collection < ActiveRecord::Base
+    has_many :items
+    associated_save :items
+  end
+      
+  class Item < ActiveRecord::Base
+    belongs_to :collection
+  end
+
+  # form:
+  <% hidden_field_tag 'collection[_items]', nil %>
+  <% @collection.items.each do |item| %>
+    <% fields_for 'collection[_items][]', item do |form| %>
+      <%= form.text_field :name %>
+      <%= form.hidden_field :id %>
+    <% end %>
+  <% end %>
+
+In the example, +associated_save :items+ will create an 
+attribute accessor for a new variable +_items+, as well as an
+after_save callback +save_associated_items+.  
+
+Note that the +fields_for+ section includes an +id+ form field - this
+is necessary for associated_save to know which items to update, create,
+and delete.
+
+So, what exactly happens?  The callback looks for the +@_items+ instance
+variable, and loops over it if found.  Items that have +id+ set will be
+updated, and those without a set +id+ will be created.  After that,
+any item in the collection that has not been updated will be deleted.
+
+Let's take the same example and show some of the options available:
+
+  # models
+  class Collection < ActiveRecord::Base
+    has_many :items
+    associated_save :items, :from => 'entries', :delete => false
+  end
+
+  class Item < ActiveRecord::Base
+    belongs_to :collection
+  end
+
+  # form:
+  <% hidden_field_tag 'collection[entries][]', nil %>
+  <% @collection.items.each do |item| %>
+    <% fields_for 'collection[entries][]', item do |form| %>
+      <%= form.text_field :name %>
+      <%= form.hidden_field :id %>
+    <% end %>
+  <% end %>
+
+As you can see, +associated_save+ supports a +:from+ option, which
+allows you to change the name of the variable that's created.  By default,
++associated_save+ simply prefixes the associated name with an underscore.
+
+Also, notice the +:delete+ option - when set to +false+, unreferenced items
+will never be deleted by the callbacks.

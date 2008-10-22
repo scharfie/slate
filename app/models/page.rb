@@ -2,7 +2,6 @@ class Page < ActiveRecord::Base
   alias_attribute :default, :is_default
   alias_attribute :hidden, :is_hidden
   
-  # permalink_column :name, :glue => '_'
   acts_as_dotted_path :scope => :space_id, 
     :ensure_root => true, :order => 'path, position ASC'
 
@@ -11,6 +10,9 @@ class Page < ActiveRecord::Base
   belongs_to :space
   has_many :areas
   has_many :permalinks, :as => :permalinkable
+
+  # Associated saves
+  associated_save :permalinks  
 
   # Callbacks
   before_validation :ensure_name

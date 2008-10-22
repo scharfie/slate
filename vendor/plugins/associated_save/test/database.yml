@@ -1,0 +1,3 @@
+test:
+  adapter: sqlite3
+  database: <%= File.dirname(__FILE__) %>/associated_save.sqlite3

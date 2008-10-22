@@ -3,8 +3,7 @@ class ApplicationController < ActionController::Base
   include Slate::Authentication
 
   # load helpers
-  helper :navigation
-  helper :toolbar
+  helper :all
 
   before_filter :capture_user!
   

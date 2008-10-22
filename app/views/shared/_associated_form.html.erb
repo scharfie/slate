@@ -1,0 +1,76 @@
+<%= hidden_field_tag path[0..-3] + '[-1]', nil  %>
+<% dom_id = "items_#{association_name}" %>
+
+<div id="<%= dom_id %>" style="clear: left">
+    <ul class="toolbar" style="margin-bottom: 15px">
+      <li><a href="#" class="new"><%= glyph 'add' %> Add new item</a></li>
+    </ul>
+    <ul class="items no-fck">
+      <li class="item" style="margin-bottom: 20px">
+        <ul class="toolbar">
+          <li><%= link_to glyph('delete'), '#', :class => 'delete' %></li>
+          <% if sortable %>
+            <li class="separator">|</li>
+            <li><span class="handle">Drag to re-order</span></li>
+          <% end %>
+        </ul>  
+        <%= form %>
+      </li>
+    </ul>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  // build chain map
+  var map = {};
+  var blank = {};
+  $("#<%= dom_id %> .items :input[name*='<%= path %>']").each(function() {
+    if (this.type != 'file') {
+      var key = this.name
+      var value = key.replace('<%= path %>', '').slice(1, -1)
+      var index = value.indexOf('][')
+      if (index < 0) {
+        blank[value] = null
+        map[":input[name='"+key+"']"]  = '{' + value + '}'
+      }
+    }
+  })
+  
+  $('#<%= dom_id %> .items').chain($.extend(map, {
+    builder: function() {
+      var $$ = this;
+      var count = $('#<%= dom_id %> .items').items().length;
+      
+      if (typeof $.Chain.builderCallback == 'function') {
+        $.Chain.builderCallback($$, '<%= path %>');  
+      }
+      
+      $$.find('a.delete').click(function() {
+        $$.fadeOut(function() { $$.remove() })
+        return false
+      }).end()
+    }
+  }));
+  
+  var items = <%= associated_objects.each { |e| e.id ||= '' }.to_json %>
+
+  $.each(items, function(index, item) {
+    if (typeof item.id != 'undefined') $('#<%= dom_id %> .items').items('add', item);
+  });
+  
+  // $('#<%= dom_id %> ul.toolbar a.new').click(function() {
+  //   $('#<%= dom_id %> .items').items('add', blank); 
+  //   return false    
+  // })
+  
+  $('#<%= dom_id %> .items')
+    .parents('form').submit(function() {
+      $$ = $('#<%= dom_id %> .items .item').each(function(i) {
+        $(this).find(':input').each(function() {
+          this.name = this.name.replace('[]', '['+ i +']')
+        })
+      })
+    })
+  .end()  
+})
+</script>

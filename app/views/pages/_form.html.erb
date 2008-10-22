@@ -1,5 +1,9 @@
 <%= form.text_field :name %>
-<%= form.text_field :permalink %>
+
+<% associated_form :permalinks do |item| %>
+  <%= item.text_field :name %>
+<% end %>
+
 <%= form.select :template, @space.theme.templates %>
 
 <% content_for_variable(:current_default) do %>
@@ -11,7 +15,7 @@
 <% end %>
 
 <% @page.is_default = @space.pages.length == 2 if @page.new_record? %>
-<%= form.check_box :is_default, :template => 'trailing_label_element', :label => 'Set as default page? ' + @content_for_current_default %>
+<%= form.check_box :is_default, :template => 'trailing_label_element', :label => 'Set as default page? ' + yield(:current_default) %>
 <%= form.check_box :is_hidden,  :template => 'trailing_label_element', :label => 'Hide this page?' %>
 
 <% form.actions do %>
