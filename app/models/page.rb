@@ -1,7 +1,5 @@
 class Page < ActiveRecord::Base
-  alias_attribute :default, :is_default
-  alias_attribute :hidden, :is_hidden
-  
+  # Acts
   acts_as_dotted_path :scope => :space_id, 
     :ensure_root => true, :order => 'path, position ASC'
 
@@ -14,9 +12,13 @@ class Page < ActiveRecord::Base
   # Associated saves
   associated_save :permalinks  
 
+  # Attributes
+  alias_attribute :default, :is_default
+  alias_attribute :hidden, :is_hidden
+
   # Callbacks
   before_validation :ensure_name
-  before_save :ensure_one_default_page
+  after_save :ensure_one_default_page
 
   # Validations
   validates_presence_of :space_id
@@ -33,9 +35,7 @@ protected
   # default page exists for this page's space
   def ensure_one_default_page
     return unless is_default?
-    return unless default_page = space.default_page
-    return if default_page.new_record?
-    default_page.update_attribute(:is_default, false)
+    self.class.update_all(['is_default = ?', false], ['is_default = ? AND id != ?', true, id])
   end
 
   # Callback from acts_as_dotted_path which is invoked
