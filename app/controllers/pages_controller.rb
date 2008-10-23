@@ -12,6 +12,7 @@ protected
     returning resource_service.new(params[resource_name]) do |page|
       page.parent_id = params[:id] if page.parent_id.blank? || page.parent_id == 0
       page.parent = resource_service.root if page.parent_id.blank?
+      page.is_default = true if @space.pages.length == 2
     end
   end
 

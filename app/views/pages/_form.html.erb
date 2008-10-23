@@ -1,12 +1,3 @@
-<%= form.text_field :name %>
-
-<% associated_form :permalinks do |item| %>
-  <%= item.text_field :name %>
-  <%= item.hidden_field :id, :template => 'hidden_field' %>
-<% end %>
-
-<%= form.select :template, @space.theme.templates %>
-
 <% content_for_variable(:current_default) do %>
   <% if (default_page = enclosing_resource.default_page) && default_page != resource %>
     <span style="font-size: 0.9em">(currently set to
@@ -15,13 +6,16 @@
   <% end %>
 <% end %>
 
-<% @page.is_default = @space.pages.length == 2 if @page.new_record? %>
-<%= form.check_box :is_default, :template => 'trailing_label_element', :label => 'Set as default page? ' + yield(:current_default) %>
-<%= form.check_box :is_hidden,  :template => 'trailing_label_element', :label => 'Hide this page?' %>
+<% fieldset 'Information' do %>
+  <%= form.text_field :name %>
+  <%= form.select :template, @space.theme.templates %>
+  <%= form.check_box :is_default, :template => 'trailing_label_element', :label => 'Set as default page? ' + yield(:current_default) %>
+  <%= form.check_box :is_hidden,  :template => 'trailing_label_element', :label => 'Hide this page?' %>
+<% end %>
 
-<% form.actions do %>
-  <%= submit_tag 'Save and continue editing', :style => 'font-weight: bold' %> 
-  <%= submit_tag 'Save' %>
-  or 
-  <%= cancel_link %>
+<% fieldset 'Permalinks' do %>
+  <% associated_form :permalinks do |item| %>
+    <%= item.text_field :name, :label => 'Path' %>
+    <%= item.hidden_field :id, :template => 'hidden_field' %>
+  <% end %>
 <% end %>

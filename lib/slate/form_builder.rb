@@ -19,8 +19,16 @@ module Slate
         label = args[-1].delete(:label) { args.first.to_s.humanize }
         tip   = args[-1].delete(:tip)
 
-        template = args.last.has_key?(:template) ? args.last.delete(:template) : self.default_template
-
+        template = args.last.has_key?(:template) ? args.last.delete(:template) : nil
+        template ||= case helper
+        when *%w(check_box radio_button)
+          'trailing_label_element'
+        when *%w(hidden_field)
+          'hidden_field'
+        else
+          default_template
+        end
+        
         return super(*args) unless template
 
         render_form_element helper, label, tip, template, args, super(*args)

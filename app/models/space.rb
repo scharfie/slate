@@ -1,4 +1,5 @@
 class Space < ActiveRecord::Base
+  # Associations
   has_many :memberships
   has_many :users, :through => :memberships, 
     :select => 'users.*, memberships.role AS role'
@@ -8,6 +9,10 @@ class Space < ActiveRecord::Base
   has_many :plugins
   has_many :domains
   
+  # Associated saves
+  associated_save :domains
+  
+  # Attributes
   cattr_accessor :active
   
   # Callbacks

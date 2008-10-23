@@ -48,12 +48,12 @@ protected
 public
   def self.find_by_permalink(permalink)
     Permalink.with_type('Page').first(:conditions => { 
-      :name => permalink 
+      :name => (permalink||'').join('/') 
     }).try(:permalinkable)
   end
   
   def permalink
-    permalinks.primary.first
+    permalinks.primary.first || permalinks.first
   end
   
   # Returns the names of all items in the bloodline

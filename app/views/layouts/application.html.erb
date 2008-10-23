@@ -7,7 +7,7 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
 	<%= stylesheet_link_tag 'base', 'flash' %>
-	<%= javascript_include_tag 'jquery.js', 'chain.js' %>
+	<%= javascript_include_tag 'jquery.js', 'jquery.faded.js', 'chain.js' %>
 	<%= yield :head %>
 </head>
 <body>
@@ -26,7 +26,13 @@
     <div class="bottom"></div>
   </div>
   
-  <div id="footer">
-  </div>
+  <div id="footer"></div>
+  
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  $('.fieldset h3').faded({left: true, right: true})
+  $('#body :input:not(:hidden):first').focus()
+});
+</script>  
 </body>
 </html>

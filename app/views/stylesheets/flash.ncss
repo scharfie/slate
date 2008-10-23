@@ -1,7 +1,7 @@
 div#flash {
 	div {
 	  .flash {
-		  margin: 5px 0 10px 0;
+		  margin: 5px 0;
 	    padding: 0.75em 38px;
 		  font: bold 1em Lucida Grande;
 		  border: 1px dotted transparent;

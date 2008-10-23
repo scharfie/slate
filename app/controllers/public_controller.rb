@@ -17,7 +17,7 @@ protected
   def capture_page
     page_path = params[:page_path]
     return @page = @space.default_page if page_path.blank?
-    return @page = @space.pages.find_by_page_path(page_path)
+    return @page = @space.pages.find_by_permalink(page_path)
   end
   
 public

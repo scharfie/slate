@@ -95,7 +95,7 @@ module BuilderHelper
     def link_to_page(page, options={})
       (options[:class] ||= '') << ' active' if active_page?(page)
       (options[:class] ||= '') << ' has-active' if parent_of_active_page?(page)
-      options[:href] = slate? ? space_page_path(@space, page) : page.permalink
+      options[:href] = slate? ? space_page_path(@space, page) : page.permalink.to_s
       options[:href] = '/' if options[:href].blank?
       content_tag :a, page.name, options
     end

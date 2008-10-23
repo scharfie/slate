@@ -4,17 +4,17 @@ module Slate
       # Include the default actions
       include Ardes::ResourcesController::Actions
 
-      # GET /events/new
-      def new
-        self.resource = resource_service.find_by_id(params[:id]) || new_resource
-        def resource.new_record?() true end
-      
-        respond_to do |format|
-          format.html # new.html.erb
-          format.js
-          format.xml  { render :xml => resource }
-        end
-      end
+      # # GET /events/new
+      # def new
+      #   self.resource = resource_service.find_by_id(params[:id]) || new_resource
+      #   def resource.new_record?() true end
+      # 
+      #   respond_to do |format|
+      #     format.html # new.html.erb
+      #     format.js
+      #     format.xml  { render :xml => resource }
+      #   end
+      # end
 
       # POST /events
       # POST /events.xml

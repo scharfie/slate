@@ -145,8 +145,12 @@ input {
 	}
 }
 
+select {
+	font: normal 14px "Lucida Grande", verdana;  
+}
+
 label {
-	font: normal 14px "Lucida Grande", Helvetica, "Trebuchet MS";
+	font: bold 14px "Lucida Grande", Helvetica, "Trebuchet MS";
 	color: #444;
  
   span {
@@ -154,6 +158,7 @@ label {
 	  font-weight: normal;
   }
 }
+
 
 /** footer **/
 #footer {
@@ -197,7 +202,7 @@ img {
 
 
 #content {
-	padding: 15px;
+	padding: 0 15px;
 }
 
 ul#toolbar {
@@ -268,4 +273,84 @@ ul#pages {
 
 img.glyph {
   vertical-align: text-bottom;
+}
+
+div.field {
+  margin-left: 15px;
+  clear: left;
+  padding: 0 0 2px 0;
+}
+
+div.info {
+  width: 80px;
+  text-align: right;
+  float: left;
+  padding-top: 3px;
+}
+
+div.input {
+  margin-left: 80px;
+  padding-left: 10px;
+}
+
+div.fieldset h3 {
+  font-size: 14px;
+  font-weight: bold;
+  background: #F3F7FB;
+  border: 1px solid #D0E8F7;
+  color: #036;
+  float: left;
+  clear: left;
+  padding: 5px 75px 5px 35px;
+  margin: 10px 0 10px -15px;
+  position: relative;
+}
+
+div.fieldset h3 span {
+  padding-right: 5px;
+}
+
+.white-fade-right, .white-fade-left {
+  position: absolute;
+  right:  -1px;
+  top:    -1px;
+  bottom: -1px;
+  width:  75px;
+}
+
+.white-fade-right {
+  background: transparent url(/images/white-fade-right-src.png) repeat-y top right;
+}
+
+.white-fade-left {
+  right: auto;
+  left: -1px;
+  background: transparent url(/images/white-fade-left-src.png) repeat-y top right;
+}
+
+ul.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+div.actions {
+  padding: 15px 20px;
+  margin: 10px 0;
+  background: #ffc;
+  padding-right: 40px;
+  border: 2px solid orange;
+  border-width: 2px 0;
+}
+
+div.actions input {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+div.formError {
+  color: #900;
+  font-weight: bold;
+  padding: 2px 0;
+  font-size: 13px;
 }

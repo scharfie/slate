@@ -63,4 +63,14 @@ module ApplicationHelper
   def admin_heading
     span 'Administrator', :class => 'space' if super_user?
   end
+  
+  def fieldset(legend, &block)
+    locals = {
+      :legend => legend, 
+      :fields => capture(&block)
+    }
+    
+    result = render(:partial => 'forms/fieldset', :locals => locals)
+    concat result, block.binding
+  end
 end
