@@ -1,5 +1,5 @@
 function editArea() {
-  var width = 400;
+  var width = 500;
   var height = 400;	
 	
 	var parameters = [
@@ -20,5 +20,6 @@ function updateAreaOnPage(dom_id) {
 }
 
 $(function() {
-	$('a.b-area').click(editArea);
+	$('a.b-area').click(editArea)
+	$('body').css({marginTop: $('#b-toolbar')[0].offsetHeight})
 });

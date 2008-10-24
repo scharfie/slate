@@ -72,6 +72,8 @@ textarea {
 
 .panel .actions {
   margin: 0;
+  padding: 10px;
+  border: none;
   background: transparent;
 }
 

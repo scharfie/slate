@@ -79,28 +79,28 @@ div.b-notice {
 
 div#b-toolbar {
   z-index: 3000;
-	position: absolute;
+  position: absolute;
 	top: 0;
 	left: 0;
-	padding: 3px 0 0 0;
-	text-indent: 3px;
+	padding: 7px 0;
+	text-indent: 13px;
 	width: 100%;
-	height: 21px;
-	color: yellow;
-	background: darkorange;
+	color: #777;
+	background: #242424;
+	border-bottom: 1px solid #777;
 
 	a {
 		font: normal 12px Verdana;
 	  text-decoration: none;
 	  color: #fff;
-	  padding: 3px;
+	  padding: 5px;
 	
 		:hover {
-  	  background: purple;
+  	  background: #444;
 		}
 	}
 }
 
 html body {
-	margin-top: 24px !important;
+	xmargin-top: 24px !important;
 }
