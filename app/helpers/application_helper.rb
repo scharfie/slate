@@ -8,11 +8,6 @@ module ApplicationHelper
     instance_variable_set("@content_for_#{name}", var)
   end
   
-  # captures given text or block to use as heading
-  def heading(text=nil, &block)
-    content_for_variable('heading', text, &block)
-  end
-  
   # finds all spaces and renders the space chooser
   def space_chooser
     spaces = Space.find(:all, :order => 'name')

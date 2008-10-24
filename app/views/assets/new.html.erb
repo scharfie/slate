@@ -1,10 +1,13 @@
 <% heading 'Upload file' %>
-<% form_for_resource(:html => { :multipart => true }) do |form| %>
-  <%= form.file_field :uploaded_data, :label => 'Upload this file:' %>
+
+<% fieldset 'Upload' do %>
+  <% form_for_resource(:html => { :multipart => true }) do |form| %>
+    <%= form.file_field :uploaded_data, :label => 'File:' %>
   
-  <%= form.text_field :name, :label => 'Name this file (optional):' %>
+    <%= form.text_field :name, :label => 'Name:' %>
   
-  <% form.actions do %>
-    <%= submit_tag 'Upload' %>
+    <% form.actions do %>
+      <%= submit_tag 'Upload' %>
+    <% end %>
   <% end %>
 <% end %>

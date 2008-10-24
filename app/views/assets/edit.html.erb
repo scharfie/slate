@@ -1,8 +1,8 @@
-<% heading 'Editing ' + span(resource.name) %>
-
 <% form_for_resource do |form| %>
+<% fieldset 'File Information' do %>
   <%= form.text_field :name, :value => resource.name, :size => 45 %>
+<% end %>
   <% form.actions do %>
-    <%= submit_tag 'Save' %>
+    <%= submit_tag 'Save' %> or <%= cancel_link %>
   <% end %>
 <% end %>  
