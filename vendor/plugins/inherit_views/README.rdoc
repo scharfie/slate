@@ -1,0 +1,41 @@
+http://plugins.ardes.com > inherit_views
+
+= Status
+
+inherit views on edge has slimmed down a bit (64 LOC).  The API is the same except that, for the moment, render_parent is out.
+
+inherit_views is available for rails 2.0-stable and 2.1-stable.  To get this version checkout the rails-2.0-2.1 branch
+
+  git clone git://github.com/ianwhite/inherit_views rails-2.0-2.1
+
+= inherit_views
+
+This plugin allows your controllers to inherit their views from parent controllers.  The default behaviour is to inherit along the ancestor path of the controller, but you can also specify custom inherit view paths to search.
+
+NOTE: this plugin is not aimed at having multiple view paths for your controllers, which is addressed with the view_paths addition to ActionController::Base for rails 2.0.  Rather, within these view paths, you can inherit views from other controller paths.
+
+Example:
+
+  class ApplicationController < ActionController::Base
+    inherit_views
+  end
+
+  class FooController < ApplicationController
+    # will look for views in 'views/foo', then 'views/application'
+  end
+
+  class BarController < FooController
+    # will look for views in 'views/bar', then 'views/foo', then 'view/application'
+  end
+  
+See Ardes::InheritViews for more details
+
+=== Specs and Coverage
+* {SPECDOC}[link:files/SPECDOC.html] lists the specifications
+* {RSpec Report}[link:rspec_report.html] is a report of spec pass/fails
+* {RCov Report}[link:coverage/index.html] is the rcov report
+
+=== Testing
+
+RSpec is used for testing, so the tests are in <tt>spec/</tt> rather than
+<tt>test/</tt> Do rake --tasks for more details.

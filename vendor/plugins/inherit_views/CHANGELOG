@@ -1,0 +1,21 @@
+* Removed render_parent for now (in edge rails version)
+
+* inherit_views allows inherited templates to be rendered where there is no action method
+
+* Vastly simplified internals, making use of the _pick_template single point of entry
+
+* branched fro rails 2.0 and 2.1 in rails-2.0-2.1, edge rails follows master branch
+
+* Now using garlic for CI
+
+* Compatibility update for the new ActionView::Partial refactoring.
+  [thanks Chris Hapgood for reporting, and tracking down, the bug]
+
+* Compatible with both Rails 2.0.x and beyond - uses the template.finder object
+  to find templates if that is available
+
+* Vastly improved readability of specs, and made them much more acceptance like
+
+* BC Alert!  inherit_views has changed to keep up with edge rails internals.
+  If you're using latest Edge, no problems.  If you're using < 7413 then freeze
+  to r390 of inherit_views

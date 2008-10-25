@@ -1,3 +1,13 @@
+<p class="info">
+  <% if resource.parent.root? %>
+    This is a top-level page
+  <% else %>  
+    This page be created in <span><%= resource.parent.path_names.join(' &raquo; ') %></span>
+  <% end %>
+</p>
+
+<%= form.hidden_field(:parent_id, :template => nil) if resource.new_record? %>
+
 <% content_for_variable(:current_default) do %>
   <% if (default_page = enclosing_resource.default_page) && default_page != resource %>
     <span style="font-size: 0.9em">(currently set to
