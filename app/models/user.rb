@@ -115,6 +115,10 @@ public
     [first_name, last_name].compact.join(' ')
   end
   
+  def name
+    display_name.blank? ? username : display_name
+  end
+  
   # returns user's role for the given site
   # (defaults to the active site)
   def role(site=nil)
