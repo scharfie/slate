@@ -1,10 +1,9 @@
-class PagesController < ApplicationController
+class PagesController < ResourcesController
   include Slate::Builder
   include Slate::ThemeSupport
   
   resources_controller_for :pages, :in => :space
   before_filter :prepend_theme_view_paths, :only => :show
-  inherit_views 'resources'
   
 protected
   # creates a new page (setting the parent id

@@ -1,3 +1,5 @@
 <% heading 'Install theme' %>
-<%= form.text_field :url, :size => 45, :label => 'Git repository URL:' %>
-<%= submit_tag 'Install' %>
+
+<% fieldset 'Theme' do %>
+  <%= form.text_field :url, :size => 45, :label => 'Git URL:' %>
+<% end %>  

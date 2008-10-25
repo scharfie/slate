@@ -2,8 +2,8 @@
 <% toolbar_link glyph('add') + ' Install theme', new_theme_path() %>
 
 <ul>
-<% Theme.installed.each do |theme| %>
-  <li><%= theme %> <%= link_to '(update)', refresh_theme_path(theme.to_s) %></li>
-<% end %>  
+  <% Theme.installed.each do |theme| %>
+    <li><%= theme %> <%= link_to '(update)', refresh_theme_path(theme.to_s) %></li>
+  <% end %>  
 </ul>
 

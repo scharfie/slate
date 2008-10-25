@@ -1,6 +1,6 @@
-class ThemesController < ApplicationController
+class ThemesController < ResourcesController
   resources_controller_for :theme
-
+  
 public
   # Refreshes theme (SCM 'update')
   def refresh
