@@ -35,7 +35,7 @@ protected
   # default page exists for this page's space
   def ensure_one_default_page
     return unless is_default?
-    self.class.update_all(['is_default = ?', false], ['is_default = ? AND id != ?', true, id])
+    self.class.update_all(['is_default = ?', false], ['is_default = ? AND id != ? AND space_id = ?', true, id, space_id])
   end
 
   # Callback from acts_as_dotted_path which is invoked

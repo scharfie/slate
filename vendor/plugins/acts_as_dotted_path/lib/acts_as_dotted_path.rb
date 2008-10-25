@@ -87,20 +87,19 @@ module ActiveRecord # :nodoc:
       #   end
       module AssociationExtension
         def root(node=nil)
-          self.find_root || self.create_root(node)
+          find_root(node) || create_root(node)
         end
         
-        def find_root
-          self.find(:first, :conditions => 'depth = 0')
+        def find_root(node=nil)
+          find(:first, :conditions => "depth = 0 AND #{node ? node.dotted_path_scope_condition : '1=1'}")
         end
         
         def create_root(node=nil)
           return nil if (node && node.root?) || !ensure_root?
           returning(self.respond_to?(:build) ? self.build : self.new) do |root|
             root.depth = 0
-            root[root.parent_column] = 0
+            root[root.dotted_path_parent_column] = 0
             root.send(:before_root, node) if node && root.respond_to?(:before_root)
-            # raise root.to_yaml
             root.save
           end  
         end
@@ -146,10 +145,10 @@ module ActiveRecord # :nodoc:
           class_eval "def self.acts_as_dotted_path_configuration(); #{configuration.inspect}; end"
           
           if scope.is_a?(String)
-            class_eval "def scope_condition() \"#{scope}\" end"
+            class_eval "def dotted_path_scope_condition() \"#{scope}\" end"
           else  
             scope = [scope] unless scope.is_a?(Array)
-            define_method 'scope_condition' do
+            define_method 'dotted_path_scope_condition' do
               conditions = [[]]
               scope.flatten.each_with_index do |condition, index|
                 case condition
@@ -172,11 +171,10 @@ module ActiveRecord # :nodoc:
             end
           end
           
-          parent_column = configuration[:parent_column]
-          define_method 'parent_column'     do configuration[:parent_column] end
+          define_method 'dotted_path_parent_column' do configuration[:parent_column] end
           define_method 'dotted_path_order' do configuration[:order] end
-          
           foreign_key = configuration[:parent_column]
+
           class_eval do
             include ActiveRecord::Acts::DottedPath::InstanceMethods
             with_options(:class_name => self.to_s, :foreign_key => foreign_key) do |e|
@@ -217,10 +215,7 @@ module ActiveRecord # :nodoc:
         #   Page.remap_tree!("1-0,2-1,3-1")
         #   TODO: finish example
         def remap_tree!(mappings)
-          # y mappings 
-          
           mappings = mappings.split(',').map { |e| e.split('-') }
-
           counters, path, nodes = [0], [], {}
           
           mappings.each do |id, pid|
@@ -244,15 +239,11 @@ module ActiveRecord # :nodoc:
           end
 
           changed_nodes = []
-          # original_nodes = self.root
-          # original_nodes.children.each do |e|
           original_nodes = self.find(:all)
-          # original_nodes.each { |e| puts "%s (%d)" % [e.name, e.id] }
           original_nodes.each do |e|
             new_data = nodes[e.id.to_s]
             next if new_data.nil?
             old_data = { :parent_id => e.parent_id, :depth => e.depth, :path => e.path, :position => e.position }
-            # puts "%s (%d) --> pos: %d (old) -- %d (new)" % [e.name, e.id, old_data[:position], new_data[:position]]
             unless old_data == new_data
               e.update_attributes(new_data) 
               changed_nodes << e
@@ -267,13 +258,11 @@ module ActiveRecord # :nodoc:
       end
 
       module InstanceMethods
-        # attr_accessor :dotted_path_previous_parent_id
         attr_accessor :dotted_path_previous_parent
         
         # sets dotted path related properties for given
         # child based on properties of current object (parent)
         def set_dotted_path_properties_for_child(child)
-          # self.dotted_path_previous_parent_id = child.parent_id
           self.dotted_path_previous_parent = child.parent
           child.set_dotted_path_properties_from_parent(self)
         end
@@ -281,7 +270,7 @@ module ActiveRecord # :nodoc:
         # sets dotted path related properties for object
         # based on properties of parent
         # 
-        # this method is used as a +before_create+ filter
+        # this method is used as a +before_create+ callback
         # to ensure that an object is properly related to 
         # a parent object IF the parent column value is set,
         # which this enables simple creation of relationships
@@ -291,7 +280,7 @@ module ActiveRecord # :nodoc:
           parent = self.class.root(self) if parent.nil? && !self.root? && self.class.ensure_root?
           
           unless parent.nil?
-            self[parent_column] = parent.id
+            self[dotted_path_parent_column] = parent.id
             self.path = parent.path_with_id
             self.depth = parent.depth + 1
           end  
@@ -328,7 +317,7 @@ module ActiveRecord # :nodoc:
               sql = <<-SQL
                 UPDATE #{self.class.table_name}
                 SET path = ('#{new_base_path}' + #{substring_sql}), depth = depth + #{depth_delta}
-                WHERE #{scope_condition} AND path LIKE '#{base_path}% AND id != #{self.id}'
+                WHERE #{dotted_path_scope_condition} AND path LIKE '#{base_path}% AND id != #{self.id}'
               SQL
               ActiveRecord::Base.connection.execute(sql)
               
@@ -361,7 +350,7 @@ module ActiveRecord # :nodoc:
         def descendants(options={})
           options[:order] ||= self.dotted_path_order
           self.class.send(:with_scope, :find => { 
-            :conditions => ["#{scope_condition} AND path LIKE ?", path_with_id + '%'] }) do
+            :conditions => ["#{dotted_path_scope_condition} AND path LIKE ?", path_with_id + '%'] }) do
             self.class.find(:all, options)
           end          
         end
@@ -382,7 +371,7 @@ module ActiveRecord # :nodoc:
       
           return [] if ids.empty?
           self.class.send(:with_scope, :find => { 
-            :conditions => "#{scope_condition} AND id IN (" + ids.join(',') + ")" }) do
+            :conditions => "#{dotted_path_scope_condition} AND id IN (" + ids.join(',') + ")" }) do
             self.class.find(:all, options)
           end
         end
@@ -400,7 +389,7 @@ module ActiveRecord # :nodoc:
         # Options: accepts ActiveRecord find() options as well as:
         #   :self -- if true, include self in collection (default false)
         def siblings(options = {})
-          pid = self[parent_column]
+          pid = self[dotted_path_parent_column]
           vdepth = self.depth
           include_self = options.delete(:self) || false
           self_condition = " AND id != #{id}" if !include_self && !new_record?
@@ -410,12 +399,12 @@ module ActiveRecord # :nodoc:
           # in this case
           if pid.nil? || pid == 0
             self.class.send(:with_scope, :find => {
-              :conditions => ["#{scope_condition} AND depth = 0 #{self_condition}"] }) do
+              :conditions => ["#{dotted_path_scope_condition} AND depth = 0 #{self_condition}"] }) do
               self.class.find(:all, options)
             end  
           else
             self.class.send(:with_scope, :find => {
-              :conditions => ["#{scope_condition} AND depth = ? AND #{parent_column} = ? #{self_condition}", 
+              :conditions => ["#{dotted_path_scope_condition} AND depth = ? AND #{dotted_path_parent_column} = ? #{self_condition}", 
               self.depth, pid] }) do
               self.class.find(:all, options)
             end
@@ -424,7 +413,7 @@ module ActiveRecord # :nodoc:
         
         # returns true if the page is a root page
         def root?
-          self.depth == 0 && self.send(parent_column) == 0
+          self.depth == 0 && self.send(dotted_path_parent_column) == 0
         end
         
         # # changes the parent of the current object
@@ -442,7 +431,7 @@ module ActiveRecord # :nodoc:
         #   depth_delta = parent.depth + 1 - depth
         #       
         #   # update the node
-        #   update_attributes self.parent_column => parent.id,
+        #   update_attributes self.dotted_path_parent_column => parent.id,
         #     :path  => parent.path_with_id,
         #     :depth => parent.depth + 1
         #       
@@ -458,7 +447,7 @@ module ActiveRecord # :nodoc:
         #   sql = <<-SQL
         #     UPDATE #{self.class.table_name}
         #     SET path = ('#{new_base_path}' + #{substring_sql}), depth = depth + #{depth_delta}
-        #     WHERE #{scope_condition} AND path LIKE '#{base_path}%'
+        #     WHERE #{dotted_path_scope_condition} AND path LIKE '#{base_path}%'
         #   SQL
         #   
         #   # if dotted_path_use_counter_cache
@@ -470,7 +459,7 @@ module ActiveRecord # :nodoc:
         # end
         
         # def update_children(updates, conditions = nil)
-        #   conditions = ["#{scope_condition} AND path LIKE '#{path_with_id}%'", conditions].compact.join(' AND ')
+        #   conditions = ["#{dotted_path_scope_condition} AND path LIKE '#{path_with_id}%'", conditions].compact.join(' AND ')
         #   self.class.update_all(updates, conditions)
         # end
       end

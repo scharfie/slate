@@ -274,9 +274,10 @@ end
 
 class ActsAsDottedPathWithScopeTest < Test::Unit::TestCase
   def setup
-    create_fixtures(:pages)
+    create_fixtures :pages
     Object.send(:remove_const, :Tree) if Object.const_defined?(:Tree)
     Object.const_set(:Tree, Class.new(ActiveRecord::Base))
+    tree_class.belongs_to :site
     tree_class.set_table_name 'pages'
   end
   
@@ -291,9 +292,8 @@ class ActsAsDottedPathWithScopeTest < Test::Unit::TestCase
   end
   
   def assert_scope_condition(expected, object)
-    assert_equal(expected, object.scope_condition)
+    assert_equal(expected, object.dotted_path_scope_condition)
   end  
-  
   
   def test_default_scope_condition
     tree_class.acts_as_dotted_path
@@ -337,21 +337,39 @@ end
 class ActsAsDottedPathWithBeforeRootTest < Test::Unit::TestCase
   def setup
     create_fixtures(:pages, :sites)
+    construct_tree_class
+    construct_forest_class
+  end
+  
+  def construct_tree_class
     Object.send(:remove_const, :Tree) if Object.const_defined?(:Tree)
     Object.const_set(:Tree, Class.new(ActiveRecord::Base))
     tree_class.set_table_name 'pages'
+    tree_class.belongs_to :forest
     tree_class.acts_as_dotted_path :scope => :site, :ensure_root => true
-    
-    tree_class.send(:define_method, :before_root) do |page|
-      self.name = 'Page Root Node'
-      self.site_id = page.site_id        
+    tree_class.send(:define_method, :before_root) do |tree|
+      self.name = 'Tree Root Node'
+      self.site_id = tree.site_id        
     end
     
     tree_class.delete_all
   end
   
+  def construct_forest_class
+    Object.send(:remove_const, :Forest) if Object.const_defined?(:Forest)
+    Object.const_set(:Forest, Class.new(ActiveRecord::Base))
+    forest_class.set_table_name 'sites'
+    forest_class.has_many :trees, :extend => ActiveRecord::Acts::DottedPath::AssociationExtension,
+      :foreign_key => 'site_id'
+    forest_class.delete_all  
+  end
+  
   def tree_class
     @klass ||= Object.const_get(:Tree)
+  end
+
+  def forest_class
+    @_forest ||= Object.const_get(:Forest)
   end
   
   def create_node(*args)
@@ -360,34 +378,65 @@ class ActsAsDottedPathWithBeforeRootTest < Test::Unit::TestCase
     tree_class.create(options)
   end  
 
+  # def test_root_auto_created
+  #   site_a = Site.create!(:name => 'site a')
+  #   site_b = Site.create!(:name => 'site b')
+  #   
+  #   assert_equal(0, site_a.trees.count)
+  #   assert_equal(0, site_b.trees.count)
+  #   
+  #   site_a.trees << site_a.trees.build(:name => 'site a, page 1')
+  #   raise tree_class.find(:all).to_yaml
+  #   assert_equal(2, site_a.trees.count)
+  # end
+
   def test_that_root_is_automatically_created
     page = create_node('Example page', :site_id => 77)
     assert_equal 2, tree_class.count
     
     root = tree_class.find(:first)
-    assert_equal('Page Root Node', root.name)
+    assert_equal('Tree Root Node', root.name)
     assert_equal(77, root.site_id)
   end
   
-  def test_that_root_is_automatically_created_via_association
-    site = Site.create!(:name => 'My Test Site')
-    page = site.pages.create!(:name => 'Example page') 
-
-    assert_equal 2, site.pages(true).count
+  def test_that_roots_do_not_collide
+    yellowstone = forest_class.create!(:name => 'Yellowstone')
+    redwood = forest_class.create!(:name => 'Redwood')
     
-    root = site.pages.find(:first)
+    assert_equal(0, yellowstone.trees.count)
+    assert_equal(0, redwood.trees.count)
+    
+    yellowstone.trees.create! :name => 'Yellow tree'
+    redwood.trees.create! :name => 'Red tree'
+
+    assert_not_nil yellowstone.trees.find_root
+    assert_not_nil redwood.trees.find_root
+    
+    assert_equal(2, yellowstone.trees(true).count)
+    assert_equal(2, redwood.trees(true).count)
+    
+    assert yellowstone.trees(true).root.id != redwood.trees(true).root.id
+  end
+  
+  def test_that_root_is_automatically_created_via_association
+    forest = forest_class.create!(:name => 'My Test forest')
+    tree = forest.trees.create!(:name => 'Example page') 
+
+    assert_equal 2, forest.trees(true).count
+    
+    root = forest.trees.find(:first)
     assert root.root?
-    assert_equal('Page Root Node', root.name)
-    assert_equal(site.id, root.site_id)
-    assert_equal(root, page.parent)
+    assert_equal('Tree Root Node', root.name)
+    assert_equal(forest.id, root.site_id)
+    assert_equal(root, tree.parent)
   end
   
   def test_address_example
-    site = Site.create!(:name => 'My Test Site')
-    @wv = site.pages.create!(:name => 'WV')
-    @morgantown = site.pages.create!(:name => 'Morgantown')
+    forest = forest_class.create!(:name => 'My Test forest')
+    @wv = forest.trees.create!(:name => 'WV')
+    @morgantown = forest.trees.create!(:name => 'Morgantown')
     @wv.children << @morgantown
-    @address = site.pages.create!(:name => '1 Fine Arts Drive')
+    @address = forest.trees.create!(:name => '1 Fine Arts Drive')
     @morgantown.children << @address
     
     @wv.reload; @morgantown.reload; @address.reload
@@ -396,6 +445,6 @@ class ActsAsDottedPathWithBeforeRootTest < Test::Unit::TestCase
     assert_equal(2, @morgantown.depth)
     assert_equal(3, @address.depth)
     
-    assert_equal(@morgantown, site.pages.find(:first, :conditions => 'name = "Morgantown" AND depth = 2'))
+    assert_equal(@morgantown, forest.trees.find(:first, :conditions => 'name = "Morgantown" AND depth = 2'))
   end  
 end
