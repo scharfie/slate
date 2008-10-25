@@ -35,6 +35,12 @@ module Slate
       end
     end
 
+    def partial(name, options={})
+      (options[:locals] ||= {}).update :form => self
+      options.update :partial => name
+      @template.render options
+    end
+    
   private
     # renders the form element using partials from forms/
     def render_form_element(helper, label, tip, template, helper_args, element, include_errors=true)

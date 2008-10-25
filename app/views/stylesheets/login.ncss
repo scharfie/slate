@@ -1,3 +1,7 @@
+body {
+  background: #eee;
+}
+
 #header {
 	display: none;
 }
@@ -11,22 +15,22 @@
 	background: #fff;
 	padding: 0px;
 	margin-top: 100px;
-  border: solid 10px #ccc;
+  border: solid 8px #ccc;
 
 	div.bottom {
 	  display: none;
 	}
 }
 
-h2 {
-	background: none;
-	color: #222;
-	
-	.heading {
-	  background: #f5f5f5; 
+/*h2 {
+  background: none;
+  color: #222;
+  
+  .heading {
+    background: #f5f5f5; 
   }
 }
-
+*/
 label {
   font-weight: bold;
 }

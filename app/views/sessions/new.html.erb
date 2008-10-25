@@ -1,6 +1,4 @@
-<% heading do %>
-  Sign in
-<% end %>
+<% heading 'Sign In' %>
 
 <% head stylesheet_link_tag('login') %>
 
@@ -10,7 +8,7 @@
     <% form.label_append = ':' %>
     <%= form.text_field 'username', :size => 30 %>
     <%= form.password_field 'password', :size => 20 %>
-    <%= form.check_box 'remember_me', :label => 'Remember me on this computer?' %>
+    <%= form.check_box 'remember_me', :label => 'Remember me on this computer?', :template => 'row' %>
     <%= form.submit 'Sign in', :label => nil %>
   </table>  
 <% end %>
