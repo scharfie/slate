@@ -9,7 +9,7 @@ div#flash {
 	  }
 	
 	  .notice {
-		  background: #558 url(/images/glyphs/check.png) no-repeat 18px center;
+		  background: #558 url(/images/glyphs/check-white.png) no-repeat 18px center;
 		  border-color: #9c9;
 		  color: #fff;
       background-color: #6391B1;
