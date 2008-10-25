@@ -2,9 +2,10 @@
   <%= page_glyph(page) %> 
   <%= link_to page.name, resource_path(page), :class => 'page' %>
   <span class="actions">
+    -
     <%= link_to 'Edit', edit_resource_path(page) %>
-    <%= link_to 'Add child', new_resource_path(page) %>
-    <%= link_to 'Destroy', resource_path(page), :method => :delete, :confirm => 'Destroy this page?' %>
+    <%= link_to glyph('add'), new_resource_path(page), :title => 'Add child page' %>
+    <%= link_to glyph('delete'), resource_path(page), :method => :delete, :confirm => 'Destroy this page?', :title => 'Delete this page' %>
   </span>  
   <ul>
     <%= render :partial => 'page', :collection => page.children %>
