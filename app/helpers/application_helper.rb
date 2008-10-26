@@ -10,7 +10,7 @@ module ApplicationHelper
   
   # finds all spaces and renders the space chooser
   def space_chooser
-    spaces = Space.find(:all, :order => 'name')
+    spaces = (super_user? ? Space : User.active.spaces).all(:order => 'name')
     render :partial => 'shared/space_chooser', :locals => { :spaces => spaces }
   end
   

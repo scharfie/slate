@@ -209,7 +209,7 @@ ul#toolbar {
   background: #F9FBFD;
   border-bottom: solid 1px #D0E8F7;
   padding: 8px 10px;
-  margin: 0;
+  margin: -10px 0 0 0;
   list-style: none;
   
   li {

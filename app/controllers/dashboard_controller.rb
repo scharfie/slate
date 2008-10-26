@@ -25,7 +25,7 @@ public
   # and access mode (direct or via /spaces)
   def show
     space_dashboard and return if enclosing_resource
-    admin_dashboard and return if User.active.super_user?
+    admin_dashboard and return if super_user?
     user_dashboard  and return
   end
   

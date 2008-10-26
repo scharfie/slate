@@ -11,7 +11,7 @@ protected
   # Called when a login is successful
   def successful_login
     save_login_cookie if remember_me?
-    redirect_back_to resource.super_user? ? dashboard_url() : spaces_url()
+    redirect_back_to dashboard_url
   end
   
   # Was the remember me checkbox checked?
