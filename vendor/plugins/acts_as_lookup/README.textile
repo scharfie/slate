@@ -1,0 +1,121 @@
+h1. ActsAsLookup
+
+This plugin provides an easy way to deal with lookup tables and drop down menus.
+
+h2. The Why
+
+Personally, I often find it a hassle to deal with drop down menus (i.e. select). For whatever reason, I don't always remember the syntax, so I have to stop and verify that I've got it right. Then there's the issue of adding the "default" nil option when the lookup isn't required. Blah.
+
+A recurring pattern that I always seem to do goes something like this:
+
+<pre><code>[['--', nil]] + Model.all.collect { |m| [m.name, m.id] }</code></pre>
+
+That's ugly to be sitting right inline with the other options. And since it's something I always do, it was worth refactoring into a way that I can reuse this madness. So that's why.
+
+h2. The How
+
+You can install this as a Rails plugin. Navigate to your project root and type:
+
+<pre><code>git clone git://github.com/rpheath/acts_as_lookup.git vendor/plugins/acts_as_lookup</code></pre>
+
+Then you'll be able to tell your models to start acting like a lookup table.
+
+h2. The "Let me see an example or two"
+
+For the following examples, we'll use a @Category@ model to illustrate how this works. Plus, categories are a prime example of a need for a lookup table. Here's how you'd set it up, in its most basic form:
+
+<pre><code>
+class Category < ActiveRecord::Base
+  acts_as_lookup :name
+end
+</code></pre>
+
+And here's how it works.
+
+h3. Example 1: Using the standard select field
+
+Here's how you might use this in a typical form, where a Product has a Category.
+
+<pre><code>
+<% form_for @product do |f| -%>
+  <p>Product Title:
+    <%= f.text_field :title -%></p>
+  
+  <p>Choose Category:
+    <%= f.select :category_id, Category.options_for_select -%></p>
+    
+  <p><%= f.submit 'Save' -%></p>
+<% end -%>
+</code></pre>
+
+The @#options_for_select@ method will provide options similar to the following (of course dependent on what's actually _in_ the Category table):
+
+<pre><code>
+<select>
+  <option value="" selected="selected">--</option>
+  <option value="1">Appliances</option>
+  <option value="2">Furniture</option>
+</select>
+</code></pre>
+
+h3. Example 2: Using a fancy smancy helper
+
+Another option for automatically generating the drop down is by using the @lookup_for@ helper, provided by this plugin. It works like this:
+
+<pre><code><%= lookup_for :project, :category_id -%></code></pre>
+
+The first parameter is the object with which this lookup gets associated, and the second is the foreign key for the association. One thing to note, though: the foreign key _must_ follow the traditional Rails convention for foreign keys. Meaning, for a Category, you'd have category_id; for a Task, you'd have task_id; and so on. The reason is because the plugin uses that foreign key to get at the Model in which it represents. But since that's pretty standard to most Rails developers, I don't think it bears too much constraint :-)
+
+And of course, you can also use this helper alongside of your other FormBuilder helpers (read: you can do @f.lookup_for...@):
+
+<pre><code>
+<% form_for @product do |f| -%>
+  Title:    <%= f.text_field :title -%>
+  Category: <%= f.lookup_for :category_id -%>
+<% end -%>
+</code></pre>
+
+h3. Example 3: Customization
+
+If you've read this far, you may be asking "what if I don't want '--' as my default option?" or "what if I don't want _every_ category to show up?" or "what if I have a category order, other than alphabetical?". No problem.
+
+h4. Changing the default text
+
+<pre></code>
+class Category < ActiveRecord::Base
+  acts_as_lookup :name, :default_text => "- Choose Category -"
+end
+</code></pre>
+
+And if you don't want a default @nil@ option at all, just set the @:default_text@ to @:first@ (meaning the first item in the options list):
+
+<pre></code>
+class Category < ActiveRecord::Base
+  acts_as_lookup :name, :default_text => :first
+end
+</pre></code>
+
+h4. Limiting the options
+
+<pre></code>
+# only show categories from within the last 4 months
+class Category < ActiveRecord::Base
+  acts_as_lookup :name, :conditions => ["created_at > ?", 4.months.ago]
+end
+</code></pre>
+
+h4. Displaying a different order
+
+By default, the plugin will order your options alphabetically. But you can change that, too:
+
+<pre><code>
+class Category < ActiveRecord::Base
+  acts_as_lookup :name, :order => 'category_order ASC'
+end
+</code></pre>
+
+And of course, you could pass all options at once. I've just shown them separately to focus on each point. Enjoy.
+
+h2. License
+
+Copyright (c) 2008 Ryan Heath, released under the MIT license

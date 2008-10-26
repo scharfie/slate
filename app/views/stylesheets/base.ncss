@@ -172,7 +172,7 @@ h1,h2,h3,h4,h5,h6 {
 
 h2 {
 	font-size: 1.2em;
-	margin: 0;
+	margin: 0 0 10px 0;
   background: #F3F7FB;
   border-bottom: solid 1px #D0E8F7;
   color: #036;
@@ -202,7 +202,7 @@ img {
 
 
 #content {
-	padding: 10px 15px;
+	padding: 0 15px;
 }
 
 ul#toolbar {
@@ -293,17 +293,21 @@ div.input {
   padding-left: 10px;
 }
 
-div.fieldset h3 {
-  font-size: 14px;
-  font-weight: bold;
-  background: #F3F7FB;
-  border: 1px solid #D0E8F7;
-  color: #036;
-  float: left;
-  clear: left;
-  padding: 5px 75px 5px 35px;
-  margin: 10px 0 10px -15px;
-  position: relative;
+div.fieldset {
+  margin-bottom: 10px;
+  
+  h3 {
+    font-size: 14px;
+    font-weight: bold;
+    background: #F3F7FB;
+    border: 1px solid #D0E8F7;
+    color: #036;
+    float: left;
+    clear: left;
+    padding: 5px 75px 5px 35px;
+    margin:  0px 0 10px -15px;
+    position: relative;
+  }
 }
 
 div.fieldset h3 span {

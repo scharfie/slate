@@ -1,4 +1,7 @@
 class Space < ActiveRecord::Base
+  # Acts
+  acts_as_lookup :name
+  
   # Associations
   has_many :memberships
   has_many :users, :through => :memberships, 

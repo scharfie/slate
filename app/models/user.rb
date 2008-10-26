@@ -22,6 +22,9 @@ class User < ActiveRecord::Base
   has_many :memberships
   has_many :spaces, :through => :memberships, :select => 'spaces.*, memberships.role AS role'
 
+  # Associated saves
+  associated_save :memberships
+  
   # Callbacks
   before_save :encrypt_password
 

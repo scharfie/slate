@@ -12,7 +12,7 @@ module Slate
     attr_accessor_with_default :label_append, ''
         
     # redefine the field helpers 
-    (field_helpers + %w(date_select datetime_select collection_select select submit)).each do |helper|
+    (field_helpers + %w(date_select datetime_select collection_select select submit lookup_for)).each do |helper|
       define_method(helper) do |*args|
         args << Hash.new unless Hash === args.last
 

@@ -1,6 +1,6 @@
 <% fieldset 'Account Information' do %>
   <%= form.text_field :username, :autocomplete => 'off' %>
-  <%= form.password_field :password %>
+  <%= form.password_field :password, :value => '' %>
   <%= form.password_field :password_confirmation, :label => 'Confirm' %>
   <%= form.text_field :email_address, :label => 'Email' %>
 <% end %>
@@ -8,4 +8,11 @@
 <% fieldset 'Personal Information' do %>
   <%= form.text_field :first_name %>
   <%= form.text_field :last_name %>
+<% end %> 
+
+<% fieldset 'Memberships' do %>
+  <% associated_form :memberships do |item| %>
+    <%= item.lookup_for :space_id %>
+    <%= item.hidden_field :id %>
+  <% end %>
 <% end %>  
