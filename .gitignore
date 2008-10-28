@@ -1,12 +1,13 @@
-log/*.log
-tmp/**/*
 .DS_Store
-db/*.sqlite3
+**/*.log
+**/*.pid
+**/*.sqlite3
+tmp/**/*
 lib/tasks/wvu.rake
 config/slate/wvu.rb
 config/database.yml
 coverage
 spec/public/*
 public/assets
-vendor/plugins/*_plugin
+vendor/plugins/*-slate-plugin
 public/stylesheets/
