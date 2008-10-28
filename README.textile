@@ -16,10 +16,9 @@ h2. Local Machine Setup
 * Access admin at slate.local.host:3000
 
 
-<div style="background: #ffffce; padding: 10px; margin: 0 0 10px 0; border: solid 1px #ddc">
-<strong>Notice</strong>:
-Please be aware: slate is still in early _alpha_ stage.  This version (0.5)
+h2. Hey!
+
+*Please be aware*: slate is still in early _alpha_ stage.  This version (0.5)
 is a complete rebuild of the original system used at WVU.  Many aspects
 have not been rebuilt yet.  Comments are welcome, but no support will 
 be provided at this point.
-</div>
