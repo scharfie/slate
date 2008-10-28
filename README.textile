@@ -1,21 +1,25 @@
+h2. Overview
+
 slate is a content management system/framework originally developed at
 West Virginia University Web Services (http://www.wvu.edu).
 
-= Setup =
+h2. Setup
 
 * Configure your database connection (database.yml)
 * Create your database and auto migrate (rake db:auto:migrate)
 * Run slate setup to create a login (rake slate:setup)
 
-= Local Machine Setup = 
+h2. Local Machine Setup
 
 * Add slate.local.host to your hosts file. Point it at 127.0.0.1
 * Start mongrel (script/server)
 * Access admin at slate.local.host:3000
 
-= ALPHA Notice =
 
+<div style="background: #ffffce; padding: 10px; margin: 0 0 10px 0; border: solid 1px #ddc">
+<strong>Notice</strong>:
 Please be aware: slate is still in early _alpha_ stage.  This version (0.5)
 is a complete rebuild of the original system used at WVU.  Many aspects
 have not been rebuilt yet.  Comments are welcome, but no support will 
-be provided at this point. 
+be provided at this point.
+</div>
