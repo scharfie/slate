@@ -7,7 +7,7 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
   <link rel="icon" href="/favicon.ico" type="image/ico" />
 	<%= stylesheet_link_tag 'base', 'flash' %>
-	<%= javascript_include_tag 'jquery.js', 'jquery.faded.js', 'chain.js' %>
+	<%= javascript_include_tag %w(jquery.js jquery.faded.js chain.js jquery.associatedForm.js) %>
 	<%= yield :head %>
 </head>
 <body>

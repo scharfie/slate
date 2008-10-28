@@ -7,7 +7,7 @@
       <table>
         <tr>
           <td><%= form %></td>
-          <td>
+          <td valign="top">
             <%= link_to glyph('add'), '#', :class => 'new' %>
             <%= link_to glyph('delete'), '#', :class => 'delete' %>
           </td>
@@ -19,63 +19,9 @@
 
 <script type="text/javascript" charset="utf-8">
 $(function() {
-  // build chain map
-  var map = {};
-  var blank = {};
-  $("#<%= dom_id %> .items :input[name*='<%= path %>']").each(function() {
-    if (this.type != 'file') {
-      var key = this.name
-      var value = key.replace('<%= path %>', '').slice(1, -1)
-      var index = value.indexOf('][')
-      if (index < 0) {
-        blank[value] = null
-        map[":input[name='"+key+"']"]  = '{' + value + '}'
-      }
-    }
+  $('#<%= dom_id %>').associatedForm({
+    items: <%= associated_objects.each { |e| e.id ||= '' }.to_json %>,
+    path:  <%= path.to_json %>
   })
-  
-  $('#<%= dom_id %> .items').chain($.extend(map, {
-    builder: function() {
-      var $$ = this;
-      var builder = $('#<%= dom_id %> .items') 
-      var count   = builder.items().length;
-      
-      if (typeof $.Chain.builderCallback == 'function') {
-        $.Chain.builderCallback($$, '<%= path %>');  
-      }
-      
-      $$.find('a.delete').click(function() {
-        if (builder.items().length > 1) {
-          $$.slideUp(function() { $$.remove() })
-        }  
-        return false
-      }).end().find('a.new').click(function() {
-        builder.items('add', blank); 
-        return false    
-      })
-    }
-  }));
-  
-  var items = <%= associated_objects.each { |e| e.id ||= '' }.to_json %>
-  if (items.length == 0) { items = [blank] }
-  
-  $.each(items, function(index, item) {
-    if (typeof item.id != 'undefined') $('#<%= dom_id %> .items').items('add', item);
-  });
-  
-  var link = $('<a href="#"><%= glyph 'add' %></a>').click(function() {
-    $('#<%= dom_id %> .items').items('add', blank); 
-    return false
-  })
-
-  $('#<%= dom_id %>').parents('.fieldset').children('h3').append(link)
-  
-  $('#<%= dom_id %> .items').parents('form').submit(function() {
-    var $$ = $('#<%= dom_id %> .items .item').each(function(i) {
-      $(this).find(':input').each(function() {
-        this.name = this.name.replace('[]', '['+ i +']')
-      })
-    })
-  })
-})
+});
 </script>
