@@ -235,7 +235,7 @@ ul#toolbar {
   }
 }
 
-ul#pages {
+ul#pages, ul.tree {
   list-style: none;
   margin: 0;
   padding: 0 0 0 10px;
@@ -257,12 +257,14 @@ ul#pages {
       text-decoration: underline; 
     }
     
-    .page {
+    .item {
       color: #000;
       font-weight: bold;
     }
   }
-  
+}
+
+li {
   span.actions {
     a {
       font-size: 0.9em;

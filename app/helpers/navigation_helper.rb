@@ -23,8 +23,8 @@ protected
     tabs =  Dictionary.new
     tabs['Dashboard']  = space_dashboard_path(Space.active)
     tabs['Pages']      = space_pages_path(Space.active)
-    tabs['Files']      = space_assets_path(Space.active)
     tabs.merge!          plugin_navigation_items
+    tabs['Files']      = space_assets_path(Space.active)
     tabs['Settings']   = edit_space_path(Space.active)
     tabs
   end

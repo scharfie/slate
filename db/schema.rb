@@ -9,12 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< HEAD:db/schema.rb
 ActiveRecord::Schema.define do
-=======
-ActiveRecord::Schema.define(:version => 0) do
->>>>>>> rpheath/master:db/schema.rb
-
   create_table "areas", :force => true do |t|
     t.string   "key"
     t.integer  "page_id"
