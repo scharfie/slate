@@ -1,0 +1,6 @@
+body {
+  color: blue;
+  p {
+    color: red;
+  }
+}
