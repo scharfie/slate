@@ -24,7 +24,7 @@ protected
 public
   def index
     raise "No page found" if @page.nil?
-    params[:page_path] = @page.url if params[:page_path].blank?
+    params[:page_path] = @page.url.to_s if params[:page_path].blank?
     view_page
   end
 end
