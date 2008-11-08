@@ -5,10 +5,10 @@ module Slate
     message "The template for this page is missing."; end
   
   module Builder
-    def self.included(receiver)
-      receiver.send(:helper, :builder)
-      receiver.send(:helper, Helpers)
-      receiver.send(:helper_method, :content_for)
+    def self.included(base)
+      base.send(:helper, :builder)
+      base.send(:helper, Helpers)
+      base.send(:helper_method, :content_for)
     end
     
     module Helpers

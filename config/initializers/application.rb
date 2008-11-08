@@ -1,5 +1,6 @@
 # configure slate
 require 'extensions/core'
+require 'extensions/active_support'
 require 'extensions/active_record'
 require 'extensions/inflector'
 

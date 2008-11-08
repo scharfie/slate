@@ -23,10 +23,14 @@ module PeriodicalsHelper
   # Note: The periodical must respond to 
   # +published_on+ and +permalink+
   def periodical_path(e, options={})
+    url_for hash_for_periodical_path(e, options)
+  end
+  
+  # Returns hash of options for periodical
+  def hash_for_periodical_path(e, options={})
     year, month, day = e.published_on.strftime('%Y/%m/%d').split('/')
     slug = e.permalink
     options.reverse_merge! :page_path => params[:page_path], :year => year, :month => month, :day => day, :slug => slug
-    url_for options
   end
 
   # Returns full URL (including host) to periodical

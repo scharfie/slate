@@ -34,6 +34,10 @@ module Slate
         (@items ||= []) << [name, options]
       end
       
+      def []=(key, value)
+        add(key, value)
+      end
+      
       # Returns items or empty array
       def items
         @items || []
