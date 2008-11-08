@@ -62,16 +62,15 @@ public
     end
   end
   
-  # Updates domains associated with this space
-  alias_method :domain_objects=, :domains=
-  def domains=(domains=[])
-    self.domain_objects = domains.map do |attributes| 
-      next if (name = attributes[:name]).blank?
-      Domain.find_or_initialize_by_name(attributes[:name]) {|e| e.attributes = attributes}
-    end.compact
-  end
-  
+  # Returns theme object associated with this space
   def theme
     Theme.find(self[:theme])
+  end
+  
+  # Returns true if given user is permitted to
+  # access this space - superusers and users
+  # associated with the space are permitted.
+  def permit?(user)
+    user.super_user? || users.include?(user)
   end
 end
