@@ -43,7 +43,7 @@ describe Area do
     @published.page.should == @page
     @published.area_id.should == @area.id
     
-    @published.published_on.should_not be_nil
+    @published.published_at.should_not be_nil
     
     @area.should have(1).versions
     @area.published_version.should == @published

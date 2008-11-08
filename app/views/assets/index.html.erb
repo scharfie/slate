@@ -8,7 +8,7 @@
     <td class="info">
       <h3><%= link_to(asset.name, resource_path(asset)) %></h3>
       <%= link_to 'Edit', edit_resource_path(asset) %><br />
-      <strong>Uploaded:</strong> <%= asset.updated_on.eztime(':nmonth :day:ordinal, :year at :hour12::minute :lmeridian') %><br />
+      <strong>Uploaded:</strong> <%= asset.updated_at.eztime(':nmonth :day:ordinal, :year at :hour12::minute :lmeridian') %><br />
       <strong>Size:</strong> <%= number_to_human_size(asset.size) %>
     </td>
   </tr>

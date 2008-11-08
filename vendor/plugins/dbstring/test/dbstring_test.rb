@@ -32,24 +32,24 @@ class DbstringTest < Test::Unit::TestCase
   end
   
   def test_year
-    assert_equal("YEAR(created_on)", @mysql.year('created_on'))
-    assert_equal("DATE_PART('YEAR', created_on)", @postgresql.year('created_on'))
-    assert_equal("CAST(strftime('%Y', created_on) AS INTEGER)", @sqlite.year('created_on'))
-    assert_equal("YEAR(created_on)", @sqlserver.year('created_on'))
+    assert_equal("YEAR(created_at)", @mysql.year('created_at'))
+    assert_equal("DATE_PART('YEAR', created_at)", @postgresql.year('created_at'))
+    assert_equal("CAST(strftime('%Y', created_at) AS INTEGER)", @sqlite.year('created_at'))
+    assert_equal("YEAR(created_at)", @sqlserver.year('created_at'))
   end
   
   def test_month  
-    assert_equal("MONTH(created_on)", @mysql.month('created_on'))
-    assert_equal("DATE_PART('MONTH', created_on)", @postgresql.month('created_on'))
-    assert_equal("MONTH(created_on)", @sqlserver.month('created_on'))
-    assert_equal("CAST(strftime('%m', created_on) AS INTEGER)", @sqlite.month('created_on'))    
+    assert_equal("MONTH(created_at)", @mysql.month('created_at'))
+    assert_equal("DATE_PART('MONTH', created_at)", @postgresql.month('created_at'))
+    assert_equal("MONTH(created_at)", @sqlserver.month('created_at'))
+    assert_equal("CAST(strftime('%m', created_at) AS INTEGER)", @sqlite.month('created_at'))    
   end
   
   def test_day  
-    assert_equal("DAY(created_on)", @mysql.day('created_on'))
-    assert_equal("DATE_PART('DAY', created_on)", @postgresql.day('created_on'))
-    assert_equal("DAY(created_on)", @sqlserver.day('created_on'))
-    assert_equal("CAST(strftime('%d', created_on) AS INTEGER)", @sqlite.day('created_on'))    
+    assert_equal("DAY(created_at)", @mysql.day('created_at'))
+    assert_equal("DATE_PART('DAY', created_at)", @postgresql.day('created_at'))
+    assert_equal("DAY(created_at)", @sqlserver.day('created_at'))
+    assert_equal("CAST(strftime('%d', created_at) AS INTEGER)", @sqlite.day('created_at'))    
   end  
 end
 
@@ -76,15 +76,15 @@ class DbStringWithAdapterTest < Test::Unit::TestCase
   end
   
   def test_year
-    assert_query('2007', connection.year(:created_on))
+    assert_query('2007', connection.year(:created_at))
   end
   
   def test_month
-    assert_query('9', connection.month(:created_on))
+    assert_query('9', connection.month(:created_at))
   end
   
   def test_day
-    assert_query('7', connection.day(:created_on))
+    assert_query('7', connection.day(:created_at))
   end
   
   def test_complex

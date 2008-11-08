@@ -17,12 +17,12 @@ ActiveRecord::Schema.define do
     t.text     "body_html"
     t.boolean  "hard_breaks",  :default => true
     t.boolean  "is_default"
-    t.datetime "created_on"
-    t.datetime "updated_on"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "area_id"
     t.integer  "version",      :default => 0
-    t.datetime "published_on"
+    t.datetime "published_at"
   end
 
   create_table "articles", :force => true do |t|
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define do
     t.string   "permalink"
     t.text     "body"
     t.text     "body_html"
-    t.datetime "published_on"
+    t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -46,8 +46,8 @@ ActiveRecord::Schema.define do
     t.integer  "parent_id"
     t.string   "thumbnail"
     t.integer  "space_id"
-    t.datetime "created_on"
-    t.datetime "updated_on"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "blogs", :force => true do |t|
@@ -75,8 +75,8 @@ ActiveRecord::Schema.define do
     t.string   "name"
     t.integer  "parent_id",      :default => 0
     t.integer  "space_id"
-    t.datetime "created_on"
-    t.datetime "updated_on"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "path"
     t.integer  "depth"
     t.string   "template"
@@ -131,7 +131,7 @@ ActiveRecord::Schema.define do
     t.integer  "login_attempts",            :default => 0
     t.boolean  "locked",                    :default => false
     t.boolean  "super_user",                :default => false
-    t.datetime "created_on"
+    t.datetime "created_at"
     t.datetime "last_login"
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"

@@ -2,4 +2,4 @@ cbscharf:
   id: 1
   first_name: Christopher
   last_name: Scharf
-  created_on: <%= DateTime.new(2007, 9, 7, 18, 45, 0) %>
+  created_at: <%= DateTime.new(2007, 9, 7, 18, 45, 0) %>

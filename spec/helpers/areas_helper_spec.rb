@@ -19,14 +19,14 @@ describe AreasHelper do
   
   it "should return timestamp (this year) for area" do
     Time.stub!(:now).and_return(Time.local(2008, 3, 20, 9, 0, 0))
-    @area.stub!(:published_on).and_return(Time.local(2008, 9, 7, 9, 0, 0))
+    @area.stub!(:published_at).and_return(Time.local(2008, 9, 7, 9, 0, 0))
     
     helper.version_timestamp(@area).should == '9:00 am on September 7th'
   end
   
   it "should return timestamp (different year) for area" do
     Time.stub!(:now).and_return(Time.local(2007, 3, 20, 9, 0, 0))
-    @area.stub!(:published_on).and_return(Time.local(2008, 9, 7, 9, 0, 0))
+    @area.stub!(:published_at).and_return(Time.local(2008, 9, 7, 9, 0, 0))
     
     helper.version_timestamp(@area).should == 'September 7th 2008'
   end  

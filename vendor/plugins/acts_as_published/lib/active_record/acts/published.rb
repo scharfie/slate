@@ -58,7 +58,7 @@ module ActiveRecord #:nodoc:
               published_model.update_attributes(
                 acts_as_published_configuration[:foreign_key] => self.id, 
                 :version => 1, 
-                :published_on => Time.now
+                :published_at => Time.now
               )
             end
           end  

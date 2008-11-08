@@ -42,7 +42,7 @@ describe PeriodicalsHelper do
     helper.params = { :page_path => ['some', 'page', 'path'], 
       :controller => 'public', :action => 'index' }
     @periodical = mock('SomePeriodical')
-    @periodical.stub!(:published_on).and_return(Time.local(2008, 3, 20, 12, 0, 0))
+    @periodical.stub!(:published_at).and_return(Time.local(2008, 3, 20, 12, 0, 0))
     @periodical.stub!(:permalink).and_return('an-example-article-permalink')
     
     url = '/some/page/path/2008/03/20/an-example-article-permalink'

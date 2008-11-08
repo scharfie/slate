@@ -9,7 +9,7 @@ module AreasHelper
   end
   
   def version_timestamp(version)
-    stamp = version.published_on
+    stamp = version.published_at
     today = Time.now
     format = if stamp.year == today.year
       ':hour12::minute :lmeridian on :nmonth :day:ordinal'
@@ -17,6 +17,6 @@ module AreasHelper
       ':nmonth :day:ordinal :year'
     end
     
-    version.published_on.eztime(format)
+    version.published_at.eztime(format)
   end
 end

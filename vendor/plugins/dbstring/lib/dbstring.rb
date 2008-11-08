@@ -25,7 +25,7 @@ module Slate # :nodoc:
   # * SQLite3 database with table +users+
   # * +users+ table has the following rows: 
   #   
-  #    name        | middle | last   | created_on
+  #    name        | middle | last   | created_at
   #    ------------+--------+--------+----------------------
   #    Christopher | B      | Scharf | 2007-09-07 18:45:00
   #    David       | M      | Olsen  | 1997-04-25 18:45:00
@@ -35,7 +35,7 @@ module Slate # :nodoc:
   #  class User < ActiveRecord::Base
   #    def self.find_users_created_in(y=2007)
   #      find(:all, :conditions => 
-  #        "#{connection.year('created_on')} = #{y}"
+  #        "#{connection.year('created_at')} = #{y}"
   #      )
   #    end
   #  
@@ -99,7 +99,7 @@ module Slate # :nodoc:
     # builds query for extracting year from given column
     # 
     # *Example*:
-    #   year(created_on) # => 'CAST(strftime('%Y', created_on) AS INTEGER)""
+    #   year(created_at) # => 'CAST(strftime('%Y', created_at) AS INTEGER)""
     #     result: 2007
     def year(column)
       case adapter_class
@@ -113,7 +113,7 @@ module Slate # :nodoc:
     # builds query for extracting month from given column
     # 
     # *Example*:
-    #   year(created_on) # => "CAST(strftime('%m', created_on) AS INTEGER)"
+    #   year(created_at) # => "CAST(strftime('%m', created_at) AS INTEGER)"
     #     result: 9
     def month(column)
       case adapter_class
@@ -127,7 +127,7 @@ module Slate # :nodoc:
     # builds query for extracting day from given column
     # 
     # *Example*:
-    #   year(created_on) # => "CAST(strftime('%d', created_on) AS INTEGER)"
+    #   year(created_at) # => "CAST(strftime('%d', created_at) AS INTEGER)"
     #     result: 7
     def day(column)
       case adapter_class
