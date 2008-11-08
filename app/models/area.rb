@@ -32,7 +32,7 @@ public
 
   # Returns key for URL parameter
   def to_param
-    self.key
+    key
   end
   
   # Returns custom DOM ID
