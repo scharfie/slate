@@ -4,6 +4,8 @@
       mode == 'editor' ? nil : mode) unless send(mode + '?') %>
   <% end %>  
   |
+  <%= link_to 'Edit', edit_resource_path(resource) %>
+  |
   <%= link_to 'Dashboard', space_dashboard_url(@space) %>
   <%= link_to 'Pages', space_pages_url(@space) %>
 </div>
