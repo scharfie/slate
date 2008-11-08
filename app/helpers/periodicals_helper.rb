@@ -28,7 +28,7 @@ module PeriodicalsHelper
   
   # Returns hash of options for periodical
   def hash_for_periodical_path(e, options={})
-    year, month, day = e.published_on.strftime('%Y/%m/%d').split('/')
+    year, month, day = (e.published_on || e.updated_at).strftime('%Y/%m/%d').split('/')
     slug = e.permalink
     options.reverse_merge! :page_path => params[:page_path], :year => year, :month => month, :day => day, :slug => slug
   end
