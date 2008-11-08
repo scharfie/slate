@@ -25,17 +25,6 @@ ActiveRecord::Schema.define do
     t.datetime "published_at"
   end
 
-  create_table "articles", :force => true do |t|
-    t.integer  "blog_id"
-    t.string   "name"
-    t.string   "permalink"
-    t.text     "body"
-    t.text     "body_html"
-    t.datetime "published_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "assets", :force => true do |t|
     t.string   "name"
     t.string   "filename"
@@ -45,14 +34,6 @@ ActiveRecord::Schema.define do
     t.integer  "width"
     t.integer  "parent_id"
     t.string   "thumbnail"
-    t.integer  "space_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "blogs", :force => true do |t|
-    t.string   "name"
-    t.string   "description"
     t.integer  "space_id"
     t.datetime "created_at"
     t.datetime "updated_at"
