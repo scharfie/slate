@@ -1,6 +1,6 @@
 <% fieldset 'Overview' do %>
   <%= form.text_field :name %>
-  <%= form.select :theme, Theme.installed.map { |e| [e.name, e.name] } %>
+  <%= form.select :theme, Theme.installed.map { |e| [e.name, e.name] }, :selected => resource.theme.try(:to_s) %>
 <% end %>
 
 <% fieldset 'Domains' do %>
