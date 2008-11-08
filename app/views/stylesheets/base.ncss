@@ -309,11 +309,11 @@ div.fieldset {
     padding: 5px 75px 5px 35px;
     margin:  0px 0 10px -15px;
     position: relative;
+    
+    span.legend {
+      padding-right: 5px;
+    }
   }
-}
-
-div.fieldset h3 span {
-  padding-right: 5px;
 }
 
 .white-fade-right, .white-fade-left {
