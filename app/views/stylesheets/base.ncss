@@ -109,7 +109,8 @@ a {
 			  margin-right: 2px;
 			
 			  :hover {
-				  background: #555;
+          background: #555;
+				  background: #556;
 		 	  }
 			
 			  .current {
