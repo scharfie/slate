@@ -1,0 +1,166 @@
+h1. FormAssistant
+
+This is a Rails plugin that provides a custom form builder that attempts to make forms somewhat friendly.
+
+h2. Usage
+
+Once installed, use the form assistant just like #form_for():
+
+<pre><code><% form_assistant_for @project do |form| %>
+  // typical form_for stuff
+<% end %></code></pre>
+
+Or if you'd rather use #form_for() everywhere, you can set the form assistant's builder to be your default across the entire application like so:
+
+<pre><code>ActionView::Base.default_form_builder = RPH::FormAssistant::FormBuilder</code></pre>
+
+h2. Defaults and Configuration
+
+Things you can customize...
+
+<pre><code># config/initializers/form_assistant.rb
+  
+RPH::FormAssistant::FormBuilder.ignore_templates = true         # defaults to false
+RPH::FormAssistant::FormBuilder.ignore_labels = true            # defaults to false
+RPH::FormAssistant::FormBuilder.ignore_errors = true            # defaults to false
+RPH::FormAssistant::FormBuilder.template_root = '...'           # defaults to app/views/forms
+</code></pre>
+
+The only thing worth mentioning deals with ignoring templates. If you ignore the templates, you will still get access to all of the custom helpers and your form helpers (@text_field@, @text_area@, etc) will automatically have labels attached to them. The form assistant considers trailing labels, too, meaning if you have a @check_box@ the label will be _after_ the check box instead of before it. It will also be given a CSS class of 'inline'.
+
+h2. Examples
+
+Here are a few reasons why it's worth using the form assistant.
+
+I'm going to refer to a @form@ object in the examples. Assume this object is yielded back to the block of a form assistant call, like so:
+
+<pre><code><% form_assistant_for @project do |form| %>
+  // the 'form' object would be used in here
+<% end %>
+</code></pre>
+
+And just to be clear, the regular @fields_for()@ doesn't inherit the builder from the builder object, but as long as you're using the form assistant, this problem has been taken care of automatically. Just call the @fields_for()@ helper on the builder object, like so:
+
+<pre><code><% form_assistant_for @project do |form| %>
+  <% form.fields_for :tasks do |task_fields| %>
+    <%= task_fields.text_field :name %>
+  <% end %>
+<% end %>
+</code></pre>
+
+h3. Form Templates
+
+The new and improved form assistant uses partials to format your fields, labels, errors (if any), and tips. To get started, run...
+
+<pre><code>$> rake form_assistant:install</code></pre>
+
+...from your project root. That will put some example form partials in app/views/forms/*.
+
+By default, the form assistant will try to render a template based on the name of the helper. For instance, calling <pre><code><%= form.text_field :title %></code></pre> will look for a template called _text_field.html.erb located in app/views/forms. However, you can specify a different template easily:
+
+<pre><code><%= form.text_field :title, :template => 'custom_template' %></code></pre>
+
+If a specified template doesn't exist, a fallback template will be used (called '_field.html.erb').
+
+There's also a @#fieldset()@ helper available to you, although it doesn't belong to the form object (it's mixed into action view itself).
+
+<pre><code><% fieldset 'User Registration' do %>
+  <%= form.text_field :name %>
+  <%= form.text_field :username %>
+  <%= form.text_field :password %>
+<% end %>
+</code></pre>
+
+The nice thing about that is it's also controlled by a template (cleverly called '_fieldset.html.erb').
+
+h3. Form Labels
+
+Another convenient thing about the form assistant is the ability to control labels from their respective helper. For example...
+
+<pre><code><%= form.text_field :title, :label => 'Project Title' %>
+<%= form.text_field :title, :label_text => 'Project Title' %>
+<%= form.text_field :title, :label_class => 'required' %>
+<%= form.text_field :title, :label_id => 'dom_id' %>
+<%= form.text_field :title, :label => { :text => 'Project Title', :id => 'dom_id', :class => 'required' } %>
+<%= form.text_field :title, :label => false %>
+</code></pre>
+
+That works for all form helpers (text_area, check_box, etc). And by default, the label will be the humanized version of the field name, so that's what you'll get if you ignore the label options altogether.
+
+h3. Custom Helpers
+
+The form assistant provides a #cancel() helper that will allow the user to go back to the previous screen, automatically.
+
+<pre><code><%= form.cancel %>
+
+<span class="cancel">
+  <a href="/wherever/the/user/came/from">Cancel</a>
+</span>
+
+# other options:
+<%= form.cancel 'Go Back' %>
+<%= form.cancel 'Nevermind', :path => some_path %>
+<%= form.cancel 'Go Back', :attrs => { :class => 'go-back' } %>
+</code></pre>
+
+I usually like to give my submit buttons special attention, and so does form assistant:
+
+<pre><code><%= form.submission %>
+
+<p class="submission">
+  <input type="submit" value="Save Changes" ... />
+</p>
+
+# other options:
+<%= form.submission 'Save Project' %>
+<%= form.submission 'Save', :class => 'button' %>
+<%= form.submission 'Save', :attrs => { :class => 'submit-wrapper' } %>
+</code></pre>
+
+h3. Bonus Features
+
+Here are a few bonus features:
+
+<pre><code><% form.div :class => 'admin' do %>
+  // admin fields
+<% end %>
+
+<div class="admin">
+  // admin fields
+</div>
+
+# other options:
+<% form.p :id => 'notice' do %>
+<% form.span :class => 'highlight' do %>
+</code></pre>
+
+Now, an easier way to wrap a div around content:
+
+<pre><code><% form.admin_operations do %>
+  // admin-operations
+<% end %>
+
+<div class="admin-operations">
+  // admin-operations
+</div>
+
+<% form.admin_operations :glue => ' ' do %>
+  // admin operations
+<% end %>
+
+<div class="admin operations">
+  // admin operations
+</div>
+</code></pre>
+
+These helpers can be found in lib/form_assistant/helpers.rb. It was designed for extensibility, so please go crazy adding your own helpers! (see how easy it is by the existing implementations)
+
+Enjoy keeping your forms DRY.
+
+h2. Requirements
+
+The form assistant requires _at least_ Rails version 2.1.0. This is mainly due to the usage of the convenience methods now included in the Rails module (for things like @Rails.version@ and @Rails.root@).
+
+h2. Licensing
+
+(c) 2008 Ryan Heath, released under the MIT license
