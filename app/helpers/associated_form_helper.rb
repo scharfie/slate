@@ -19,7 +19,7 @@ module AssociatedFormHelper
     locals[:label] = options[:label] || association_name.to_s.humanize
     locals[:path]  = path = options[:path] || "#{resource_name}[#{from}][]"
     
-    locals[:form] = fields_for(path, association.new, :builder => Slate::FormBuilder) do |item|
+    locals[:form] = fields_for(path, association.new, :builder => ActionView::Base.default_form_builder) do |item|
       @associated_form_locals = locals
       capture(item, &block)
     end

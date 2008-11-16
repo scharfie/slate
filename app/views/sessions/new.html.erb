@@ -4,11 +4,11 @@
 
 <% form_for_resource do |form| %>
   <table>
-    <% form.default_template = 'row' %>
-    <% form.label_append = ':' %>
-    <%= form.text_field 'username', :size => 30 %>
-    <%= form.password_field 'password', :size => 20 %>
-    <%= form.check_box 'remember_me', :label => 'Remember me on this computer?', :template => 'row' %>
-    <%= form.submit 'Sign in', :label => nil %>
+    <% form.with_options(:template => 'row') do |f| %>
+      <%= f.text_field 'username', :size => 30 %>
+      <%= f.password_field 'password', :size => 20 %>
+      <%= f.check_box 'remember_me', :label => 'Remember me on this computer?', :template => 'row' %>
+      <%= f.submit 'Sign in', :label => false %>
+    <% end %>  
   </table>  
 <% end %>

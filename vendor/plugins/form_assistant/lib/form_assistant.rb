@@ -85,9 +85,9 @@ module RPH
       
     protected
       # renders the appropriate partial located in the template root
-      def render_partial_for(element, field, label, tip, template, args)
+      def render_partial_for(element, field, label, tip, template, helper, args)
         errors = self.class.ignore_errors ? nil : error_message_for(field)
-        locals = { :element => element, :label => label, :errors => errors, :tip => tip }
+        locals = { :element => element, :label => label, :errors => errors, :tip => tip, :helper => helper }
 
         @template.render :partial => "#{self.class.template_root}/#{template}", :locals => locals
       end
@@ -160,8 +160,16 @@ module RPH
           return render_element(element, field, name, options, ignore_label) if self.class.ignore_templates
           
           # render the partial template from the desired template root
-          render_partial_for(element, field, label, tip, template, args)
+          render_partial_for(element, field, label, tip, template, name, args)
         end
+      end
+      
+      # Renders a partial, passing the form object as a local
+      # variable named 'form'
+      def partial(name, options={})
+        (options[:locals] ||= {}).update :form => self
+        options.update :partial => name
+        @template.render options
       end
       
       # since #fields_for() doesn't inherit the builder from form_for, we need

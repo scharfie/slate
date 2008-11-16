@@ -25,7 +25,7 @@ end
 
 # load extra configuration files from config/slate
 Slate::Configuration.process File.join(Rails.root, "config/slate/*.rb")
-ActionView::Base.default_form_builder = Slate::FormBuilder
+ActionView::Base.default_form_builder = RPH::FormAssistant::FormBuilder
 Ardes::ResourcesController.actions = Slate::ResourcesController::Actions
 
 # Patch ActiveRecord::Migrator for auto_migrations
