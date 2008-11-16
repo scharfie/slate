@@ -21,6 +21,9 @@ class Space < ActiveRecord::Base
   # Callbacks
   after_create :create_default_page
   
+  # Validations
+  validates_presence_of :name
+  
 protected
   # after_create callback
   # Creates default page 'Home' for space
