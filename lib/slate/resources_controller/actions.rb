@@ -23,10 +23,12 @@ module Slate
 
         respond_to do |format|
           if resource_saved?
+            resource.publish! if params[:commit] =~ /publish/i && resource.respond_to?(:publish!)
+            
             format.html do
               flash[:notice] = "#{resource_name.humanize} was successfully created."
-              # redirect_to resource_url
-              if params[:commit] =~ /continue/i
+              case params[:commit]
+              when /continue/i
                 redirect_to edit_resource_url
               else
                 redirect_to resource_url
@@ -50,10 +52,11 @@ module Slate
 
         respond_to do |format|
           if resource_saved?
+            resource.publish! if params[:commit] =~ /publish/i && resource.respond_to?(:publish!)
             format.html do
               flash[:notice] = "#{resource_name.humanize} was successfully updated."
-              # redirect_to resource_url
-              if params[:commit] =~ /continue/i
+              case params[:commit]
+              when /continue/i
                 redirect_to edit_resource_url
               else
                 redirect_to resource_url

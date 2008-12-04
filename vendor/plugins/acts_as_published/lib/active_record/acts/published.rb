@@ -16,7 +16,35 @@ module ActiveRecord #:nodoc:
           class_eval "def self.acts_as_published_configuration(); #{options.inspect}; end"
 
           # Add the association
-          has_many :versions, options
+          has_many :versions, options.except(:versions)
+          belongs_to :original_version, :class_name => options[:class_name], :foreign_key => options[:foreign_key]
+          named_scope :published, :conditions => 'version = 1'
+          named_scope :draft, :conditions => 'version = 0'
+          
+          a = table_name
+          b = a + '_versions'
+          
+          named_scope :unpublished, 
+            :select => "#{a}.*",
+            :joins => "LEFT OUTER JOIN #{a} #{b} ON #{a}.id = #{b}.#{options[:foreign_key]}",
+            :conditions => "#{a}.version = 0 AND #{b}.id IS NULL"
+
+          named_scope :on_date, Proc.new { |year, month, day|
+            conditions = [connection.year('published_at') + ' = ?']
+            variables  = [year.to_i]
+    
+            if month
+              conditions << connection.month('published_at') + ' = ?'
+              variables  << month.to_i
+      
+              if day
+                conditions << connection.day('published_at') + ' = ?'
+                variables  << day.to_i
+              end
+            end
+    
+            { :conditions => [conditions.join(' AND '), variables].flatten }
+          }
         end
       
         # Returns hash of default options based on given
@@ -25,7 +53,8 @@ module ActiveRecord #:nodoc:
           options = {
             :class_name  => class_name,
             :foreign_key => class_name.foreign_key,
-            :dependent   => :delete_all
+            :dependent   => :delete_all,
+            :versions    => 4
           }  
         end
       end
@@ -42,15 +71,15 @@ module ActiveRecord #:nodoc:
             "#{acts_as_published_configuration[:foreign_key]} = #{self.id} AND version > 0"
         end
 
-        # Removes old versions (any version >= 5) of this model
+        # Removes old versions (any version > max) of this model
         def clear_old_versions
-          self.class.delete_all "version >= 5 AND #{acts_as_published_configuration[:foreign_key]} = #{self.id}"
+          self.class.delete_all "version > #{acts_as_published_configuration[:versions]} AND #{acts_as_published_configuration[:foreign_key]} = #{self.id}"
         end  
         
         # Publishes this model
         def publish!
           return false if new_record?
-    
+          
           returning self.clone do |published_model|
             transaction do
               increment_versions 
@@ -64,18 +93,36 @@ module ActiveRecord #:nodoc:
           end  
         end
 
+        # Finds a particular version
+        def find_version(v)
+          return self if version == v
+          
+          # Finding a version is easy if we're in the draft object
+          return versions.find_by_version(v) if draft?
+
+          original_version.find_version(v)
+        end
+
         # Finds currently published version
         def published_version
-          versions.find_by_version(1)
+          published_version? ? self : find_version(1)
         end
         
-        def published?
+        # Finds draft version
+        def draft_version
+          draft? ? self : original_version
+        end        
+        
+        def published_version?
           version == 1
         end
         
-        def draft?
+        def draft_version?
           version == 0
         end
+        
+        alias_method :published?, :published_version?
+        alias_method :draft?, :draft_version?
       end
     end
   end
