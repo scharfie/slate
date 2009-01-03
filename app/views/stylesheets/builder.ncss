@@ -1,12 +1,12 @@
 div.b-area {
-  border: solid 2px orange;
+  border: solid 2px #558;
   padding: 0px;
   position: relative;
 
   div.b-toolbar {
 	  padding: 2px;
 	  margin:  1px;
-	  background: darkorange;
+	  background: #336;
 	
 	  table {
 		  width: 100%;
@@ -38,11 +38,11 @@ div.b-area {
 
 div.b-default {
 	div.b-area {
-	  border-color: purple;
+	  border-color: #959;
   }
 
 	div.b-toolbar {
-	  background: purple;	
+	  background: #626;	
 	}
 }
 
