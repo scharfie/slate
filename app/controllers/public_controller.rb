@@ -12,6 +12,7 @@ protected
   # Sets active space based on domain
   def capture_space
     @space = Space.active = Space.find_by_domain(request.host)
+    render :text => "No website configured at this address." and return false if @space.nil?
   end
   
   # Captures page based on URL (defaults to default page for space)
