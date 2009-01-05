@@ -9,11 +9,11 @@ module Slate
         # according to Rails docs and should have a mutex)
         def prepend_theme_view_paths
           return true if Space.active.nil? || Space.active.theme.blank?
-          self.prepend_view_path [themes_view_path, theme_views_path]
+          self.prepend_view_path [theme_path, theme_views_path]
         end
         
         # Returns the path to public/themes
-        def themes_view_path
+        def theme_path
           File.join(App.root, 'public/themes')
         end
         
