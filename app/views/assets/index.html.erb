@@ -1,6 +1,6 @@
 <% head stylesheet_link_tag('assets') %>
 <% toolbar_link glyph('application_get') + ' Upload', new_resource_path %>
-
+<% heading 'Files' %>
 <table class="assets">
   <% for asset in resources %>
   <tr class="<%= cycle('odd', '') %>">
