@@ -68,4 +68,8 @@ module ApplicationHelper
     result = render(:partial => 'forms/fieldset', :locals => locals)
     concat result, block.binding
   end
+  
+  def field_error(error)
+    content_tag(:p, error, :class => 'error')
+  end
 end

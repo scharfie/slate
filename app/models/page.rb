@@ -23,12 +23,21 @@ class Page < ActiveRecord::Base
   # Validations
   validates_presence_of :space_id
   validates_presence_of :name
+  validate :ensure_permalink
 
 protected
   # Callback which ensures that the root node 
   # has the name 'Pages'
   def ensure_name
     self.name = 'Pages' if self.root?
+  end
+
+  # Callback which ensures that the page
+  # has a permalink
+  def ensure_permalink
+    return true if root?
+    valid_permalinks = associated_permalinks.select(&:valid?)
+    errors.add(:permalinks, 'Please provide at least one permalink for this page') if valid_permalinks.empty?
   end
   
   # Callback which ensures that only one 

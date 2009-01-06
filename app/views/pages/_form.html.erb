@@ -2,7 +2,7 @@
   <% if resource.parent.root? %>
     This is a top-level page
   <% else %>  
-    This page be created in <span><%= resource.parent.path_names.join(' &raquo; ') %></span>
+    This page will be created in <span><%= resource.parent.path_names.join(' &raquo; ') %></span>
   <% end %>
 </p>
 
@@ -27,5 +27,6 @@
   <% associated_form :permalinks do |item| %>
     <%= item.text_field :name, :label => 'Path' %>
     <%= item.hidden_field :id, :template => 'hidden_field' %>
+    <div class="input"><%= field_error(resource.errors.on(:permalinks)) %></div>
   <% end %>
 <% end %>

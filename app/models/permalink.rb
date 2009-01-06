@@ -6,6 +6,8 @@ class Permalink < ActiveRecord::Base
   
   belongs_to :permalinkable, :polymorphic => true
   
+  validates_presence_of :name
+  
   def to_s
     name
   end

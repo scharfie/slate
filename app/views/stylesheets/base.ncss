@@ -317,6 +317,14 @@ div.fieldset {
   }
 }
 
+p.error {
+  margin: 5px 0;
+  padding: 5px;
+  color: #900;
+  font: bold 12px Lucida Grande, Arial;
+/*  border-left: 2px solid #900;*/
+}
+
 .white-fade-right, .white-fade-left {
   position: absolute;
   right:  -1px;
