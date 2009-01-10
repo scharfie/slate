@@ -45,7 +45,7 @@ public
   # PUT remap
   def remap
     mappings = params[:mappings]
-    resource_service.remap_tree!(mappings)
+    Page.remap_tree!(mappings)
     flash[:notice] = 'Successfully re-organized pages!'
     redirect_to resources_url
   end

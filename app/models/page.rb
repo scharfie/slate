@@ -36,7 +36,7 @@ protected
   # has a permalink
   def ensure_permalink
     return true if root?
-    valid_permalinks = associated_permalinks.select(&:valid?)
+    valid_permalinks = (associated_permalinks || permalinks).select(&:valid?)
     errors.add(:permalinks, 'Please provide at least one permalink for this page') if valid_permalinks.empty?
   end
   
