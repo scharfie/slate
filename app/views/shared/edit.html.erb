@@ -1,3 +1,4 @@
+<% toolbar_link 'View ' + resource_name.humanize.downcase, resource_url(resource) %>
 <% form_for_resource do |form| %>
   <%= form.partial 'form' %>
   <%= form.partial 'actions' %>
