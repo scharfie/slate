@@ -9,6 +9,7 @@ module AreasHelper
   end
   
   def version_timestamp(version)
+    return nil if version.published_at.nil?
     stamp = version.published_at
     today = Time.now
     format = if stamp.year == today.year

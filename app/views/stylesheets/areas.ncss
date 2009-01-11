@@ -41,6 +41,7 @@ textarea {
   color: #888;
   position: relative;
   cursor: pointer;
+  border: none;
 }
 
 .panel .header h2 span {
