@@ -160,6 +160,11 @@ label {
   }
 }
 
+p.tip {
+  margin: 0;
+  color: #777;
+  font-size: 12px;
+}
 
 /** footer **/
 #footer {
