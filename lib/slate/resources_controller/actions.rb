@@ -52,7 +52,7 @@ module Slate
 
         respond_to do |format|
           if resource_saved?
-            resource.publish! if params[:commit] =~ /publish/i && resource.respond_to?(:publish!)
+            publish_resource! if params[:commit] =~ /publish/i && resource.respond_to?(:publish!)
             format.html do
               flash[:notice] = "#{resource_name.humanize} was successfully updated."
               case params[:commit]
@@ -71,6 +71,10 @@ module Slate
           end
         end
       end  
+
+      def publish_resource!
+        resource.publish!
+      end
     end
   end
 end    

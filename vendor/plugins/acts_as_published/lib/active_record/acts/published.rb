@@ -77,7 +77,7 @@ module ActiveRecord #:nodoc:
         end  
         
         # Publishes this model
-        def publish!
+        def publish!(time=Time.now)
           return false if new_record?
           
           returning self.clone do |published_model|
@@ -87,7 +87,7 @@ module ActiveRecord #:nodoc:
               published_model.update_attributes(
                 acts_as_published_configuration[:foreign_key] => self.id, 
                 :version => 1, 
-                :published_at => Time.now
+                :published_at => time
               )
             end
           end  
