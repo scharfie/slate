@@ -4,6 +4,8 @@ module PeriodicalsHelper
     params[:slug]
   end
   
+  alias_method :periodical_by_slug?, :periodicals_by_slug?
+  
   # Returns true if the URL ends with /:year/:month/:day
   def periodicals_by_day?
     params[:day] && !params[:slug]
