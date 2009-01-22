@@ -35,6 +35,11 @@ module BuilderHelper
       name = @space.theme.to_s / name unless name.starts_with?('shared/')
       name
     end
+    
+    def title(value=nil)
+      return @content_for_title if value.nil?
+      @content_for_title = value
+    end
   end
   
   module Admin
