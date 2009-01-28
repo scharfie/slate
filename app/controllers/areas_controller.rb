@@ -3,6 +3,8 @@ class AreasController < ApplicationController
 
   resources_controller_for :area, :in => [:space, :page],
     :only => [:edit, :update]
+    
+  after_filter :expire_cache, :unless => Proc.new { |c| c.request.get? }  
 
 protected
   # override default find_resource to find by key
@@ -10,6 +12,10 @@ protected
     key = params[:key] || params[:id]
     resource_service.find_by_key(key) ||
       resource_service.build(:key => key)
+  end
+  
+  def expire_cache
+    Slate::Caching.expire_page(resource) 
   end
   
 public

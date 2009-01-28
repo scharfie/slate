@@ -1,6 +1,4 @@
 class StylesheetsController < ApplicationController
-  self.page_cache_extension = '.css'
-  
   # disable sessions
   session :off
   
@@ -18,13 +16,15 @@ private
   # headers for rendering, then performs the actual
   # render and finally caches the result
   def render_stylesheet
+    self.class.page_cache_directory = Rails.public_path
+
     # set the content type for stylesheets
     headers['type'] = 'text/css; charset=utf-8'
     
     # perform the action
-    yield    
+    yield
     
     # cache the result
-    cache_page
+    cache_page nil, request.path
   end  
 end

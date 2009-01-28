@@ -55,10 +55,23 @@ protected
   end
   
 public
-  def self.find_by_permalink(permalink)
-    Permalink.with_type('Page').first(:conditions => { 
-      :name => (permalink||'').join('/') 
-    }).try(:permalinkable)
+  def self.find_by_permalink(permalink, space=nil)
+    permalink = [*(permalink || '')].join('/')
+    find_by_sql(["
+      SELECT pages.* FROM pages, permalinks p
+      WHERE pages.space_id = ?
+        AND p.permalinkable_type = 'Page'
+        AND p.permalinkable_id = pages.id
+        AND p.name = ?
+      ", 
+      space.id, 
+      permalink
+    ]).first
+    
+    # Permalink.with_type('Page').first(:conditions => { 
+    #   :name => (permalink||'').join('/'),
+    #   :space_id => Space === space ? space.id : nil,
+    # }).try(:permalinkable)
   end
   
   def permalink

@@ -14,6 +14,14 @@ ActionController::Routing::Routes.draw do |map|
   # the public controller and group all parameters in page_path
   map.public_routes do |m|
     # support "periodical" routes
+    m.connect ':year/:month/:day/:slug',
+      :month => nil, :day => nil, :slug => nil,
+      :requirements => { 
+        :year => /\d{4}/, 
+        :month => /\d{1,2}|/, 
+        :day => /\d{1,2}|/ 
+      }
+
     m.connect '*page_path/:year/:month/:day/:slug',
       :month => nil, :day => nil, :slug => nil,
       :requirements => { 

@@ -9,7 +9,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define do
+ActiveRecord::Schema.define(:version => 20090127024352) do
+
   create_table "areas", :force => true do |t|
     t.string   "key"
     t.integer  "page_id"
@@ -17,12 +18,26 @@ ActiveRecord::Schema.define do
     t.text     "body_html"
     t.boolean  "hard_breaks",  :default => true
     t.boolean  "is_default"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "area_id"
     t.integer  "version",      :default => 0
+    t.datetime "updated_at"
     t.datetime "published_at"
+    t.datetime "created_at"
+    t.string   "format"
+  end
+
+  create_table "articles", :force => true do |t|
+    t.integer  "blog_id"
+    t.string   "name"
+    t.string   "permalink"
+    t.text     "body"
+    t.text     "body_html"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "published_at"
+    t.integer  "version",      :default => 0
+    t.integer  "article_id"
   end
 
   create_table "assets", :force => true do |t|
@@ -35,6 +50,22 @@ ActiveRecord::Schema.define do
     t.integer  "parent_id"
     t.string   "thumbnail"
     t.integer  "space_id"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+  end
+
+  create_table "blogs", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "space_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "comments", :force => true do |t|
+    t.string   "name"
+    t.text     "body"
+    t.integer  "article_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -56,8 +87,6 @@ ActiveRecord::Schema.define do
     t.string   "name"
     t.integer  "parent_id",      :default => 0
     t.integer  "space_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "path"
     t.integer  "depth"
     t.string   "template"
@@ -67,13 +96,15 @@ ActiveRecord::Schema.define do
     t.integer  "children_count", :default => 0
     t.string   "behavior_type"
     t.integer  "behavior_id"
+    t.datetime "updated_at"
+    t.datetime "created_at"
   end
-  
+
   create_table "permalinks", :force => true do |t|
     t.string  "name"
     t.string  "permalinkable_type"
     t.integer "permalinkable_id"
-    t.boolean "is_default", :default => false
+    t.boolean "is_default",         :default => false
   end
 
   create_table "plugin_schema_info", :force => true do |t|
@@ -112,10 +143,10 @@ ActiveRecord::Schema.define do
     t.integer  "login_attempts",            :default => 0
     t.boolean  "locked",                    :default => false
     t.boolean  "super_user",                :default => false
-    t.datetime "created_at"
     t.datetime "last_login"
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"
+    t.datetime "created_at"
   end
 
 end

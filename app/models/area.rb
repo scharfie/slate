@@ -9,7 +9,7 @@ class Area < ActiveRecord::Base
 
   # Callbacks
   before_validation :ensure_user
-
+  
   # Validations
   validates_presence_of :page_id
   validates_presence_of :user_id

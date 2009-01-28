@@ -12,15 +12,21 @@
           <%= text_area :area, :body, :onkeypress => 'AreaEditor.markUnsaved()', :style => 'margin: 0; padding: 0px; width: 100%; height: 100%;' %>
 				</div>
         <div class="actions" id="actions_for_draft">
+          <div style="float:right;padding:0 5px 0 0">
+            <label>Format:</label>
+            <%= select :area, :format, Slate::CompiledColumn.compilers %>
+          </div>  
+          
           <%= submit_tag 'Preview', :onclick => 'AreaEditor.preview(); return false;' %> or 
           <%= submit_tag 'Save now', :onclick => 'AreaEditor.save(true); return false;' %>
           <%= submit_tag('Publish') %>
-          <p style="margin: 5px 0 0 0">
+          
+          <!-- <p style="margin: 5px 0 0 0">
             <label>
-    	        <%= check_box 'area', 'hard_breaks', :onchange => 'AreaEditor.markUnsaved()' -%> Hard breaks? 
-    	        <span class="tip">automatically inserts &lt;br /&gt; tags</span>
-    	      </label>
-  	      </p>
+              <%= check_box 'area', 'hard_breaks', :onchange => 'AreaEditor.markUnsaved()' -%> Hard breaks? 
+              <span class="tip">automatically inserts &lt;br /&gt; tags</span>
+            </label>
+          </p> -->
         </div>
         </fieldset>
       <% end %>
