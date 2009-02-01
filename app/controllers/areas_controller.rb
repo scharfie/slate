@@ -15,7 +15,7 @@ protected
   end
   
   def expire_cache
-    Slate::Caching.expire_page(resource) 
+    # Slate::Caching.expire_page(resource.page) 
   end
   
 public

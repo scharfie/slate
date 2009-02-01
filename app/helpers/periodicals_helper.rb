@@ -37,6 +37,8 @@ module PeriodicalsHelper
   end
   
   def cache_paths_for_periodical(e)
+    return [] if e.new_record?
+    
     options = {}
     [
       periodical_path(e, options),

@@ -29,7 +29,7 @@ protected
   # Creates default page 'Home' for space
   def create_default_page
     pages.create! :name => 'Home', :template => 'index.html.erb',
-      :is_default => true
+      :is_default => true, :_permalinks => [{ :name => '/' }]
   end  
   
 public  
