@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   helper :all
 
   before_filter :capture_user!
+  before_filter :configure_timezone
   
   # Manually load the enclosing resources
   # and then capture the space - this is done
@@ -31,5 +32,9 @@ protected
     return true if Space.active.permit?(User.active)
     flash[:error] = 'You are not authorized to view this space.'
     redirect_to dashboard_url and return false
+  end
+  
+  def configure_timezone
+    Time.zone = current_user.time_zone if logged_in?
   end
 end

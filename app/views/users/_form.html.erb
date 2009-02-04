@@ -3,6 +3,7 @@
   <%= form.password_field :password, :value => '' %>
   <%= form.password_field :password_confirmation, :label => 'Confirm' %>
   <%= form.text_field :email_address, :label => 'Email' %>
+  <%= form.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %>
 <% end %>
 
 <% fieldset 'Personal Information' do %>

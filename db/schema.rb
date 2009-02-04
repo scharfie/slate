@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090127024352) do
+ActiveRecord::Schema.define(:version => 20090204165211) do
 
   create_table "areas", :force => true do |t|
     t.string   "key"
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(:version => 20090127024352) do
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"
     t.datetime "created_at"
+    t.string   "time_zone"
   end
 
 end
