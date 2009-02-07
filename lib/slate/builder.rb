@@ -77,7 +77,8 @@ module Slate
       raise Slate::ThemeMissing if (theme = @space.theme).nil?
       raise Slate::TemplateMissing if (template = @page.template).blank?
       
-      template = File.join(theme.to_s, template) rescue nil
+      template = 'templates' / template
+      # template = File.join(theme.to_s, template) rescue nil
       
       # load_behavior_object
       # load_behavior_helper

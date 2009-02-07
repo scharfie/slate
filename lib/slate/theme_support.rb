@@ -12,14 +12,14 @@ module Slate
           self.prepend_view_path [theme_path, theme_views_path]
         end
         
-        # Returns the path to public/themes
+        # Returns the path to the current theme in public/themes
         def theme_path
-          File.join(App.root, 'public/themes')
+          File.join(App.root, 'public/themes', Space.active.theme.to_s)
         end
         
         # Returns the view path for the current theme's "views" folder
         def theme_views_path
-          File.join(App.root, 'public/themes', Space.active.theme.to_s, 'views')
+          File.join(theme_path, 'views')
         end
       end
     end

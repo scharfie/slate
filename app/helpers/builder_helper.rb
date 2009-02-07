@@ -13,7 +13,7 @@ module BuilderHelper
     def support_toolbar
       render :partial => 'builder/support_toolbar' if slate?
     end
-  
+    
     # Returns URL path to the current theme
     def theme_path
       '/themes' / @space.theme.to_s
@@ -21,18 +21,17 @@ module BuilderHelper
     
     # Renders partial with given name
     def partial(name, options={})
-      render options.merge!(:partial => qualified_theme_path(name))
+      render options.merge!(:partial => qualified_theme_template_path(name))
     end
     
     # Makes the given name into a qualified theme path
-    # by prepending the theme name (unless the name begins
-    # with 'shared/')
+    # by ensuring it begins with 'templates'
     # 
     # This is primarily used when rendering partials with
     # the +partial+ helper
-    def qualified_theme_path(name)
+    def qualified_theme_template_path(name)
       name = name.to_s
-      name = @space.theme.to_s / name unless name.starts_with?('shared/')
+      name = 'templates' / name.to_s unless name.to_s.starts_with?('templates/')
       name
     end
     
