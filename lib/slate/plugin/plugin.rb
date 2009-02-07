@@ -66,6 +66,14 @@ module Slate
       def route_definitions
         @route_definitions ||= []
       end
+      
+      def mounts
+        @mounts ||= ActiveSupport::OrderedHash.new
+      end
+      
+      def mount(key, attributes={})
+        self.mounts[key] = attributes
+      end
     end
     
     # Convenience accessor to class route definitions
@@ -76,6 +84,10 @@ module Slate
     # Convenience accessor to class navigation definitions
     def navigation_definitions
       self.class.navigation_definitions
+    end
+    
+    def mounts
+      self.class.mounts
     end
 
     # Migrates this plugin to the target version

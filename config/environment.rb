@@ -63,7 +63,6 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # config.active_record.observers = :ticket_observer
 
-  # Make Active Record use UTC-base instead of local time
-  # config.active_record.default_timezone = :utc  
-  config.time_zone = 'UTC'
+  # Default time zone is Eastern (New York)
+  config.time_zone = 'America/New_York'
 end

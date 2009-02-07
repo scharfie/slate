@@ -4,6 +4,7 @@ class PagesController < ResourcesController
   
   resources_controller_for :pages, :in => :space
   before_filter :prepend_theme_view_paths, :only => :show
+  before_filter :install_mounts
   
 protected
   # creates a new page (setting the parent id
@@ -14,6 +15,18 @@ protected
       page.parent = resource_service.root if page.parent_id.blank?
       page.is_default = true if @space.pages.count == 2
     end
+  end
+  
+  def find_resource
+    if params[:id] =~ /^\d+/
+      resource_service.find_by_id(params[:id])
+    else
+      resource_service.find_by_mount_key(params[:id])
+    end  
+  end
+  
+  def install_mounts
+    resource_service.install_mounts
   end
 
 public

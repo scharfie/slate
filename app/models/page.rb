@@ -1,4 +1,6 @@
 class Page < ActiveRecord::Base
+  include Page::Mount
+  
   # Acts
   acts_as_dotted_path :scope => :space_id, 
     :ensure_root => true, :order => 'path, position ASC'
@@ -23,7 +25,7 @@ class Page < ActiveRecord::Base
   # Validations
   validates_presence_of :space_id
   validates_presence_of :name
-  validate :ensure_permalink
+  validate :ensure_permalink, :unless => Proc.new { |record| record.mount? }
 
 protected
   # Callback which ensures that the root node 

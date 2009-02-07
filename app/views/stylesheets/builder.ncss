@@ -3,10 +3,22 @@ div.b-area {
   padding: 0px;
   position: relative;
 
+  a {
+    color: #fff;
+    padding: 0;
+    text-decoration: none;
+    background: none;
+    
+    :hover {
+      text-decoration: underline;  
+    }
+  }
+
   div.b-toolbar {
 	  padding: 2px;
 	  margin:  1px;
 	  background: #336;
+	  color: #fff;
 	
 	  table {
 		  width: 100%;
