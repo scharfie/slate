@@ -27,7 +27,7 @@ class Theme < ActiveRecord::Base
   end
   
   def templates
-    Dir.chdir(Rails.public_path / 'themes' / name) do
+    Dir.chdir(Rails.public_path / 'themes' / name / 'templates') do
       Dir.glob('*.html.erb').map do |template|
         # Skip partials
         next if template.starts_with?('_')
