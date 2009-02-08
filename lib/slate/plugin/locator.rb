@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/plugin.rb'
-
 module Slate
   class Plugin
     class Locator < Rails::Plugin::FileSystemLocator

@@ -20,6 +20,14 @@ module Slate
       end
     end
     
+    # Returns true if:
+    #   key is blank
+    #   key matches plugin key
+    #   key with "-slate-plugin" suffix matches plugin key
+    def match?(key)
+      key.blank? || self.key == key || self.key == key.+('-slate-plugin')      
+    end
+    
     class Navigation
       attr_accessor :items
       attr_accessor :controller
@@ -90,12 +98,6 @@ module Slate
       self.class.mounts
     end
 
-    # Migrates this plugin to the target version
-    def migrate(target_version = nil) 
-      require 'slate/plugin/migrator'
-      Slate::Plugin::Migrator.migrate_plugin(self, target_version)
-    end
-    
     # Path to migrations directory
     def migrations_path
       File.join(directory, 'db/migrate')
@@ -103,36 +105,14 @@ module Slate
     
     # Returns true if there are pending migrations
     def pending_migrations?
-      current_version < migratable_version
+      Slate::Migrator.for(self).pending_migrations.any?
     end
     
     # Renders error message to stderr if the plugin
     # cannot be loaded due to pending migrations
     def pending_migrations_error
-      message = "   Migrations pending: please run 'rake db:migrate:plugins PLUGIN=#{key}'"
+      message = "   Migrations pending: please run 'rake plugins:migrate PLUGIN=#{key}'"
       $stderr.puts message
-    end
-        
-    # Returns migrated version of plugin based on 
-    # plugin schema table
-    def current_version
-      schema_info.version
-    end
-    
-    # Returns the highest migration version number from 
-    # available migration files in migrations path
-    def migratable_version
-      migration_file = Dir["#{migrations_path}/[0-9]*_*.rb"].sort.last
-      migration_file.scan(/[0-9]+/).first.to_i
-    rescue
-      0  
-    end
-    
-    # Returns ActiveRecord object from the plugin schema
-    # table for this plugin
-    def schema_info
-      require 'slate/plugin/schema_info'
-      Slate::Plugin::SchemaInfo.find_or_create_by_name(plugin_name)
     end
     
     # Returns name of the plugin
@@ -140,14 +120,16 @@ module Slate
       self.class.to_s
     end
     
-    # Returns plugin key name
+    # Returns plugin key name (the directory name of the plugin)
+    #   For example, a plugin in vendor/plugins/something-slate-plugin
+    #   would have a key of 'something-slate-plugin'
     def key
       @name
     end
     
     # Returns the "friendly" name of the plugin
     def name
-      self.class.name || key.gsub(/_plugin/i, '').humanize
+      self.class.name || plugin_name.gsub(/_plugin/i, '').humanize
     end
     
     # Returns the description of the plugin
@@ -168,6 +150,10 @@ module Slate
     # plugin to Slate.plugins)
     def load(initializer)
       return if loaded?
+
+      # Note - the pending migrations check is currently 
+      # disabled until I figure out how to make it only run
+      # on server boot - otherwise it causes issues with rake, etc.
       
       # Prevent this plugin from loading if we have pending migrations
       # pending_migrations_error and return if pending_migrations?

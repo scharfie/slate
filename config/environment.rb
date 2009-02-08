@@ -28,6 +28,7 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{Rails.root}/extras )
 
+  require File.join(File.dirname(__FILE__), '../lib/slate/plugin.rb')  
   require File.join(File.dirname(__FILE__), '../lib/slate/plugin/locator.rb')  
 
   # locate slate plugins unless we're in test environment
