@@ -9,8 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090204165211) do
-
+ActiveRecord::Schema.define do
   create_table "areas", :force => true do |t|
     t.string   "key"
     t.integer  "page_id"
@@ -27,19 +26,6 @@ ActiveRecord::Schema.define(:version => 20090204165211) do
     t.string   "format"
   end
 
-  create_table "articles", :force => true do |t|
-    t.integer  "blog_id"
-    t.string   "name"
-    t.string   "permalink"
-    t.text     "body"
-    t.text     "body_html"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "published_at"
-    t.integer  "version",      :default => 0
-    t.integer  "article_id"
-  end
-
   create_table "assets", :force => true do |t|
     t.string   "name"
     t.string   "filename"
@@ -52,22 +38,6 @@ ActiveRecord::Schema.define(:version => 20090204165211) do
     t.integer  "space_id"
     t.datetime "updated_at"
     t.datetime "created_at"
-  end
-
-  create_table "blogs", :force => true do |t|
-    t.string   "name"
-    t.string   "description"
-    t.integer  "space_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "comments", :force => true do |t|
-    t.string   "name"
-    t.text     "body"
-    t.integer  "article_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "domains", :force => true do |t|
@@ -105,12 +75,6 @@ ActiveRecord::Schema.define(:version => 20090204165211) do
     t.string  "permalinkable_type"
     t.integer "permalinkable_id"
     t.boolean "is_default",         :default => false
-  end
-
-  create_table "plugin_schema_info", :force => true do |t|
-    t.string  "name"
-    t.integer "version", :default => 0
-    t.boolean "enabled", :default => true
   end
 
   create_table "plugins", :force => true do |t|

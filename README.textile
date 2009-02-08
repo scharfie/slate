@@ -6,7 +6,7 @@ West Virginia University Web Services (http://www.wvu.edu).
 h2. Setup
 
 * Configure your database connection (database.yml)
-* Create your database and migrate (rake db:auto:migrate)
+* Create your database and load the schema (rake db:schema:load)
 * Run slate setup to create a login (rake slate:setup)
 
 h2. Local Machine Setup
