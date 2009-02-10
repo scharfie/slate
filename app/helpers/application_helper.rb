@@ -72,4 +72,9 @@ module ApplicationHelper
   def field_error(error)
     content_tag(:p, error, :class => 'error')
   end
+  
+  def absolute_url(path=nil)
+    path = [*path] unless Array === path
+    url_for(:controller => 'public', :page_path => path.compact)
+  end
 end

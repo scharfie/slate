@@ -27,11 +27,17 @@ module PeriodicalsHelper
   def periodical_path(e, options={})
     url_for hash_for_periodical_path(e, options)
   end
+
+  # Returns full URL (including host) to periodical
+  def periodical_url(e, options={})
+    url_for hash_for_periodical_path(e, options.merge(:only_path => false))
+  end  
   
   # Returns hash of options for periodical
   def hash_for_periodical_path(e, options={})
     year, month, day = (e.published_at || e.updated_at).strftime('%Y/%m/%d').split('/')
     slug = e.permalink
+    options[:controller] = 'public' unless slate?
     options.reverse_merge! :page_path => params[:page_path] unless params[:page_path].blank?
     options.reverse_merge! :year => year, :month => month, :day => day, :slug => slug
   end
@@ -46,10 +52,5 @@ module PeriodicalsHelper
       periodical_path(e, options.merge(:month => nil)),
       periodical_path(e, options.merge(:year  => nil)),
     ]  
-  end
-
-  # Returns full URL (including host) to periodical
-  def periodical_url(e, options={})
-    periodical_path e, options.merge(:only_path => false)
   end
 end

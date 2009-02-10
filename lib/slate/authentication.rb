@@ -92,7 +92,7 @@ module Slate
     def slate?
       request.subdomains.first == 'slate'    
     end
-
+    
     def self.included(base)
       base.send :helper_method, :super_user?, :slate?
     end
