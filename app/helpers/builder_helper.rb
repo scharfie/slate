@@ -106,7 +106,8 @@ module BuilderHelper
     # Returns url to given page
     def page_url(page)
       url = slate? ? space_page_path(@space, page) : page.permalink.to_s
-      url = '/' if url.blank?
+      url = File.join('', url || '')
+      url
     end
     
     # Returns top-level pages as UL

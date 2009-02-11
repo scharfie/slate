@@ -25,7 +25,10 @@ protected
   # Assigns active space based on instance variable
   # (from resources_controller)
   def capture_space
-    Space.active = @space and return true if slate?
+    if slate?
+      Space.active = @space
+      return true
+    end
 
     # Sets active space based on domain
     @space = Space.active = Space.find_by_domain(request.host)
