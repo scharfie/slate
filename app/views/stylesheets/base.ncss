@@ -150,6 +150,10 @@ select {
 	font: normal 14px "Lucida Grande", verdana;  
 }
 
+textarea {
+  font: normal 14px "Inconsolata", "Monaco", monospace;
+}
+
 label {
 	font: bold 14px "Lucida Grande", Helvetica, "Trebuchet MS";
 	color: #444;

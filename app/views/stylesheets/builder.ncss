@@ -6,10 +6,15 @@ div.b-area {
   a {
     color: #fff;
     padding: 0;
+    margin: 0;
+    display: inline;
+    border: none;
     text-decoration: none;
     background: none;
     
     :hover {
+      background: none;
+      color: #fff;
       text-decoration: underline;  
     }
   }
@@ -81,6 +86,9 @@ div.b-notice {
 		font-weight: bold;
 		padding: 3px 1px;
 		text-decoration: none;
+		display: inline;
+		float: none;
+		border: none;
 
 		:hover {
 			background: darkorange;
@@ -106,13 +114,12 @@ div#b-toolbar {
 	  text-decoration: none;
 	  color: #fff;
 	  padding: 5px;
+		display: inline;
+		float: none;
+		border: none;
 	
 		:hover {
   	  background: #444;
 		}
 	}
-}
-
-html body {
-	xmargin-top: 24px !important;
 }
