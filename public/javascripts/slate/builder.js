@@ -16,10 +16,10 @@ function editArea() {
 function updateAreaOnPage(dom_id) {
 	var page = window.opener.document;
 	var area = page.getElementById(dom_id);
-	$(area).html($('#area').html());
+	$(area).html($('#area').html())
 }
 
 $(function() {
-	$('a.b-area').click(editArea)
+	$('a.b-area').live('click', editArea)
 	$('body').css({marginTop: $('#b-toolbar')[0].offsetHeight})
 });

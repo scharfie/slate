@@ -44,7 +44,7 @@ module BuilderHelper
   module Admin
     # creates link to editor for given area
     def edit_area_link(area)
-      link_to glyph('application_edit'), 
+      link_to glyph('pencil'), 
         edit_space_page_area_url(@space.id, @page.id, area.key), 
         :class => 'b-area'
     end
@@ -64,7 +64,7 @@ module BuilderHelper
     def clear_area_link(area)
       return nil if area.new_record? || area.using_default?(@page)
       
-      link_to glyph('bin_empty'), space_page_area_path(@space.id, @page.id, area.key),
+      link_to glyph('delete'), space_page_area_path(@space.id, @page.id, area.key),
         :method => :delete, :confirm => 'Remove content for this area and page?'
     end
     
