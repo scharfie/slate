@@ -13,10 +13,23 @@ class Page
       end
   
       def install_mounts
-        Slate.plugins.inject([]) do |mounts, plugin|
+        raise "No active space" unless Space.active
+        Space.active.plugins.inject([]) do |mounts, plugin|
           mounts += plugin.mounts.map do |key, attributes|
             mount(key, attributes)
           end
+        end
+      end
+      
+      def ensure_mount(key)
+        raise "No active space" unless Space.active
+        key = key.to_s
+        
+        Space.active.plugins.each do |plugin|
+          next unless plugin = plugin.slate_plugin
+          if attributes = plugin.mounts[key]
+            return mount(key, attributes)
+          end  
         end
       end
     end

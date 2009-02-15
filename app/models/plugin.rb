@@ -1,5 +1,6 @@
 class Plugin < ActiveRecord::Base
-  delegate :name, :description, :navigation_definitions, :to => :slate_plugin
+  delegate :name, :description, :navigation_definitions, :mounts,
+    :to => :slate_plugin
   
   attr_accessor_with_default :slate_plugin do
     @slate_plugin ||= Slate.plugins.detect { |e| e.key == self.key }
