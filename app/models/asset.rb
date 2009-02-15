@@ -1,15 +1,15 @@
 class Asset < ActiveRecord::Base
   belongs_to :space
-  
+
   # attachment_fu configuration
   # note: the slashes are to make rcov happy
   has_attachment :processor => Slate.config.assets.processor, \
-    :thumbnails => { \
-      :sq => 75, \
-      :tn => '100x100>', \
-      :sm => '240x240>', \
-      :md => '500x500>', \
-      :lg => '1024x1024>' \
+    :thumbnails => {
+      'sq' => 75,
+      'tn' => '100x100>',
+      'sm' => '240x240>',
+      'md' => '500x500>',
+      'lg' => '1024x1024>'      
     }, :storage => :file_system
     
   # Ensure that the site id is properly set for thumbnails  
@@ -45,5 +45,25 @@ public
         :uploaded_data => UploadedFile.new(tempfile, entry.name),
         :space_id => self.space_id)
     end 
+  end
+  
+  def dimensions
+    [width, height].join('x')
+  end
+  
+  def thumbnail_name
+    case thumbnail
+    when nil, '' ; 'original'
+    when 'sq'    ; 'square'
+    when 'tn'    ; 'thumbnail'
+    when 'sm'    ; 'small'  
+    when 'md'    ; 'medium'  
+    when 'lg'    ; 'large'  
+    end
+  end
+  
+  def available_thumbnails
+    order = %w(sq tn sm md lg)
+    thumbnails.sort_by { |e| order.index(e.thumbnail) }
   end
 end

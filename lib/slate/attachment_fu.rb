@@ -78,7 +78,7 @@ module Slate
       # should exist
       def has_thumbnail?(thumbnail)
         return nil if !image?
-        thumbnail ? attachment_thumbnails.keys.include?(thumbnail.to_sym) : true
+        thumbnail ? attachment_thumbnails.keys.include?(thumbnail.to_s) : true
       end
     end  
 

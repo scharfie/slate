@@ -1,4 +1,24 @@
-<%= image_tag image.public_filename %>
-<% for thumbnail in image.thumbnails %>
-  <%= image_tag thumbnail.public_filename %>
-<% end %>
+<ul class="sizes clearfix">
+  <% for e in [image.available_thumbnails, image].flatten %>
+    <li>
+      <a href="<%= e.public_filename %>"><%= e.thumbnail_name %><span><%= e.dimensions %></span></a>  
+    </li>
+  <% end %>
+</ul>
+<br />
+<img id="asset-preview" src="<%= image.public_filename('md') %>" />
+
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  var preview = $('#asset-preview')[0]
+  $('ul.sizes a').each(function() {
+    if (preview.src == this.href) {
+      $(this).addClass('current')
+    }  
+  }).click(function() {
+    preview.src = this.href
+    $('ul.sizes a.current').add(this).toggleClass('current')
+    return false  
+  })
+})
+</script>
