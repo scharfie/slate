@@ -1,6 +1,5 @@
 <% heading 'Dashboard' %>
 
-This view would be for a user when they first log in and haven't selected
-a space yet.
+Please choose a space:
 
-<pre><%= __FILE__ -%></pre>
+<%= render :partial => 'space', :collection => User.active.spaces.all %>
