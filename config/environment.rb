@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.2.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.0' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -32,7 +32,7 @@ Rails::Initializer.run do |config|
   require File.join(File.dirname(__FILE__), '../lib/slate/plugin/locator.rb')  
 
   # locate slate plugins unless we're in test environment
-  config.plugin_locators += [Slate::Plugin::Locator] unless RAILS_ENV =~ /test/
+  # config.plugin_locators += [Slate::Plugin::Locator] unless RAILS_ENV =~ /test/
   
   # Configure gems
   config.gem 'rubyzip', :lib => 'zip/zip' 
@@ -65,5 +65,5 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :ticket_observer
 
   # Default time zone is Eastern (New York)
-  config.time_zone = 'America/New_York'
+  config.time_zone = 'Eastern Time (US & Canada)'
 end

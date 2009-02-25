@@ -14,7 +14,9 @@ class Page
   
       def install_mounts
         raise "No active space" unless Space.active
+
         Space.active.plugins.inject([]) do |mounts, plugin|
+          return mounts unless plugin = plugin.slate_plugin
           mounts += plugin.mounts.map do |key, attributes|
             mount(key, attributes)
           end
