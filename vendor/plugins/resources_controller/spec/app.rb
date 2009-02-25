@@ -59,6 +59,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.connect ':controller/:action/:id'
+  map.connect ':controller/:action/:id.:format'
 end
 
 
@@ -156,20 +157,16 @@ class Post < ActiveRecord::Base
 end
 
 class Comment < ActiveRecord::Base
+  validates_presence_of :user, :post
+  
   belongs_to :user
   belongs_to :post
   has_many :tags, :as => :taggable
 end
 
-
 ##############
 # Controllers
 ##############
-
-# explicitly set the actions to the default (in case another plugin has changed this)
-Ardes::ResourcesController.actions = Ardes::ResourcesController::Actions
-Ardes::ResourcesController.singleton_actions = Ardes::ResourcesController::SingletonActions
-
 
 class ApplicationController < ActionController::Base
   map_enclosing_resource :account, :class => User, :singleton => true, :find => :current_user

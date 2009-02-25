@@ -19,12 +19,12 @@ describe UsersController, "#route_for" do
     route_for(:controller => "users", :action => "edit", :id => 'dave').should == "/users/dave/edit"
   end
   
-  it "should map { :controller => 'users', :action => 'update', :id => 'dave'} to /users/dave" do
-    route_for(:controller => "users", :action => "update", :id => 'dave').should == "/users/dave"
+  it "should map { :controller => 'users', :action => 'update', :id => 'dave'} to PUT /users/dave" do
+    route_for(:controller => "users", :action => "update", :id => 'dave').should == {:method => :put, :path => "/users/dave"}
   end
   
-  it "should map { :controller => 'users', :action => 'destroy', :id => 'dave'} to /users/dave" do
-    route_for(:controller => "users", :action => "destroy", :id => 'dave').should == "/users/dave"
+  it "should map { :controller => 'users', :action => 'destroy', :id => 'dave'} to DELETE /users/dave" do
+    route_for(:controller => "users", :action => "destroy", :id => 'dave').should == {:method => :delete, :path => "/users/dave"}
   end
   
 end
@@ -235,14 +235,12 @@ describe UsersController, "handling PUT /users/dave" do
   end
   
   def put_with_successful_update
-    @user.should_receive(:attributes=).once.ordered
-    @user.should_receive(:save).once.ordered.and_return(true)
+    @user.should_receive(:update_attributes).and_return(true)
     put :update, :id => "dave"
   end
   
   def put_with_failed_update
-    @user.should_receive(:attributes=).once.ordered
-    @user.should_receive(:save).once.ordered.and_return(false)
+    @user.should_receive(:update_attributes).and_return(false)
     put :update, :id => "dave"
   end
   
