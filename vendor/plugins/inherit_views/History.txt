@@ -1,3 +1,7 @@
+* Added ActionMailer support
+
+* Added support for rails 2.3
+
 * Removed render_parent for now (in edge rails version)
 
 * inherit_views allows inherited templates to be rendered where there is no action method

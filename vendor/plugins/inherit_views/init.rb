@@ -1,4 +1,5 @@
-require 'ardes/inherit_views'
+require 'inherit_views'
 
-ActionController::Base.send :extend, Ardes::InheritViews::ActionController
-ActionView::Base.send :include, Ardes::InheritViews::ActionView
+defined?(ActionController) && ActionController::Base.extend(InheritViews::ActMethod)
+defined?(ActionMailer) && ActionMailer::Base.extend(InheritViews::ActMethod)
+defined?(ActionView) && ActionView::Base.send(:include, InheritViews::ActionView)

@@ -1,18 +1,19 @@
-http://plugins.ardes.com > inherit_views
+= {ianwhite}[http://github.com/ianwhite] / {inherit_views}[http://github.com/ianwhite/inherit_views] >>{info}[http://ianwhite.github.com/inherit_views] >>{api}[http://ianwhite.github.com/inherit_views/doc]
 
-= Status
+== Status
 
-inherit views on edge has slimmed down a bit (64 LOC).  The API is the same except that, for the moment, render_parent is out.
+inherit_views works with rails 2.x
 
-inherit_views is available for rails 2.0-stable and 2.1-stable.  To get this version checkout the rails-2.0-2.1 branch
+If you're on <b>rails master (2.3)</b>, you want {inherit_views/master}[http://github.com/ianwhite/inherit_views/tree/master]
 
-  git clone git://github.com/ianwhite/inherit_views rails-2.0-2.1
+If you're on <b>rails 2.2</b>, you want {inherit_views/rails-2.2}[http://github.com/ianwhite/inherit_views/tree/rails-2.2]
 
-= inherit_views
+If you're on <b>rails 2.0, or 2.1</b>, you want {inherit_views/rails-2.0-2.1}[http://github.com/ianwhite/inherit_views/tree/rails-2.0-2.1]
 
-This plugin allows your controllers to inherit their views from parent controllers.  The default behaviour is to inherit along the ancestor path of the controller, but you can also specify custom inherit view paths to search.
+== what does it do?
 
-NOTE: this plugin is not aimed at having multiple view paths for your controllers, which is addressed with the view_paths addition to ActionController::Base for rails 2.0.  Rather, within these view paths, you can inherit views from other controller paths.
+This rails plugin allows your controllers/mailers to inherit their views from parent controllers/mailers.
+The default behaviour is to inherit along the ancestor path of the controller/mailer, but you can also specify custom inherit view paths to search.
 
 Example:
 
@@ -28,14 +29,37 @@ Example:
     # will look for views in 'views/bar', then 'views/foo', then 'view/application'
   end
   
-See Ardes::InheritViews for more details
+See InheritViews for more details
 
-=== Specs and Coverage
-* {SPECDOC}[link:files/SPECDOC.html] lists the specifications
-* {RSpec Report}[link:rspec_report.html] is a report of spec pass/fails
-* {RCov Report}[link:coverage/index.html] is the rcov report
+NOTE: this plugin is not aimed at having multiple view paths for your controllers, which is addressed with the view_paths addition to ActionController::Base for rails 2.0.  Rather, within these view paths, you can inherit views from other controller paths.
 
-=== Testing
+== In templates
+
+You can render the 'parent' template from within a template if you so choose.  This works for partials and top-level templates alike.
+
+<b>foo/view.html.erb</b>
+  <h1>Foo View</h1>
+    
+<b>bar/view.html.erb</b>
+  <%= render :parent %>
+  <h2>With some 'bar' action</h2>
+  
+rendering bar/view (with the controller setup described above):
+  <h1>Foo View</h1>
+  <h2>With some 'bar' action</h2>
+    
+== Testing & CI
 
 RSpec is used for testing, so the tests are in <tt>spec/</tt> rather than
 <tt>test/</tt> Do rake --tasks for more details.
+
+{garlic}[http://github.com/ianwhite/garlic] is used for CI, see garlic.rb for details on
+what versions of rails are tested.
+
+== Contributors
+
+Author: {Ian W. White}[http://github.com/ianwhite]
+
+Contributions by:
+
+* {The Dark One}[http://github.com/thedarkone]

@@ -1,1 +1,0 @@
-* Add specs for whether existnce of one format implies existence of all (leading to weird no render errors).  Should be able to fix this by adding format to the memoiazation
