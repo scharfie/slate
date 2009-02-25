@@ -2,13 +2,13 @@ module Slate
   module CompiledColumn
     class TextileCompiler
       def self.process(text, options={})
-        RedCloth.new(text || '', options).to_html
+        ::RedCloth.new(text || '', options).to_html
       end
     end
     
     class MarkdownCompiler
       def self.process(text, options={})
-        BlueCloth.new(text || '', options).to_html
+        ::BlueCloth.new(text || '', options).to_html
       end
     end
     

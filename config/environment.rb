@@ -37,6 +37,8 @@ Rails::Initializer.run do |config|
   # Configure gems
   config.gem 'rubyzip', :lib => 'zip/zip' 
   config.gem 'highline'
+  config.gem 'RedCloth'
+  config.gem 'BlueCloth'
   
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
