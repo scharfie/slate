@@ -27,7 +27,9 @@ Rails::Initializer.run do |config|
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{Rails.root}/extras )
-  
+
+  require File.join(File.dirname(__FILE__), '../lib/slate.rb')
+
   # Configure gems
   config.gem 'rubyzip', :lib => 'zip/zip' 
   config.gem 'highline'

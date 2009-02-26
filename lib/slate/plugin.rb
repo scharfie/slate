@@ -1,13 +1,7 @@
 module Slate
-  class << self
-    def plugins
-      @plugins ||= ActiveSupport::OrderedHash.new
-    end
-  end
-  
   class Plugin
-    attr_accessor :key, :directory
-    
+    attr_accessor :key, :directory, :about
+
     def self.install(key, directory=nil, &block)
       directory ||= File.dirname(eval('__FILE__', block))
       plugin = new(key, directory)
@@ -18,7 +12,17 @@ module Slate
     def initialize(key, directory)
       @key = key
       @directory = directory
+      init_about
       init_dependencies
+    end
+    
+    def name
+      @about['name']
+    end
+    
+    def init_about
+      @about = Rails::Plugin.new(directory).about rescue Hash.new
+      @about['name'] ||= key
     end
     
     # Initializes dependencies
@@ -34,7 +38,7 @@ module Slate
       [controller_path, model_path, helper_path].each do |path|
         ActiveSupport::Dependencies.load_once_paths.delete(path)
       end
-    end    
+    end  
     
     # Returns true if:
     #   key is blank

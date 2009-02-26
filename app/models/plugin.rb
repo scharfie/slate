@@ -3,7 +3,7 @@ class Plugin < ActiveRecord::Base
     :to => :slate_plugin
   
   attr_accessor_with_default :slate_plugin do
-    @slate_plugin ||= Slate.plugins.detect { |e| e.key == self.key }
+    @slate_plugin ||= Slate.plugins[self.key]
   end
   
   # Enables this plugin

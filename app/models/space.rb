@@ -50,9 +50,9 @@ public
   
   # Returns all available plugins
   def available_plugins
-    Slate.plugins.collect do |plugin|
-      plugins.detect { |e| e.key == plugin.key } || 
-        plugins.build(:slate_plugin => plugin, :key => plugin.key)
+    Slate.plugins.collect do |key, plugin|
+      plugins.detect { |e| e.key == key } || 
+        plugins.build(:key => key, :slate_plugin => plugin)
     end
   end
   
