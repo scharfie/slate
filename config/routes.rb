@@ -1,13 +1,7 @@
 require 'slate/routing'
-
 ActionController::Routing::Routes.draw do |map|
   map.connect 'stylesheets/:action.:format', 
     :controller => 'stylesheets'
-  
-  # Load plugin route definitions
-  Slate.plugins.each do |plugin|
-    plugin.route_definitions.each { |block| block.call(map) }
-  end  
   
   # public side
   # map all requests that do not have slate as the subdomain to
